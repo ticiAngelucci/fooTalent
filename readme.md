@@ -23,3 +23,8 @@
 |:-:|
 | **Juan Emilio Elizondo** |
 | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/Juane2305) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-emilio-elizondo/) |
+
+|![Avatar](https://avatars.githubusercontent.com/u/85854406?s=400&u=887f6ab01a1fec45f04a77e08714a332f3678b85&v=4 'Backend Dev')                                                                                                              |
+|:-:|
+|**Victor Molinas**                                                                                                                                                                    |
+| [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/vmolinas) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/vmolinasg/) |
