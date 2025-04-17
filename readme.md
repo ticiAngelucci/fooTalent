@@ -18,3 +18,8 @@
 |:-:|
 | **Carlos Padilla** |
 | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/CarlosPad08) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/carlospadillamesa/) |
+
+|![Avatar](https://avatars.githubusercontent.com/u/106024573?v=4 'FullStack Dev')|
+|:-:|
+| **Juan Emilio Elizondo** |
+| [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/Juane2305) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-emilio-elizondo/) |
