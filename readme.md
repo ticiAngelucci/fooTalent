@@ -23,3 +23,8 @@
 |:-:|
 | **Juan Emilio Elizondo** |
 | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/Juane2305) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-emilio-elizondo/) |
+
+|![Avatar](https://avatars.githubusercontent.com/u/144204205?s=400&u=098fe0c3fdb6cce14a9c14187111396ed954c9a3&v=4 'Full Stack Dev')|
+|:-:|
+| **Raydberg Chuquival** |
+| [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/Raydberg) [!['LinkedIn Link'](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/raydbergchuquival) |
