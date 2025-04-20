@@ -1,5 +1,6 @@
 package BackEnd.GestorAlquileres.config;
 
+import BackEnd.GestorAlquileres.Auth.DTOs.CustomUserDetails;
 import BackEnd.GestorAlquileres.Auth.repositories.UserRepository;
 import BackEnd.GestorAlquileres.Auth.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -53,6 +54,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return username -> userRepository
                 .findByUsername(username)
+                .map(CustomUserDetails::new)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 

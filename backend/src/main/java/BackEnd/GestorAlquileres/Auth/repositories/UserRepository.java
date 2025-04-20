@@ -1,7 +1,7 @@
 package BackEnd.GestorAlquileres.Auth.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.User;
+import BackEnd.GestorAlquileres.Users.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
