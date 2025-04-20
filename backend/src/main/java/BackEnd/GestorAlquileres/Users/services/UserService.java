@@ -25,12 +25,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> getUserById(Long id) {
-        Optional<User> user = userRepository.findById(id);
+    public ResponseEntity<?> getUserByIdIfAuthorized(Long id, Authentication auth) {
+        User currentUser = (User) auth.getPrincipal();
 
-        return user.map(value -> ResponseEntity.ok(UserDTO.fromEntity(value)))
-                .orElse(ResponseEntity.notFound().build());
+        if (currentUser.getId().equals(id) || currentUser.getRole() == Role.ADMIN) {
+            Optional<User> user = userRepository.findById(id);
+
+            return user.map(value -> ResponseEntity.ok(UserDTO.fromEntity(value)))
+                    .orElse(ResponseEntity.notFound().build());
+        }
+
+        return ResponseEntity.status(403).body("No autorizado");
     }
-
 
 }

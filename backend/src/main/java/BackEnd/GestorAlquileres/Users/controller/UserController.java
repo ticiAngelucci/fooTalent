@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -23,8 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/getUserByID/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<?> getUserById(@PathVariable Long id, Authentication auth) {
+        return userService.getUserByIdIfAuthorized(id, auth);
     }
-
 }
