@@ -1,3 +1,4 @@
+import Loader from '@/shared/components/loader/loader';
 import { useEffect, useState } from 'react';
 interface Character {
     id: number;
@@ -10,14 +11,13 @@ interface Character {
 
 const ApiPublica = () => {
     const [characters, setCharacters] = useState<Character[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
 
 
     useEffect(() => {
         const urlApi = `https://dragonball-api.com/api/characters?page=${page}`;
         async function loadCharacters() {
-            setLoading(true);
             try {
                 const response = await fetch(urlApi);
                 if (!response.ok) {
@@ -40,14 +40,15 @@ const ApiPublica = () => {
 
 
 
-
+        if(loading){
+            return <Loader/>
+        }
     return (
         <div className="bg-gray-100 p-4 h-screen overflow-y-auto">
             <h1 className="text-3xl font-bold text-center my-8 text-gray-800">API Pública Dragon Ball</h1>
 
             {/* Estado de carga y mensajes */}
             <div className="text-center my-4">
-                {loading && <p className="text-blue-600">Cargando personajes...</p>}
                 {!loading && characters.length === 0 && (
                     <p className="text-red-500">No hay personajes disponibles</p>
                 )}
