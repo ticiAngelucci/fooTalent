@@ -7,7 +7,9 @@ import ApiPublica from "./modules/publicApi/pages/ApiPublica";
 import ProtectedNode from "./routes/ProtectedRoute";
 import { Route as AppRoute }  from "./shared/constants/route";
 
+
 function App() {
+  
   return (
     <main>
       <Routes>
