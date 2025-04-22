@@ -1,71 +1,90 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginFormValues } from "../schemas/login.schemas";
+import { useNavigate } from "react-router-dom";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
-
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Iniciando sesión con:", formData)
+  const onSubmit = (data: LoginFormValues) => {
+    console.log("Iniciando sesión con:", data);
     localStorage.setItem("token", "vnajkjnaflakfkafmlamfneal2341nakfva");
     navigate("/dashboard");
-  }
+  };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
       <div className="w-full max-w-md px-6">
         <div className="bg-white rounded-lg shadow-xl p-8">
-          <h2 className="text-3xl font-semibold text-center text-gray-800 mb-8 pt-5">Iniciar sesión</h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">Correo electrónico</label>
-              <input
-                id="email"
+          <h2 className="text-3xl font-semibold text-center text-gray-800 mb-8 pt-5">
+            Iniciar sesión
+          </h2>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+              <FormField
+                control={form.control}
                 name="email"
-                type="email"
-                placeholder="correo@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Correo electrónico</FormLabel>
+                    <FormControl>
+                      <Input placeholder="correo@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">Contraseña</label>
-              <input
-                id="password"
+
+              <FormField
+                control={form.control}
                 name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-md shadow-md transition"
-            >
-              Iniciar sesión
-            </button>
-            <p className="text-center text-sm text-gray-500 mt-4">
-              ¿No tenés cuenta? <a href="/register" className="underline hover:text-emerald-600">Registrate</a>
-            </p>
-          </form>
+
+              <Button type="submit" className="w-full">
+                Iniciar sesión
+              </Button>
+
+              <p className="text-center text-sm text-gray-500 mt-4">
+                ¿No tenés cuenta?{" "}
+                <a href="/register" className="underline hover:text-emerald-600">
+                  Registrate
+                </a>
+              </p>
+            </form>
+          </Form>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
