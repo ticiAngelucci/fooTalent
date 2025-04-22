@@ -1,5 +1,5 @@
 import Loader from '@/shared/components/loader/loader';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 interface Character {
     id: number;
     name: string;
