@@ -1,44 +1,28 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/404NotFound";
-import ApiPublica from "./pages/ApiPublica";
+import { Routes, Route } from "react-router-dom";
+import Register from "./modules/auth/pages/Register";
+import Login from "./modules/auth/pages/Login";
+import Dashboard from "./modules/dashboard/pages/Dashboard";
+import NotFound from "./modules/error/pages/404NotFound";
+import ApiPublica from "./modules/publicApi/pages/ApiPublica";
+import ProtectedNode from "./routes/ProtectedRoute";
+import { Route as AppRoute }  from "./shared/constants/route";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-  }, []);
-
   return (
-    <div>
+    <main>
       <Routes>
-        <Route
-          path="/register"
-          element={
-            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
-          }
-        />
+        {/* Public Routes */}
+        <Route path={AppRoute.Register} element={ <Register />} />
+        <Route path={AppRoute.Login} element={<Login />} />
+        <Route path={AppRoute.PublicApi} element={<ApiPublica />} />
+        {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
-        <Route path="/api-publica" element={<ApiPublica />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedNode />}>
+          <Route path={AppRoute.Dashboard} element={<Dashboard />} />
+        </Route>
       </Routes>
-    </div>
+    </main>
   );
 }
 
