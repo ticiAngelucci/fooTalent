@@ -1,4 +1,4 @@
-const NotFound = () => {
+const Dashboard = () => {
     return (
       <div style={{ display: "flex", height: "100vh", justifyContent: "center", alignItems: "center", flexDirection: "column",margin:"auto" }}>
         <h1>Dashboard</h1>
@@ -6,5 +6,5 @@ const NotFound = () => {
     );
   };
   
-  export default NotFound;
+  export default Dashboard;
   

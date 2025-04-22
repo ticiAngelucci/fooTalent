@@ -1,0 +1,9 @@
+# Auth Schemas
+
+This folder is intended to contain schemas for form or input validations related to authentication, such as:
+- Validation schemas for forms (Login, Register, etc.)
+- Validation rules for authentication-related UI elements
+- Any other validation logic related to authentication
+
+[PLEASE DELETE THIS TXT once the schemas are added]
+
