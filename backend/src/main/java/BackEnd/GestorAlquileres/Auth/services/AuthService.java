@@ -1,8 +1,6 @@
 package BackEnd.GestorAlquileres.Auth.services;
 
-import BackEnd.GestorAlquileres.Auth.DTOs.AuthResponse;
-import BackEnd.GestorAlquileres.Auth.DTOs.LoginRequest;
-import BackEnd.GestorAlquileres.Auth.DTOs.RegisterRequest;
+import BackEnd.GestorAlquileres.Auth.DTOs.*;
 import BackEnd.GestorAlquileres.Auth.enums.Role;
 import BackEnd.GestorAlquileres.Auth.repositories.UserRepository;
 import BackEnd.GestorAlquileres.Auth.util.UserValidation;
@@ -84,4 +82,29 @@ public class AuthService {
 
         return new AuthResponse(jwt, "Usuario autenticado exitosamente.", true);
     }
+    public AuthResponse changePassword(ChangePasswordRequest request) {
+        // Buscar al usuario por username
+        Optional<User> optionalUser = userRepository.findByUsername(request.userName());
+
+        if (optionalUser.isEmpty()) {
+            return new AuthResponse(null, "Usuario no encontrado.", false);
+        }
+
+        User user = optionalUser.get();
+
+        // Verificar que la contraseña actual sea correcta
+        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
+            return new AuthResponse(null, "Contraseña actual incorrecta.", false);
+        }
+
+        // Actualizar la contraseña
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        // Generar nuevo JWT
+        String jwt = jwtService.generateToken(user);
+
+        return new AuthResponse(jwt, "Contraseña actualizada con éxito.", true);
+    }
+
 }
