@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/404NotFound";
+import ApiPublica from "./pages/ApiPublica";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,6 +36,7 @@ function App() {
           }
         />
         <Route path="*" element={<NotFound />} />
+        <Route path="/api-publica" element={<ApiPublica />} />
       </Routes>
     </div>
   );
