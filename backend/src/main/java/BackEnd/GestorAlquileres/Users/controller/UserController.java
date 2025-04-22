@@ -1,5 +1,6 @@
 package BackEnd.GestorAlquileres.Users.controller;
 
+import BackEnd.GestorAlquileres.Users.User;
 import BackEnd.GestorAlquileres.Users.services.UserService;
 import BackEnd.GestorAlquileres.Users.DTOs.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -27,4 +28,15 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable Long id, Authentication auth) {
         return userService.getUserByIdIfAuthorized(id, auth);
     }
+    @DeleteMapping("/getUserByID/{id}")
+    public ResponseEntity<String> deleteUsuario(@PathVariable Long id) {
+        userService.deleteUsuario(id);
+        return ResponseEntity.ok("Usuario eliminado lógicamente.");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getUsuariosActivos() {
+        return ResponseEntity.ok(userService.getUsuariosActivos());
+    }
 }
+

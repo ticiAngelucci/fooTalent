@@ -7,6 +7,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -22,4 +23,9 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    private boolean isActive = true;
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 }
