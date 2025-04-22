@@ -1,7 +1,7 @@
 package BackEnd.GestorAlquileres.Auth.controller;
 
 import BackEnd.GestorAlquileres.Auth.DTOs.AuthResponse;
-import BackEnd.GestorAlquileres.Auth.DTOs.CambioContraseñaRequest;
+import BackEnd.GestorAlquileres.Auth.DTOs.ChangePasswordRequest;
 import BackEnd.GestorAlquileres.Auth.DTOs.LoginRequest;
 import BackEnd.GestorAlquileres.Auth.DTOs.RegisterRequest;
 import BackEnd.GestorAlquileres.Auth.services.AuthService;
@@ -28,12 +28,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PutMapping("/cambio_contrasena")
-    public ResponseEntity<AuthResponse> cambioContraseña(
-            @Valid @RequestBody CambioContraseñaRequest request,
+    @PutMapping("/change_password")
+    public ResponseEntity<AuthResponse> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
             Authentication authentication
     ) {
-        return ResponseEntity.ok(authService.cambioContraseña(request));
+        return ResponseEntity.ok(authService.changePassword(request));
     }
 
 }

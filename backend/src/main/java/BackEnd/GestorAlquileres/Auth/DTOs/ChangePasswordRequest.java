@@ -2,7 +2,7 @@ package BackEnd.GestorAlquileres.Auth.DTOs;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CambioContraseñaRequest(
+public record ChangePasswordRequest(
         @NotBlank
         String userName,
         @NotBlank

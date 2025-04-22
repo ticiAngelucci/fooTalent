@@ -4,13 +4,10 @@ import BackEnd.GestorAlquileres.Auth.DTOs.*;
 import BackEnd.GestorAlquileres.Auth.enums.Role;
 import BackEnd.GestorAlquileres.Auth.repositories.UserRepository;
 import BackEnd.GestorAlquileres.Auth.util.UserValidation;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import BackEnd.GestorAlquileres.Users.User;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -85,7 +82,7 @@ public class AuthService {
 
         return new AuthResponse(jwt, "Usuario autenticado exitosamente.", true);
     }
-    public AuthResponse cambioContraseña(CambioContraseñaRequest request) {
+    public AuthResponse changePassword(ChangePasswordRequest request) {
         // Buscar al usuario por username
         Optional<User> optionalUser = userRepository.findByUsername(request.userName());
 
