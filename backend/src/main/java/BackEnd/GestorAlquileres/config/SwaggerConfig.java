@@ -1,42 +1,57 @@
 package BackEnd.GestorAlquileres.config;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
-@Configuration
+import org.springframework.http.HttpHeaders;
+
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Foo Talent API",
+                description = "API para el Sistema de Administración de Alquileres ",
+                termsOfService = "www.footalent.com",
+                version = "1.0.0",
+                contact = @Contact(
+                        name = "Equipo Foo Talent",
+                        url = "https://www.footalent.com",
+                        email = "support@footalent.com"
+                ),
+                license = @License(
+                        name = "Standard Apache License Version 2.0 for Fintech",
+                        url = "https://www.apache.org/licenses/LICENSE-2.0",
+                        identifier = "Apache-2.0"
+                )
+        ),
+        servers = {
+                @Server(
+                        description = "Local Server",
+                        url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "Production Server",
+                        url = "https://foo-talent.koyeb.app"
+                )
+        },
+        security = @SecurityRequirement(
+                name = "securityToken"
+        )
+)
+@SecurityScheme(
+        name = "securityToken",
+        description = "Access Token For My API",
+        type = SecuritySchemeType.HTTP,
+        paramName = HttpHeaders.AUTHORIZATION,
+        in = SecuritySchemeIn.HEADER,
+        scheme = "bearer",
+        bearerFormat = "JWT"
+)
+
 public class SwaggerConfig {
-
-
-    @Bean
-    public GroupedOpenApi authApi() {
-        return GroupedOpenApi.builder()
-                .group("all")
-                .pathsToMatch("/api/auth/**", "/api/users/**")
-                .build();
-    }
-
-
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("API prueba")
-                        .version("1.0")
-                        .description("Documentación de endpoints seleccionados"))
-                .addSecurityItem(new SecurityRequirement().addList("BearerAuth"))
-                .components(new Components()
-                        .addSecuritySchemes("BearerAuth",
-                                new SecurityScheme()
-                                        .name("Authorization")
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")));
-
-    }
 }
