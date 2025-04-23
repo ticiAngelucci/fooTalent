@@ -49,6 +49,6 @@ jobs:
           --token ${{ secrets.KOYEB_API_TOKEN }}
         
       - name: Redeploy service on Koyeb
-        run: koyeb service redeploy beneficial-adey/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
+        run: koyeb service redeploy foo-talent/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
