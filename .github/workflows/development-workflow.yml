@@ -40,7 +40,7 @@ jobs:
 
       - name: Update service with DB environment variables
         run: |
-          koyeb service update beneficial-adey/footalent-backend \
+          koyeb service update foo-talent/footalent-backend \
           --env DB_HOST=${{ secrets.DB_HOST }} \
           --env DB_PORT=${{ secrets.DB_PORT }} \
           --env DB_NAME=${{ secrets.DB_NAME }} \
