@@ -25,6 +25,10 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
 
+        if (!request.password().equals(request.confirmPassword())) {
+            return new AuthResponse(null, "Las contraseñas no coinciden.", false);
+        }
+
         User tempUser = new User();
         tempUser.setUsername(request.username());
         tempUser.setEmail(request.email());
@@ -51,15 +55,15 @@ public class AuthService {
         // Lo guardamos en la base de datos
         userRepository.save(user);
 
-        // Generamos token JWT
-        String jwt = jwtService.generateToken(user);
+        /*// Generamos token JWT
+        String jwt = jwtService.generateToken(user);*/
 
-        return new AuthResponse(jwt, "Usuario registrado exitosamente.", true);
+        return new AuthResponse(null, "Usuario registrado exitosamente.", true);
     }
 
     public AuthResponse login(LoginRequest request) {
         // Verificar si el usuario existe antes de autenticar
-        Optional<User> optionalUser = userRepository.findByUsername(request.username());
+        Optional<User> optionalUser = userRepository.findByEmail(request.email());
         if (optionalUser.isEmpty()) {
             return new AuthResponse(null, "Usuario no encontrado.", false);
         }
@@ -67,7 +71,7 @@ public class AuthService {
             // Autenticamos con Spring Security
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.username(),
+                            request.email(),
                             request.password()
                     )
             );
@@ -76,12 +80,13 @@ public class AuthService {
             return new AuthResponse(null, "Contraseña incorrecta.", false);
         }
 
-        // Si todo está bien generamos el token JWT
+        // Si todo esta bien, generamos el JWT y lo devolvemos
         User user = optionalUser.get();
         String jwt = jwtService.generateToken(user);
 
         return new AuthResponse(jwt, "Usuario autenticado exitosamente.", true);
     }
+
     public AuthResponse changePassword(ChangePasswordRequest request) {
         // Buscar al usuario por username
         Optional<User> optionalUser = userRepository.findByUsername(request.userName());
@@ -106,5 +111,4 @@ public class AuthService {
 
         return new AuthResponse(jwt, "Contraseña actualizada con éxito.", true);
     }
-
 }
