@@ -30,8 +30,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+
+        if (!response.success()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/change_password")
