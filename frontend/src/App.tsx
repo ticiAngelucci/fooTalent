@@ -9,7 +9,6 @@ import { Route as AppRoute }  from "./shared/constants/route";
 
 
 function App() {
-  //comentario para porbar deploy
   return (
     <main>
       <Routes>
