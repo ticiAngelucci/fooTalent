@@ -23,6 +23,7 @@ export const userLogin = async (userData: Omit<UserProps, "username" |"confirmPa
   try {
     const response = await axios.post(`${API_URL}/api/auth/login`, userData);
     return response.data;
+    
   } catch (error: any) {
     // Puedes capturar y lanzar un mensaje más limpio aquí
     const errorMessage = error.response?.data?.message || error.message || "Ocurrió un error al Iniciar sesión";
