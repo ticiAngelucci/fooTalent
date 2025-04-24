@@ -10,9 +10,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../components/ui/form";
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
+} from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { adaptRegisterData } from "../adapters/authAdapters";
+import { userRegister } from "../services/authService";
+import { Route } from "@/shared/constants/route";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -27,9 +30,16 @@ const Register = () => {
     },
   });
 
-  const onSubmit = (data: RegisterFormValues) => {
-    console.log("Registrando usuario:", data);
-    navigate("/login");
+  const onSubmit = async(data: RegisterFormValues) => {
+    try {
+      const cleanData = adaptRegisterData(data);
+      const register = await userRegister(cleanData);
+      if (register.success == true){
+        navigate(Route.Login);
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (

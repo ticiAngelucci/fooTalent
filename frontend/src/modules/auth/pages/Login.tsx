@@ -10,9 +10,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../components/ui/form";
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
+} from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { userLogin } from "../services/authService";
+import { Route } from "@/shared/constants/route";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,10 +27,16 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Iniciando sesión con:", data);
-    localStorage.setItem("token", "vnajkjnaflakfkafmlamfneal2341nakfva");
-    navigate("/dashboard");
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      console.log("Iniciando sesión con:", data);
+      const login = await userLogin(data);
+      const { token } = login;
+      sessionStorage.setItem("token", token);
+      navigate(Route.Dashboard);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
