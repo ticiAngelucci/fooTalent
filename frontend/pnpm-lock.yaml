@@ -26,6 +26,9 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
+      frontend:
+        specifier: 'file:'
+        version: file:(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(lightningcss@1.29.2))
       lucide-react:
         specifier: ^0.501.0
         version: 0.501.0(react@19.1.0)
@@ -1025,6 +1028,9 @@ packages:
 
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
+
+  'frontend@file:':
+    resolution: {directory: '', type: directory}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -2416,6 +2422,27 @@ snapshots:
       mime-types: 2.1.35
 
   fraction.js@4.3.7: {}
+
+  frontend@file:(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(lightningcss@1.29.2)):
+    dependencies:
+      '@hookform/resolvers': 5.0.1(react-hook-form@7.56.1(react@19.1.0))
+      '@radix-ui/react-label': 2.1.4(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@radix-ui/react-slot': 1.2.0(@types/react@19.1.2)(react@19.1.0)
+      '@tailwindcss/vite': 4.1.4(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(lightningcss@1.29.2))
+      axios: 1.8.4
+      class-variance-authority: 0.7.1
+      lucide-react: 0.501.0(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-hook-form: 7.56.1(react@19.1.0)
+      react-router-dom: 7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      tailwind-merge: 3.2.0
+      zod: 3.24.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - debug
+      - vite
 
   fsevents@2.3.3:
     optional: true
