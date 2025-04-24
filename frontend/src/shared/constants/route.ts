@@ -4,7 +4,7 @@ enum Route {
     Login = '/login',
     Register = '/register',
     Dashboard= '/dashboard',
-    PublicApi = '/public-api'
+    PublicApi = '/public-api',
 }
 
 export {Route}

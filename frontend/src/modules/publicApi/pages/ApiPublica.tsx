@@ -38,8 +38,6 @@ const ApiPublica = () => {
         loadCharacters();
         }, [page]);
 
-
-
         if(loading){
             return <Loader/>
         }
