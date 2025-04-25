@@ -24,4 +24,11 @@ public class UserValidation {
 
         return new AuthResponse(null, "Validación exitosa", true);
     }
+
+    public AuthResponse validatePassword(String password) {
+        if (password == null || !password.matches(PASSWORD_REGEX)) {
+            return new AuthResponse(null, "La contraseña debe tener entre 8 y 16 caracteres, al menos un número, una minúscula y una mayúscula.", false);
+        }
+        return new AuthResponse(null, "Validación exitosa", true);
+    }
 }

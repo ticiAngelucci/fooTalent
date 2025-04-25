@@ -94,12 +94,23 @@ public class AuthService {
         if (optionalUser.isEmpty()) {
             return new AuthResponse(null, "Usuario no encontrado.", false);
         }
-
         User user = optionalUser.get();
 
         // Verificar que la contraseña actual sea correcta
         if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
             return new AuthResponse(null, "Contraseña actual incorrecta.", false);
+        }
+
+       // Validar formato de la nueva contraseña
+        AuthResponse passwordValidation = userValidation.validatePassword(request.newPassword());
+        if (!passwordValidation.success()) {
+            return passwordValidation;
+        }
+
+
+        // Evitar que la nueva contraseña sea igual a la anterior
+        if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+            return new AuthResponse(null, "La nueva contraseña no puede ser igual a la anterior.", false);
         }
 
         // Actualizar la contraseña
