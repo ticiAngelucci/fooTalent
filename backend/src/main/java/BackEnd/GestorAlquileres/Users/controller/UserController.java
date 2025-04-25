@@ -33,10 +33,5 @@ public class UserController {
         userService.deleteUsuario(id);
         return ResponseEntity.ok("Usuario eliminado lógicamente.");
     }
-
-    @GetMapping
-    public ResponseEntity<List<User>> getUsuariosActivos() {
-        return ResponseEntity.ok(userService.getUsuariosActivos());
-    }
 }
 

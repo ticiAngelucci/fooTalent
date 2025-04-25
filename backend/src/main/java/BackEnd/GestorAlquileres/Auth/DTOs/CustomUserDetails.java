@@ -14,10 +14,9 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
-
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override

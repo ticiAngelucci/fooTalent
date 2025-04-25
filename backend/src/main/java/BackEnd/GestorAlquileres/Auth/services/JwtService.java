@@ -15,7 +15,8 @@ public class JwtService {
 
     public String generateToken(User user) {
         return JWT.create()
-                .withSubject(user.getUsername())
+                .withSubject(user.getEmail())
+                .withClaim("id", user.getId())
                 .withClaim("role", user.getRole().name())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 86400000)) // 1 día
