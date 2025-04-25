@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ChangePasswordRequest(
         @NotBlank
-        String userName,
+        String email,
         @NotBlank
         String oldPassword,
         @NotBlank

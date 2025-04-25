@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import BackEnd.GestorAlquileres.Users.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +40,9 @@ public class AuthService {
         if (!validationResponse.success()) {
             return validationResponse;
         }
-
-        // Verificamos si el username ya existe
-        if (userRepository.existsByUsername(request.username())) {
-            return new AuthResponse(null, "El usuario ya existe.", false);
+        //verificamos si el email ya existe
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            return new AuthResponse(null, "El email ya está registrado", false);
         }
 
         // Creamos el usuario nuevo
@@ -88,8 +88,8 @@ public class AuthService {
     }
 
     public AuthResponse changePassword(ChangePasswordRequest request) {
-        // Buscar al usuario por username
-        Optional<User> optionalUser = userRepository.findByUsername(request.userName());
+
+        Optional<User> optionalUser = userRepository.findByEmail(request.email());
 
         if (optionalUser.isEmpty()) {
             return new AuthResponse(null, "Usuario no encontrado.", false);
