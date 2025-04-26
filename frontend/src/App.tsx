@@ -6,6 +6,7 @@ import NotFound from "./modules/error/pages/404NotFound";
 import ApiPublica from "./modules/publicApi/pages/ApiPublica";
 import ProtectedNode from "./routes/ProtectedRoute";
 import { Route as AppRoute }  from "./shared/constants/route";
+import GetAllUsers from "./modules/getAllUser/page/getAllUsers";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path={AppRoute.Register} element={ <Register />} />
         <Route path={AppRoute.Login} element={<Login />} />
         <Route path={AppRoute.PublicApi} element={<ApiPublica />} />
+        <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
