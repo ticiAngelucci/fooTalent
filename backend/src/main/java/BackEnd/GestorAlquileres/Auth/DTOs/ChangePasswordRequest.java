@@ -9,5 +9,4 @@ public record ChangePasswordRequest(
         String oldPassword,
         @NotBlank
         String newPassword
-) {
-}
+) {}

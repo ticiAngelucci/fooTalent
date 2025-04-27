@@ -1,19 +1,15 @@
 package BackEnd.GestorAlquileres.Auth.DTOs;
 
-import BackEnd.GestorAlquileres.Auth.repositories.UserRepository;
+
 import BackEnd.GestorAlquileres.Users.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public record CustomUserDetails(User user) implements UserDetails {
 
-    private final User user;
     @Override
     public String getUsername() {
         return user.getEmail();
@@ -34,10 +30,10 @@ public class CustomUserDetails implements UserDetails {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
-
-@Override
-public boolean isEnabled() {
-    return user.isActive();}
+    @Override
+    public boolean isEnabled() {
+        return user.isActive();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,9 +44,4 @@ public boolean isEnabled() {
     public String getPassword() {
         return user.getPassword();
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    }
+}

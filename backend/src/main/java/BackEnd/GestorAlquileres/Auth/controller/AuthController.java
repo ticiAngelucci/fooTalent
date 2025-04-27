@@ -39,35 +39,25 @@ public class AuthController {
         }
         return ResponseEntity.ok(response);
     }
-/*
+
     @PutMapping("/change_password")
     public ResponseEntity<AuthResponse> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
             Authentication authentication
     ) {
-        return ResponseEntity.ok(authService.changePassword(request));
+        AuthResponse response = authService.changePassword(request);
+
+        if (!response.success()) {
+            return switch (response.message()) {
+                case "Usuario no encontrado." ->
+                        ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                case "Contraseña actual incorrecta." ->
+                        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+                default ->
+                        ResponseEntity.badRequest().body(response);
+            };
+        }
+
+        return ResponseEntity.ok(response);
     }
-*/
-@PutMapping("/change_password")
-public ResponseEntity<AuthResponse> changePassword(
-        @Valid @RequestBody ChangePasswordRequest request,
-        Authentication authentication
-) {
-    AuthResponse response = authService.changePassword(request);
-
-    if (!response.success()) {
-        return switch (response.message()) {
-            case "Usuario no encontrado." ->
-                    ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            case "Contraseña actual incorrecta." ->
-                    ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            default ->
-                    ResponseEntity.badRequest().body(response);
-        };
-    }
-
-    return ResponseEntity.ok(response);
-}
-
-
 }
