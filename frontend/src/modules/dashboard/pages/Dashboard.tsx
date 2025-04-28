@@ -1,28 +1,14 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/ui/button";
 import { Route } from "@/shared/constants/route";
+import LogoutButton from "@/shared/components/logoutButton/logoutButton";
+import { useUserStore } from "@/store/userStore";
 
 const Dashboard = () => {
-  const [username, setUsername] = useState<string | null>(null); 
   const navigate = useNavigate();
+  const username = useUserStore((state) => state.username);
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-
-    if (token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const decodedPayload = JSON.parse(atob(base64));
-      console.log(decodedPayload);
-      setUsername(decodedPayload.sub);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    navigate("/login");
-  };
+  if(!username) return null;
 
   const handleButtonClick = () => {    
     navigate(Route.GetAllUsers);
@@ -34,9 +20,7 @@ const Dashboard = () => {
         {username && <p className="text-xl">Hola {username}!</p>}
       </div>
       <div className="absolute top-5 right-5">
-        <Button onClick={handleLogout}>
-          Cerrar sesión
-        </Button>
+        <LogoutButton/>
       </div>
 
       <h1 className="text-3xl">Dashboard</h1>

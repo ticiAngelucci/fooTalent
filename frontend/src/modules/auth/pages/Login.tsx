@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormValues } from "../schemas/login.schemas";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "@/store/userStore";
 
 import {
   Form,
@@ -19,6 +20,8 @@ import { Route } from "@/shared/constants/route";
 const Login = () => {
   const navigate = useNavigate();
 
+  const setUser = useUserStore((state) => state.setUser);
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,13 +32,26 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      console.log("Iniciando sesión con:", data);
       const login = await userLogin(data);
-      const { token } = login;
-      sessionStorage.setItem("token", token);
+      //const { token, username } = login; (tenemos que esperar el endpoint de user/me para mostrar el username en lugar de decodificarlo)
+      const { token } = login; 
+
+      if (token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedPayload = JSON.parse(atob(base64));
+        console.log(decodedPayload);
+        setUser(token, decodedPayload.sub || "Usuario");
+      }
+  
+  
       navigate(Route.Dashboard);
     } catch (error) {
-      alert(error);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Error al iniciar sesión");
+      }
     }
   };
 

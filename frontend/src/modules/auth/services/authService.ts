@@ -11,6 +11,7 @@ interface UserProps {
 export const userRegister = async (userData: UserProps) => {
   try {
     const response = await axios.post(`${API_URL}/api/auth/register`, userData);
+    console.log(response.data);
     return response.data;
   } catch (error: any) {
     // Puedes capturar y lanzar un mensaje más limpio aquí
