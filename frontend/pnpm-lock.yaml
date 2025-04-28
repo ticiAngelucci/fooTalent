@@ -2825,10 +2825,13 @@ snapshots:
       react-router-dom: 7.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge: 3.2.0
       zod: 3.24.3
+      zustand: 5.0.3(@types/react@19.1.2)(react@19.1.0)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - debug
+      - immer
+      - use-sync-external-store
       - vite
 
   fsevents@2.3.3:
