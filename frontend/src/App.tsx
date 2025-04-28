@@ -17,12 +17,12 @@ function App() {
         <Route path={AppRoute.Register} element={ <Register />} />
         <Route path={AppRoute.Login} element={<Login />} />
         <Route path={AppRoute.PublicApi} element={<ApiPublica />} />
-        <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
         <Route element={<ProtectedNode />}>
           <Route path={AppRoute.Dashboard} element={<Dashboard />} />
+          <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
         </Route>
       </Routes>
     </main>
