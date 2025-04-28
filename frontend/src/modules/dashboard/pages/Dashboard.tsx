@@ -26,11 +26,9 @@ const Dashboard = () => {
 
       <h1 className="text-3xl">Dashboard</h1>
       
-      <button >
         <Button onClick={handleButtonClick}>
           Ver todos los usuarios
         </Button>
-      </button>
     </div>
   );
 };
