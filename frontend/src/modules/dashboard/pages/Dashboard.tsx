@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/ui/button";
 import { Route } from "@/shared/constants/route";
-import LogoutButton from "@/shared/components/logoutButton/logoutButton";
+
 import { useUserStore } from "@/store/userStore";
+import LogoutButton from "@/shared/components/LogoutButton/LogoutButton";
 
 const Dashboard = () => {
   const navigate = useNavigate();
