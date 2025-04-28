@@ -3,7 +3,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Route } from "@/shared/constants/route";
 
 import { useUserStore } from "@/store/userStore";
-import LogoutButton from "@/shared/components/LogoutButton/LogoutButton";
+import LogoutButton from "@/shared/components/logoutButton/LogoutButton";
 
 const Dashboard = () => {
   const navigate = useNavigate();
