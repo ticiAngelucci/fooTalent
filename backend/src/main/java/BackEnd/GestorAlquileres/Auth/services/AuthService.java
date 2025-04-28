@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import BackEnd.GestorAlquileres.Users.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,12 +50,7 @@ public class AuthService {
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password())); // Hash del password
         user.setRole(Role.USER); // Por defecto le damos rol USER
-
-        // Lo guardamos en la base de datos
         userRepository.save(user);
-
-        /*// Generamos token JWT
-        String jwt = jwtService.generateToken(user);*/
 
         return new AuthResponse(null, "Usuario registrado exitosamente.", true);
     }
@@ -106,7 +100,6 @@ public class AuthService {
         if (!passwordValidation.success()) {
             return passwordValidation;
         }
-
 
         // Evitar que la nueva contraseña sea igual a la anterior
         if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
