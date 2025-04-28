@@ -11,6 +11,9 @@ import {
     TableRow,
 } from "@/shared/components/ui/table";
 import { Button } from '@/shared/components/ui/button';
+import AddNewUser from '../components/AddNewUser';
+import DeleteUser from '../components/DeleteUser';
+import EditUser from '../components/EditUser';
 
 interface Character {
     id: number;
@@ -66,8 +69,12 @@ const GetAllUsers = () => {
         setCurrentPage(prev => prev + 1);
     };
 
-    if (loading && allUsers.length === 0) {
+
+    if (loading) {
         return <Loader />;
+    }
+    if(!loading && allUsers.length <= 0){
+        return <h1 className='place-self-center'>Aún no hay registros disponibles, nuevamente más tarde.</h1>
     }
 
     return (
@@ -101,10 +108,17 @@ const GetAllUsers = () => {
                                 <TableCell className="font-medium">{user.id}</TableCell>
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>{user.email}</TableCell>
+                                <TableCell>
+                                    <EditUser id={user.id} role={user.role} email={user.email} />
+                                   <DeleteUser id={user.id} />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+                <Button>
+                    <AddNewUser />
+                </Button>
             </div>
             
             {hasMore && (
