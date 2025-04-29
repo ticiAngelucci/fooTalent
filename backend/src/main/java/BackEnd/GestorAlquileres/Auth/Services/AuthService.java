@@ -72,7 +72,7 @@ public class AuthService {
         userRepository.save(user);
 
         // Enviar email de verificación
-        String link = "http://localhost:8080/api/auth/verify?token=" + verificationToken;
+        String link = "https://foo-talent.koyeb.app/api/auth/verify?token=" + verificationToken;
         emailService.sendEmail(user.getEmail(), "Verifica tu cuenta",
                 "<p>Hola " + user.getUsername() + ",</p>" +
                         "<p>Gracias por registrarte en Rentary. Por favor, haz clic en el siguiente enlace para activar tu cuenta:</p>" +
@@ -158,7 +158,7 @@ public class AuthService {
         verificationToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         verificationTokenRepository.save(verificationToken);
 
-        String link = "http://localhost:8080/api/auth/reset_password?token=" + token;
+        String link = "https://foo-talent.koyeb.app/api/auth/reset_password?token=" + token;
         emailService.sendEmail(user.getEmail(), "Recuperar contraseña",
                 "<p>Hola " + user.getUsername() + ",</p>" +
                         "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>" +
