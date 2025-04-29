@@ -1,16 +1,19 @@
 package BackEnd.GestorAlquileres.Auth.Controller;
 
-import BackEnd.GestorAlquileres.Auth.DTOs.AuthResponse;
-import BackEnd.GestorAlquileres.Auth.DTOs.ChangePasswordRequest;
-import BackEnd.GestorAlquileres.Auth.DTOs.LoginRequest;
-import BackEnd.GestorAlquileres.Auth.DTOs.RegisterRequest;
+import BackEnd.GestorAlquileres.Auth.DTOs.*;
 import BackEnd.GestorAlquileres.Auth.Services.AuthService;
+import BackEnd.GestorAlquileres.Auth.Util.VerificationTokenRepository;
+import BackEnd.GestorAlquileres.Users.Entities.User;
+import BackEnd.GestorAlquileres.Users.Repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.Date;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,10 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        System.out.println("Username recibido: '" + request.username() + "'");
+        System.out.println("Nombre completo recibido: '" + request.firstName() + " " + request.lastName() + "'");
         AuthResponse response = authService.register(request);
 
         if (!response.success()) {
@@ -49,15 +54,56 @@ public class AuthController {
 
         if (!response.success()) {
             return switch (response.message()) {
-                case "Usuario no encontrado." ->
-                        ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-                case "Contraseña actual incorrecta." ->
-                        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-                default ->
-                        ResponseEntity.badRequest().body(response);
+                case "Usuario no encontrado." -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                case "Contraseña actual incorrecta." -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+                default -> ResponseEntity.badRequest().body(response);
             };
         }
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/verifyToken")
+    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
+        Optional<User> optionalUser = userRepository.findByVerificationToken(token);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("El enlace de verificación no es válido o ya fue utilizado.");
+        }
+
+        User user = optionalUser.get();
+
+        if (user.getVerificationTokenExpiration() == null || user.getVerificationTokenExpiration().before(new Date())) {
+            return ResponseEntity.badRequest().body("El enlace de verificación ha expirado. Solicita uno nuevo.");
+        }
+
+        if (user.getIsActive()) {
+            return ResponseEntity.badRequest().body("La cuenta ya está verificada.");
+        }
+
+        user.setIsActive(true);
+        user.setVerificationToken(null);
+        user.setVerificationTokenExpiration(null);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("¡Tu cuenta fue verificada exitosamente! Ahora puedes iniciar sesión.");
+    }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        String response = authService.forgotPassword(request.email());
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/reset_password")
+    public ResponseEntity<AuthResponse> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        AuthResponse response = authService.resetPassword(request);
+
+        if (!response.success()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
 }
