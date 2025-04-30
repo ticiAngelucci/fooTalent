@@ -7,6 +7,7 @@ import BackEnd.GestorAlquileres.Auth.Util.VerificationTokenRepository;
 import BackEnd.GestorAlquileres.Users.Repositories.UserRepository;
 import BackEnd.GestorAlquileres.Auth.Util.UserValidation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import BackEnd.GestorAlquileres.Users.Entities.User;
@@ -29,6 +30,9 @@ public class AuthService {
     private final UserValidation userValidation;
     private final EmailService emailService;
     private final VerificationTokenRepository verificationTokenRepository;
+
+    @Value("${base-url}")
+    private String baseUrl;
 
     public AuthResponse register(RegisterRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
@@ -72,7 +76,7 @@ public class AuthService {
         userRepository.save(user);
 
         // Enviar email de verificación
-        String link = "https://foo-talent.koyeb.app/api/auth/verify?token=" + verificationToken;
+        String link = baseUrl + "/api/auth/verify?token=" + verificationToken;
         emailService.sendEmail(user.getEmail(), "Verifica tu cuenta",
                 "<p>Hola " + user.getUsername() + ",</p>" +
                         "<p>Gracias por registrarte en Rentary. Por favor, haz clic en el siguiente enlace para activar tu cuenta:</p>" +
@@ -108,7 +112,7 @@ public class AuthService {
 
         return new AuthResponse(jwt, "Usuario autenticado exitosamente.", true);
     }
-
+    
     public AuthResponse changePassword(ChangePasswordRequest request) {
 
         Optional<User> optionalUser = userRepository.findByEmail(request.email());
@@ -158,7 +162,7 @@ public class AuthService {
         verificationToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         verificationTokenRepository.save(verificationToken);
 
-        String link = "https://foo-talent.koyeb.app/api/auth/reset_password?token=" + token;
+        String link = baseUrl + "/api/auth/reset_password?token=" + token;
         emailService.sendEmail(user.getEmail(), "Recuperar contraseña",
                 "<p>Hola " + user.getUsername() + ",</p>" +
                         "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>" +
