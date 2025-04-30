@@ -1,7 +1,7 @@
 package BackEnd.GestorAlquileres.Auth.DTOs;
 
 
-import BackEnd.GestorAlquileres.Users.User;
+import BackEnd.GestorAlquileres.Users.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,7 +32,7 @@ public record CustomUserDetails(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return user.getIsActive();
     }
 
     @Override

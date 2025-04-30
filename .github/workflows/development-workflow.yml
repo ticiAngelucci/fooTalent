@@ -46,6 +46,9 @@ jobs:
           --env DB_NAME=${{ secrets.DB_NAME }} \
           --env DB_USER=${{ secrets.DB_USER }} \
           --env DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          --env BASE_URL=${{ secrets.BASE_URL }} \
+          --env EMAIL=${{ secrets.EMAIL }} \
+          --env PASSWORD_EMAIL=${{ secrets.PASSWORD_EMAIL }} \
           --token ${{ secrets.KOYEB_API_TOKEN }}
         
       - name: Redeploy service on Koyeb
