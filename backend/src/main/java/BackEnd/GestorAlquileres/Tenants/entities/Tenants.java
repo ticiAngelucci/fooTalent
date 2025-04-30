@@ -1,23 +1,20 @@
 package BackEnd.GestorAlquileres.Tenants.entities;
 
+import BackEnd.GestorAlquileres.Common.Person;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tenants {
+public class Tenants extends Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "first_name")
-    private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "phone")
-    private String phone;
+    private String warranty;
+    @Column(name = "attached_document")
+    private String attachedDocument;
 }
