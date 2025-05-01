@@ -6,7 +6,12 @@ export const registerSchema = z
       .string()
       .min(3, "El nombre debe tener al menos 3 caracteres")
       .regex(/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/, "El nombre solo puede contener letras y espacios"),
-    
+
+    lastname: z
+    .string()
+    .min(3, "El apellido debe tener al menos 3 caracteres")
+    .regex(/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/, "El apellido solo puede contener letras"),
+
     email: z
       .string()
       .email("Correo inválido"),

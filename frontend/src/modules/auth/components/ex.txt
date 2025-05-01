@@ -1,8 +1,0 @@
-# Auth Module Components
-
-This folder is intended to contain modular components related to authentication, such as:
-- Forms (Login, Register, etc.)
-- Buttons or other UI elements specific to authentication
-- Any other auth-related components
-
-[PLEASE DELETE THIS TXT once the components are added]
