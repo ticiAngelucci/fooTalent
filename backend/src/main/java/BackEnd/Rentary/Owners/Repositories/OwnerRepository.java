@@ -1,6 +1,6 @@
-package BackEnd.GestorAlquileres.Owners.Repositories;
+package BackEnd.Rentary.Owners.Repositories;
 
-import BackEnd.GestorAlquileres.Owners.Entities.Owner;
+import BackEnd.Rentary.Owners.Entities.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

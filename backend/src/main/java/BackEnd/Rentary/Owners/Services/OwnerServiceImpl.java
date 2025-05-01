@@ -1,8 +1,8 @@
-package BackEnd.GestorAlquileres.Owners.Services;
+package BackEnd.Rentary.Owners.Services;
 
-import BackEnd.GestorAlquileres.Owners.DTOs.OwnerDto;
-import BackEnd.GestorAlquileres.Owners.Entities.Owner;
-import BackEnd.GestorAlquileres.Owners.Repositories.OwnerRepository;
+import BackEnd.Rentary.Owners.DTOs.OwnerDto;
+import BackEnd.Rentary.Owners.Entities.Owner;
+import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -11,7 +11,7 @@
 	<groupId>Footalent</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>GestorAlquileres</name>
+	<name>Rentary</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

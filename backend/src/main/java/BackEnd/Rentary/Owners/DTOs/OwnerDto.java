@@ -1,8 +1,8 @@
-package BackEnd.GestorAlquileres.Owners.DTOs;
+package BackEnd.Rentary.Owners.DTOs;
 
 
-import BackEnd.GestorAlquileres.Common.Address;
-import BackEnd.GestorAlquileres.Propertys.Entities.Property;
+import BackEnd.Rentary.Common.Address;
+import BackEnd.Rentary.Propertys.Entities.Property;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

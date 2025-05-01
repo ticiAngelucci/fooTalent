@@ -1,7 +1,7 @@
-package BackEnd.GestorAlquileres.Owners.Controller;
+package BackEnd.Rentary.Owners.Controller;
 
-import BackEnd.GestorAlquileres.Owners.DTOs.OwnerDto;
-import BackEnd.GestorAlquileres.Owners.Services.OwnerServiceImpl;
+import BackEnd.Rentary.Owners.DTOs.OwnerDto;
+import BackEnd.Rentary.Owners.Services.OwnerServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
