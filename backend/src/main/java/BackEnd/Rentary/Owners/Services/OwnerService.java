@@ -1,7 +1,6 @@
-package BackEnd.GestorAlquileres.Owners.Services;
+package BackEnd.Rentary.Owners.Services;
 
-import BackEnd.GestorAlquileres.Owners.DTOs.OwnerDto;
-import BackEnd.GestorAlquileres.Owners.Entities.Owner;
+import BackEnd.Rentary.Owners.DTOs.OwnerDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
