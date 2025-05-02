@@ -2,9 +2,9 @@ import { Button } from "@/shared/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 
 export function GoogleLoginButton() {
+  
   const handleGoogleLogin = () => {
-    // Acá va el link de redirección a Google
-    //window.location.href = "redireccion a google"
+    window.location.href = `https://foo-talent.vercel.app/oauth2/authorization/google`;
   };
 
   return (
