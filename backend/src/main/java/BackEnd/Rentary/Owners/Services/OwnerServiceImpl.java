@@ -74,7 +74,7 @@ public class OwnerServiceImpl implements OwnerService{
             optionalOwner.get().setLastName(owner.getLastName());
             optionalOwner.get().setEmail(owner.getEmail());
             optionalOwner.get().setPhone(owner.getPhone());
-            optionalOwner.get().setProperty(ownerDto.getProperty());
+            // optionalOwner.get().setProperty(ownerDto.getProperty());
 
 
             return ResponseEntity.ok().body(optionalOwner);
