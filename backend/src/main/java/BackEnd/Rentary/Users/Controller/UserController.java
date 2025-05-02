@@ -1,7 +1,6 @@
 package BackEnd.Rentary.Users.Controller;
 
 import BackEnd.Rentary.Users.Entities.User;
-import BackEnd.Rentary.Users.Services.CsvUserLoader;
 import BackEnd.Rentary.Users.Services.UserService;
 import BackEnd.Rentary.Users.DTOs.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final CsvUserLoader csvUserLoader;
 
     @GetMapping("/getAllUsers")
     @PreAuthorize("hasRole('user')")
@@ -39,14 +36,6 @@ public class UserController {
     public ResponseEntity<String> deleteUsuario(@PathVariable Long id) {
         userService.deleteUsuario(id);
         return ResponseEntity.ok("Usuario eliminado lógicamente.");
-    }
-
-    @PostMapping("/upload-csv")
-    public List<User> uploadCSV(@RequestParam("file") MultipartFile file) throws Exception {
-        if (!file.isEmpty()) {
-            return csvUserLoader.loadUsersFromCsv(file.getInputStream());
-        }
-        throw new RuntimeException("Error al leer el archivo");
     }
 
     @GetMapping("/active")
