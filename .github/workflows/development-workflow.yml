@@ -1,15 +1,14 @@
-name: Deploy Backend
+name: Build and Deploy Backend
 
 on:
   pull_request:
-    types:
-      - closed
-    branches:
-      - dev-backend
+    types: [closed]
+    branches: [dev-backend]
 
 jobs:
-  build-and-deploy:
+  build:
     if: github.event.pull_request.merged == true
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +23,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push Docker image
+      - name: Build and push image
         uses: docker/build-push-action@v4
         with:
           context: ./backend
@@ -33,25 +32,28 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/footalent-backend:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/footalent-backend:buildcache,mode=max
 
-      - name: Install Koyeb CLI
-        run: |
-          curl -sSL https://koyeb.com/install.sh | sh
-          echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH
+  deploy:
+    if: github.event.pull_request.merged == true
+    name: Deploy to Koyeb
+    needs: build
+    runs-on: ubuntu-latest
+    environment: development
 
-      - name: Update service with DB environment variables
-        run: |
-          koyeb service update foo-talent/footalent-backend \
-          --env DB_HOST=${{ secrets.DB_HOST }} \
-          --env DB_PORT=${{ secrets.DB_PORT }} \
-          --env DB_NAME=${{ secrets.DB_NAME }} \
-          --env DB_USER=${{ secrets.DB_USER }} \
-          --env DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-          --env BASE_URL=${{ secrets.BASE_URL }} \
-          --env EMAIL=${{ secrets.EMAIL }} \
-          --env PASSWORD_EMAIL=${{ secrets.PASSWORD_EMAIL }} \
-          --token ${{ secrets.KOYEB_API_TOKEN }}
-        
-      - name: Redeploy service on Koyeb
-        run: koyeb service redeploy foo-talent/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
-        env:
-          KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy via Koyeb Action
+        uses: koyeb/koyeb-action@v1
+        with:
+          token: ${{ secrets.KOYEB_API_TOKEN }}
+          args: |
+            service update foo-talent/footalent-backend \
+              --env DB_HOST=${{ secrets.DB_HOST }} \
+              --env DB_PORT=${{ secrets.DB_PORT }} \
+              --env DB_NAME=${{ secrets.DB_NAME }} \
+              --env DB_USER=${{ secrets.DB_USER }} \
+              --env DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              --env BASE_URL=${{ secrets.BASE_URL }} \
+              --env EMAIL=${{ secrets.EMAIL }} \
+              --env PASSWORD_EMAIL=${{ secrets.PASSWORD_EMAIL }} && \
+            service redeploy foo-talent/footalent-backend
