@@ -40,6 +40,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         user.setIsActive(true);
 
         // Redirigir al frontend con el token JWT como parámetro o header
+        //la url es de prueba, luego se la cambia
         String redirectUrl ="http://localhost:8080/Oauth/login-success";/*"http://localhost:3000/oauth2/redirect?token=" + jwt; // Ajusta tu frontend*/
         System.out.println(jwt);
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
