@@ -57,4 +57,3 @@ jobs:
               --env EMAIL=${{ secrets.EMAIL }} \
               --env PASSWORD_EMAIL=${{ secrets.PASSWORD_EMAIL }} && \
             service redeploy foo-talent/footalent-backend
-            
