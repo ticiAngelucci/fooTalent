@@ -14,14 +14,14 @@ import org.springframework.http.HttpHeaders;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Foo Talent API",
+                title = "Rentary API",
                 description = "API para el Sistema de Administración de Alquileres ",
                 termsOfService = "www.footalent.com",
                 version = "1.0.0",
                 contact = @Contact(
-                        name = "Equipo Foo Talent",
-                        url = "https://www.footalent.com",
-                        email = "support@footalent.com"
+                        name = "Rentary",
+                        url = "rentaryappweb@gmail.com",
+                        email = "rentaryappweb@gmail.com"
                 ),
                 license = @License(
                         name = "Standard Apache License Version 2.0 for Fintech",
