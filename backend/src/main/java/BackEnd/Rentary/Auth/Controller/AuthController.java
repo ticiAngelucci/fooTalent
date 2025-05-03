@@ -5,12 +5,16 @@ import BackEnd.Rentary.Auth.Services.AuthService;
 import BackEnd.Rentary.Auth.Util.VerificationTokenRepository;
 import BackEnd.Rentary.Users.Entities.User;
 import BackEnd.Rentary.Users.Repositories.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,6 +27,8 @@ public class AuthController {
     private final AuthService authService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;
+    @Value("${URL_FRONT}")
+    private String frontUrl;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
@@ -64,30 +70,45 @@ public class AuthController {
     }
 
     @GetMapping("/verifyToken")
-    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
+    public void verifyAccount(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
+        // Validar que el token no sea nulo o vacío
+        if (token == null || token.isEmpty()) {
+            response.sendRedirect(frontUrl + "/login?verified=invalid");
+            return;
+        }
+
+        // Buscar al usuario por el token
         Optional<User> optionalUser = userRepository.findByVerificationToken(token);
 
         if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("El enlace de verificación no es válido o ya fue utilizado.");
+            response.sendRedirect(frontUrl + "/login?verified=invalid");
+            return;
         }
 
         User user = optionalUser.get();
 
+        // Verificar si el token ha expirado
         if (user.getVerificationTokenExpiration() == null || user.getVerificationTokenExpiration().before(new Date())) {
-            return ResponseEntity.badRequest().body("El enlace de verificación ha expirado. Solicita uno nuevo.");
+            response.sendRedirect(frontUrl + "/login?verified=expired");
+            return;
         }
 
+        // Verificar si el usuario ya está activo
         if (user.getIsActive()) {
-            return ResponseEntity.badRequest().body("La cuenta ya está verificada.");
+            response.sendRedirect(frontUrl + "/login?verified=already");
+            return;
         }
 
+        // Activar el usuario
         user.setIsActive(true);
         user.setVerificationToken(null);
         user.setVerificationTokenExpiration(null);
         userRepository.save(user);
 
-        return ResponseEntity.ok("¡Tu cuenta fue verificada exitosamente! Ahora puedes iniciar sesión.");
+        // Redirigir al login con mensaje de éxito
+        response.sendRedirect(frontUrl + "/login?verified=success");
     }
+
 
     @PostMapping("/forgot_password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {

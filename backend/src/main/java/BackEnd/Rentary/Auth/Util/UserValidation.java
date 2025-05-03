@@ -31,4 +31,19 @@ public class UserValidation {
         }
         return new AuthResponse(null, "Validación exitosa", true);
     }
+    public AuthResponse validateName(String name, String campo) {
+        if (name == null || name.trim().isEmpty()) {
+            return new AuthResponse(null, campo + " no puede estar vacío.", false);
+        }
+
+        if (name.length() < 2 || name.length() > 50) {
+            return new AuthResponse(null, campo + " debe tener entre 2 y 50 caracteres.", false);
+        }
+
+        if (!name.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+            return new AuthResponse(null, campo + " solo puede contener letras y espacios.", false);
+        }
+
+        return new AuthResponse(null, "Validación exitosa", true);
+    }
 }
