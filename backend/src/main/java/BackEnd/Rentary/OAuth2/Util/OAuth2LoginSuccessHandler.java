@@ -6,6 +6,7 @@ import BackEnd.Rentary.Users.Entities.User;
 import BackEnd.Rentary.Users.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +19,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final UserService userService;
     private final JwtService jwtService;
+
+    @Value("${URL_FRONT}")
+    private String frontUrl;
 
     public OAuth2LoginSuccessHandler(UserService userService, JwtService jwtService) {
         this.userService = userService;
@@ -39,9 +43,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         user.setRole(Role.USER);
         user.setIsActive(true);
 
+
         // Redirigir al frontend con el token JWT como parámetro o header
-        //la url es de prueba, luego se la cambia
-        String redirectUrl ="http://localhost:8080/Oauth/login-success";/*"http://localhost:3000/oauth2/redirect?token=" + jwt; // Ajusta tu frontend*/
+        //url de prueba, una vez testeado, se borra "http://localhost:5500/success.html?token=" + jwt;/*"http://localhost:8080/Oauth/login-success"
+        String redirectUrl = frontUrl + "/oauth2/redirect?token=" + jwt;
+        /*lo dejo en caso de falla se prueba, una vez testeado se lo borra*/
         System.out.println(jwt);
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }

@@ -1,7 +1,9 @@
 package BackEnd.Rentary.Users.Services;
 
+import BackEnd.Rentary.Auth.DTOs.AuthResponse;
 import BackEnd.Rentary.Auth.DTOs.CustomUserDetails;
 import BackEnd.Rentary.Auth.Enums.Role;
+import BackEnd.Rentary.Auth.Util.UserValidation;
 import BackEnd.Rentary.Users.Repositories.UserRepository;
 import BackEnd.Rentary.Users.DTOs.UserDTO;
 import BackEnd.Rentary.Users.Entities.User;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final UserValidation userValidation;
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
@@ -58,7 +62,7 @@ public class UserService {
     }
 
     // Entity to DTO
-    private UserDTO convertToDto(User user) {
+    public UserDTO convertToDto(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -83,4 +87,42 @@ public class UserService {
                     return userRepository.save(user);
                 });
     }
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
     }
+    public void updateUserProfile(String email, UserDTO updatedUserDTO) {
+        User existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+
+        boolean isModified = false;
+
+        // Validar y actualizar firstName
+        if (updatedUserDTO.getFirstName() != null && !updatedUserDTO.getFirstName().equals(existingUser.getFirstName())) {
+            AuthResponse firstNameValidation = userValidation.validateName(updatedUserDTO.getFirstName(), "Nombre");
+            if (!firstNameValidation.success()) {
+                throw new IllegalArgumentException(firstNameValidation.message());
+            }
+            existingUser.setFirstName(updatedUserDTO.getFirstName());
+            isModified = true;
+        }
+
+        // Validar y actualizar lastName
+        if (updatedUserDTO.getLastName() != null && !updatedUserDTO.getLastName().equals(existingUser.getLastName())) {
+            AuthResponse lastNameValidation = userValidation.validateName(updatedUserDTO.getLastName(), "Apellido");
+            if (!lastNameValidation.success()) {
+                throw new IllegalArgumentException(lastNameValidation.message());
+            }
+            existingUser.setLastName(updatedUserDTO.getLastName());
+            isModified = true;
+        }
+
+        if (isModified) {
+            userRepository.save(existingUser);
+        } else {
+            throw new IllegalArgumentException("No se detectaron cambios para actualizar.");
+        }
+    }
+
+}
+
