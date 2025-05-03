@@ -1,1 +1,0 @@
-No need to use style into this modular structure, please delete when applied tailwind styling

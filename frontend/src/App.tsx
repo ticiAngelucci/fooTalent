@@ -8,6 +8,7 @@ import { Route as AppRoute } from "./shared/constants/route";
 import GetAllUsers from "./modules/getAllUser/page/getAllUsers";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import SemiPublicRoute from "./routes/SemiPublicRoute";
+import OauthRedirect from "./modules/auth/pages/OAuthRedirect";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route element={<SemiPublicRoute />}>
           <Route path={AppRoute.Register} element={<Register />} />
           <Route path={AppRoute.Login} element={<Login />} />
+          <Route path={AppRoute.Google} element={<OauthRedirect />} />
         </Route>
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />

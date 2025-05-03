@@ -1,127 +1,44 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, RegisterFormValues } from "../schemas/register.schema";
-import { useNavigate } from "react-router-dom";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/shared/components/ui/form";
-import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
-import { adaptRegisterData } from "../adapters/authAdapters";
-import { userRegister } from "../services/authService";
-import { Route } from "@/shared/constants/route";
+import { GoogleLoginButton } from "../components/GoogleLoginButton";
+import RegisterForm from "../components/RegisterForm";
+import registerBackground from "../assets/registerBackground.webp"
 
 const Register = () => {
-  const navigate = useNavigate();
 
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  const onSubmit = async(data: RegisterFormValues) => {
-    try {
-      const cleanData = adaptRegisterData(data);
-      const register = await userRegister(cleanData);
-      if (register.success == true){
-        navigate(Route.Login);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
-
+  
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
-      <div className="w-full max-w-md px-6">
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <h2 className="text-3xl font-semibold text-center text-gray-800 mb-8 pt-5">
+    <div className="flex">
+      <section
+        className="w-3/4 h-screen bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${registerBackground})` }}
+      />
+      <section className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
+        <a href="/login" className="absolute top-10 right-20 text-[#1E40AF] underline">
+          Iniciar sesión
+        </a>
+        <div className="w-full max-w-md px-6">
+          <h2 className="text-2xl text-black mb-2 pt-5 cursor-default">
             Crear cuenta
           </h2>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Juan Pérez" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="correo@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contraseña</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar contraseña</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Registrarse
-              </Button>
-
-              <p className="text-center text-sm text-gray-500 mt-4">
-                ¿Ya tenés cuenta?{" "}
-                <a href="/login" className="underline hover:text-emerald-600">
-                  Iniciá sesión
-                </a>
-              </p>
-            </form>
-          </Form>
+          <p className="text-gray-500 text-sm mb-6 cursor-default">
+            Ingresa tus datos para crear una cuenta
+          </p>
+          <RegisterForm/>
+          <div className="flex items-center gap-4 my-4">
+            <div className="flex-grow h-px bg-gray-300 cursor-default"></div>
+            <span className="text-sm text-gray-500 cursor-default">
+              Continuar con
+            </span>
+            <div className="flex-grow h-px bg-gray-300 cursor-default"></div>
+          </div>
+          <GoogleLoginButton />
+          <div className="flex justify-center mt-4">
+            <p className="text-center mt-4 text-xs text-gray-500 cursor-default">
+              Al hacer clic en continuar, acepta nuestros Términos de servicio y
+              Política de privacidad.
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

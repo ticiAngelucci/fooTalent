@@ -38,7 +38,7 @@ export function AppSidebar() {
         collapsed ? "w-[80px]" : "w-[200px]"
       } transition-all duration-300 flex flex-col justify-between pt-[40px] bg-black`}
     >
-      <SidebarContent>
+      <SidebarContent className="bg-black">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenuButton className="flex items-center justify-center w-full h-10 bg-zinc-900 text-white rounded-md mx-auto">
