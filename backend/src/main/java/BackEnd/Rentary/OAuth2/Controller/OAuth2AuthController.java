@@ -37,9 +37,5 @@ public class OAuth2AuthController {
         // Devolver la respuesta con el token
         return new AuthResponse(token, "Inicio de sesión con Google exitoso", true);
     }
-    //para prueba local, despues se borra
-    @GetMapping("/login-success")
-    public String loginSuccessMessage() {
-        return "Inicio de sesión exitoso (prueba local)";
-    }
+
 }
