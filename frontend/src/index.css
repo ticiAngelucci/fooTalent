@@ -1,5 +1,4 @@
 @import "tailwindcss";
-<<<<<<< HEAD
 
 @custom-variant dark (&:is(.dark *));
 
@@ -100,9 +99,6 @@ button:focus-visible {
   }
 }
 
-=======
-@import "@fontsource/raleway/index.css" @custom-variant dark (&: is(.dark *));
->>>>>>> 79a643512bb78dea5ce06971d6bbf4b037bc9093
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
