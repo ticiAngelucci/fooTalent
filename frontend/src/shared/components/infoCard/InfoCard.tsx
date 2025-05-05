@@ -1,5 +1,17 @@
 import { Button } from "@/shared/components/ui/button";
-const InfoCard = ({ title, subtitle, type, items }) => {
+interface Props {
+    title: string;
+    subtitle:string;
+    type:string;
+    items: Array<{
+        image: string;
+        type: string;
+        status: string;
+        location: string;
+        name: string;
+      }>;      
+}
+const InfoCard = ({ title, subtitle, type, items }:Props) => {
     return (
         <div className="g-white flex flex-col justify-between rounded-lg shadow-none p-4 space-y-4 border border-zinc-200">
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
