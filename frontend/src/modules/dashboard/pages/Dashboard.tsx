@@ -1,9 +1,9 @@
 import { useUserStore } from "@/store/userStore";
 import LogoutButton from "@/shared/components/logoutButton/LogoutButton";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
-import InfoCard from "@/shared/components/infoCard/InfoCard";
 import { SidebarProvider } from "@/shared/components/ui/sidebar";
 import { AppSidebar } from "@/shared/components/sidebar/app-sidebar";
+import InfoCard from "@/shared/components/infoCard/InfoCard";
 
 const summary = [
   { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
@@ -16,27 +16,45 @@ const properties = [
     type: "Casa",
     location: "San Andrés #4613",
     status: "Disponible",
-    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FzYSUyMG1vZGVybmF8ZW58MHx8MHx8fDA%3D",
+    image: "https://example.com/casa.jpg",
+    name: "Casa Moderna"
   },
   {
     type: "Depto",
     location: "San Andrés #4613",
     status: "Disponible",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROM_tkr50bz0XK-3ZPQKiyW7gNj6HLuyhWrw&s",
+    image: "https://example.com/depto.jpg",
+    name: "Depto Familiar"
   },
 ];
 
 const contracts = [
-  { name: "Maria García", location: "San Andrés #4613" },
-  { name: "Juan Perez", location: "San Andrés #4613" },
-  { name: "José Rodríguez", location: "San Ignacio #4614" },
+  {
+    name: "Maria García",
+    location: "San Andrés #4613",
+    image: "https://example.com/avatar1.jpg",
+    type: "Contrato",
+    status: "Vigente"
+  },
+  {
+    name: "Juan Perez",
+    location: "San Andrés #4613",
+    image: "https://example.com/avatar2.jpg",
+    type: "Contrato",
+    status: "Vigente"
+  },
 ];
 
 const contacts = [
-  { type: "Casa", location: "San Andrés #4613" },
-  { type: "Casa", location: "San Andrés #4613" },
-  { type: "Casa", location: "San Andrés #4613" },
+  {
+    name: "Carlos Pérez",
+    location: "San Andrés #4613",
+    type: "Inquilino",
+    image: "https://example.com/avatar3.jpg",
+    status: "Activo"
+  },
 ];
+
 const infoSections = [
   {
     type: "property",
@@ -59,7 +77,6 @@ const infoSections = [
 ];
 const Dashboard = () => {
   const username = useUserStore((state) => state.username);
-
   if (!username) return null;
 
   return (
