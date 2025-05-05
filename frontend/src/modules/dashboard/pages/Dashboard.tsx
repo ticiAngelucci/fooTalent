@@ -2,6 +2,8 @@ import { useUserStore } from "@/store/userStore";
 import LogoutButton from "@/shared/components/logoutButton/LogoutButton";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
+import { SidebarProvider } from "@/shared/components/ui/sidebar";
+import { AppSidebar } from "@/shared/components/sidebar/app-sidebar";
 
 const summary = [
   { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
@@ -39,19 +41,19 @@ const infoSections = [
   {
     type: "property",
     title: "Inmuebles",
-    subtitle:"Listado de inmuebles",
+    subtitle: "Listado de inmuebles",
     items: properties,
   },
   {
     type: "contract",
     title: "Contratos",
-    subtitle:"Contratos vigentes",
+    subtitle: "Contratos vigentes",
     items: contracts,
   },
   {
     type: "contact",
     title: "Contactos",
-    subtitle:"Listado de contratos",
+    subtitle: "Listado de contratos",
     items: contacts,
   },
 ];
@@ -61,34 +63,37 @@ const Dashboard = () => {
   if (!username) return null;
 
   return (
-    <div className="flex flex-col justify-center items-center ">
-      <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
-        <LogoutButton />
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="flex flex-col justify-center items-center ">
+        <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
+          <LogoutButton />
+        </div>
+        <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
+          <h1 className="text-2xl font-thin">¡Bienvenido, {username}!</h1>
+          <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10">
+            {summary.map((item, idx) => (
+              <SummaryCard key={idx} {...item} />
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+            {infoSections.map((section, idx) => (
+              <InfoCard
+                key={idx}
+                type={section.type}
+                subtitle={section.subtitle}
+                title={section.title}
+                items={section.items}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
-      <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
-  <h1 className="text-2xl font-thin">¡Bienvenido, {username}!</h1>
-  <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
-
-  <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10"> 
-    {summary.map((item, idx) => (
-      <SummaryCard key={idx} {...item} />
-    ))}
-  </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-    {infoSections.map((section, idx) => (
-      <InfoCard
-        key={idx}
-        type={section.type}
-        subtitle={section.subtitle}
-        title={section.title}
-        items={section.items}
-      />
-    ))}
-  </div>
-</div>
-
-    </div>
+    </SidebarProvider>
   );
 };
 
