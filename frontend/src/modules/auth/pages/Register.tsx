@@ -1,21 +1,25 @@
 import { GoogleLoginButton } from "../components/GoogleLoginButton";
 import RegisterForm from "../components/RegisterForm";
-import registerBackground from "../assets/registerBackground.webp"
+import edificio2 from "../assets/edificio2.png";
 
 const Register = () => {
 
   
   return (
     <div className="flex">
-      <section
-        className="w-3/4 h-screen bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${registerBackground})` }}
-      />
-      <section className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
-        <a href="/login" className="absolute top-10 right-20 text-[#1E40AF] underline">
-          Iniciar sesión
-        </a>
-        <div className="w-full max-w-md px-6">
+      <section className="hidden lg:block lg:w-2/3 xl:w-1/2 h-screen bg-brand-200 relative">
+        <img src="/Logo.svg" alt="" className="absolute top-10 left-10"/>
+        <p className="mt-42 text-4xl font-semibold px-10"><span className="text-brand-800">Gestiona</span> tus alquileres de forma <span className="text-brand-800">fácil</span> y <span className="text-brand-800">eficiente</span></p>
+        <img src={edificio2} alt="Logo Rentary" className="w-4xl absolute bottom-0"/>
+      </section>
+      <section className="w-full h-screen flex flex-col items-center lg:justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
+        <div className="w-full flex justify-around items-center">
+          <img src="/Logo.svg" alt="Logo Rentary" className="lg:hidden size-38"/>
+          <a href="/login" className=" text-[#1E40AF] underline lg:absolute lg:top-10 lg:right-20">
+            Iniciar sesión
+          </a>
+        </div>
+        <div className=" w-full max-w-md px-6">
           <h2 className="text-2xl text-black mb-2 pt-5 cursor-default">
             Crear cuenta
           </h2>

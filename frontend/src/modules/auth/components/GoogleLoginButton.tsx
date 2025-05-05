@@ -1,10 +1,13 @@
 import { Button } from "@/shared/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
+import { API_URL } from "@/shared/constants/api";
+
+
 
 export function GoogleLoginButton() {
   
   const handleGoogleLogin = () => {
-    window.location.href = `https://foo-talent.vercel.app/oauth2/authorization/google`;
+    window.location.href = `${API_URL}/oauth2/authorization/google`;
   };
 
   return (
