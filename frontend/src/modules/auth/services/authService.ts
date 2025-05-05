@@ -42,3 +42,26 @@ export const userLogin = async (userData: LoginFormValues) => {
     throw new Error(errorMessage);
   }
 };
+
+interface ResetPasswordProps {
+  password: string;
+  confirmPassword: string;
+}
+
+export const resetPassword = async (data: ResetPasswordProps, token: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/auth/reset-password`, 
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || "Ocurrió un error al restablecer la contraseña";
+    throw new Error(errorMessage);
+  }
+};
