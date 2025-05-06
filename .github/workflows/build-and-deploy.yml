@@ -42,17 +42,9 @@ jobs:
 
       - name: Update service on Koyeb
         run: |
-          koyeb service update rentary/footalent \
+          koyeb service update rentary/footalent-backend \
             --docker "${{ secrets.DOCKER_USERNAME }}/footalent-backend:latest" \
-            --env DB_HOST="${{ secrets.DB_HOST }}" \
-            --env DB_PORT="${{ secrets.DB_PORT }}" \
-            --env DB_NAME="${{ secrets.DB_NAME }}" \
-            --env DB_USER="${{ secrets.DB_USER }}" \
-            --env DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-            --env BASE_URL="${{ secrets.BASE_URL }}" \
-            --env EMAIL="${{ secrets.EMAIL }}" \
-            --env PASSWORD_EMAIL="${{ secrets.PASSWORD_EMAIL }}" \
             --token ${{ secrets.KOYEB_API_TOKEN }}
 
       - name: Redeploy service on Koyeb
-        run: koyeb service redeploy rentary/footalent --token ${{ secrets.KOYEB_API_TOKEN }}
+        run: koyeb service redeploy rentary/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}

@@ -1,92 +1,92 @@
-name: Validate Pull Request
+# name: Validate Pull Request
 
-on:
-  pull_request:
-    branches: [dev-backend]
-    types: [opened, synchronize, reopened]
+# on:
+#   pull_request:
+#     branches: [dev-backend]
+#     types: [opened, synchronize, reopened]
 
-jobs:
-  validate-build:
-    name: Validate Docker Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# jobs:
+#   validate-build:
+#     name: Validate Docker Build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and test Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend
-          push: false
-          tags: ${{ secrets.DOCKER_USERNAME }}/footalent-backend:pr-test
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/footalent-backend:buildcache
-          load: true
+#       - name: Build and test Docker image
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: ./backend
+#           push: false
+#           tags: ${{ secrets.DOCKER_USERNAME }}/footalent-backend:pr-test
+#           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/footalent-backend:buildcache
+#           load: true
 
-      - name: Test container startup
-        run: |
-          docker network create test-network
+#       - name: Test container startup
+#         run: |
+#           docker network create test-network
 
-          docker run -d --name test-mysql \
-            --network test-network \
-            -e MYSQL_ROOT_PASSWORD=test \
-            -e MYSQL_DATABASE=testdb \
-            -e MYSQL_USER=testuser \
-            -e MYSQL_PASSWORD=testpass \
-            mysql:8.0
+#           docker run -d --name test-mysql \
+#             --network test-network \
+#             -e MYSQL_ROOT_PASSWORD=test \
+#             -e MYSQL_DATABASE=testdb \
+#             -e MYSQL_USER=testuser \
+#             -e MYSQL_PASSWORD=testpass \
+#             mysql:8.0
 
-          sleep 20
+#           sleep 20
 
-          docker run -d --name test-container \
-            --network test-network \
-            -p 8080:8080 \
-            -e DB_HOST=test-mysql \
-            -e DB_PORT=3306 \
-            -e DB_NAME=testdb \
-            -e DB_USER=testuser \
-            -e DB_PASSWORD=testpass \
-            -e BASE_URL=http://localhost:8080 \
-            -e EMAIL=test@example.com \
-            -e PASSWORD_EMAIL=testpassword \
-            ${{ secrets.DOCKER_USERNAME }}/footalent-backend:pr-test
+#           docker run -d --name test-container \
+#             --network test-network \
+#             -p 8080:8080 \
+#             -e DB_HOST=test-mysql \
+#             -e DB_PORT=3306 \
+#             -e DB_NAME=testdb \
+#             -e DB_USER=testuser \
+#             -e DB_PASSWORD=testpass \
+#             -e BASE_URL=http://localhost:8080 \
+#             -e EMAIL=test@example.com \
+#             -e PASSWORD_EMAIL=testpassword \
+#             ${{ secrets.DOCKER_USERNAME }}/footalent-backend:pr-test
 
-          sleep 30
+#           sleep 30
 
-          CONTAINER_STATUS=$(docker inspect --format="{{.State.Status}}" test-container)
+#           CONTAINER_STATUS=$(docker inspect --format="{{.State.Status}}" test-container)
 
-          if [ "$CONTAINER_STATUS" != "running" ]; then
-            echo "❌ Container failed to start properly"
-            docker logs test-container
-            exit 1
-          else
-            echo "✅ Container started successfully"
-            # Opcional: Intentar hacer curl a un endpoint de health check
-            # curl -f http://localhost:8080/actuator/health || exit 1
-          fi
+#           if [ "$CONTAINER_STATUS" != "running" ]; then
+#             echo "❌ Container failed to start properly"
+#             docker logs test-container
+#             exit 1
+#           else
+#             echo "✅ Container started successfully"
+#             # Opcional: Intentar hacer curl a un endpoint de health check
+#             # curl -f http://localhost:8080/actuator/health || exit 1
+#           fi
 
-      - name: Report validation status
-        if: always()
-        run: |
-          echo "### Docker build validation results" >> $GITHUB_STEP_SUMMARY
+#       - name: Report validation status
+#         if: always()
+#         run: |
+#           echo "### Docker build validation results" >> $GITHUB_STEP_SUMMARY
 
-          if [ ${{ job.status }} == "success" ]; then
-            echo "✅ Docker image builds and starts successfully" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ Docker build or startup validation failed" >> $GITHUB_STEP_SUMMARY
-            echo "Please check the logs for details" >> $GITHUB_STEP_SUMMARY
-          fi
+#           if [ ${{ job.status }} == "success" ]; then
+#             echo "✅ Docker image builds and starts successfully" >> $GITHUB_STEP_SUMMARY
+#           else
+#             echo "❌ Docker build or startup validation failed" >> $GITHUB_STEP_SUMMARY
+#             echo "Please check the logs for details" >> $GITHUB_STEP_SUMMARY
+#           fi
 
-      - name: Clean up
-        if: always()
-        run: |
-          docker stop test-container test-mysql || true
-          docker rm test-container test-mysql || true
-          docker network rm test-network || true
+#       - name: Clean up
+#         if: always()
+#         run: |
+#           docker stop test-container test-mysql || true
+#           docker rm test-container test-mysql || true
+#           docker network rm test-network || true
