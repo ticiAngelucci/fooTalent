@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Map;
-
 @Component
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -39,9 +38,26 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String name = (String) attributes.get("name");
 
         User user = userService.findOrCreateUser(email, name);
-        String jwt = jwtService.generateToken(user);
         user.setRole(Role.USER);
         user.setIsActive(true);
+        String jwt = jwtService.generateToken(user);
 
+
+        // HTML que guarda el token y redirige al frontend
+        response.setContentType("text/html;charset=UTF-8");
+        String html = """
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <script>
+              localStorage.setItem("jwt", "%s");
+              window.location.href = "%s";
+            </script>
+          </head>
+          <body>Redireccionando...</body>
+        </html>
+        """.formatted(jwt, frontUrl + "/dashboard");
+
+        response.getWriter().write(html);
     }
 }
