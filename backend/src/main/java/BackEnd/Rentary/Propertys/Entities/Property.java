@@ -2,7 +2,7 @@ package BackEnd.Rentary.Propertys.Entities;
 
 import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Owners.Entities.Owner;
-import BackEnd.Rentary.Propertys.Enums.Status;
+import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
 import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "propertys")
+@Table(name = "properties")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,7 +28,7 @@ public class Property {
     private TypeOfProperty typeOfProperty;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private PropertyStatus status;
     @Column(nullable = false, length = 1000)
     private String observations;
     @ManyToOne(fetch = FetchType.LAZY)

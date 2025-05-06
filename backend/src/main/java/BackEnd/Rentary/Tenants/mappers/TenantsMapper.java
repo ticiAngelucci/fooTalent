@@ -14,7 +14,6 @@ public class TenantsMapper {
         address.setCountry(dto.getCountry());
         address.setProvince(dto.getProvince());
         address.setLocality(dto.getLocality());
-        address.setNeighborhood(dto.getNeighborhood());
         address.setStreet(dto.getStreet());
         address.setNumber(dto.getNumber());
         address.setPostalCode(dto.getPostalCode());
@@ -47,7 +46,6 @@ public class TenantsMapper {
             dto.setCountry(entity.getAddress().getCountry());
             dto.setProvince(entity.getAddress().getProvince());
             dto.setLocality(entity.getAddress().getLocality());
-            dto.setNeighborhood(entity.getAddress().getNeighborhood());
             dto.setStreet(entity.getAddress().getStreet());
             dto.setNumber(entity.getAddress().getNumber());
             dto.setPostalCode(entity.getAddress().getPostalCode());
