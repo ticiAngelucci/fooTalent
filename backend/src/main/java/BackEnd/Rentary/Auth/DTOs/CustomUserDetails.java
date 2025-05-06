@@ -3,6 +3,7 @@ package BackEnd.Rentary.Auth.DTOs;
 
 import BackEnd.Rentary.Users.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -39,6 +40,7 @@ public record CustomUserDetails(User user) implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
+
 
     @Override
     public String getPassword() {
