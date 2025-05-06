@@ -92,6 +92,7 @@ public class SecurityConfig {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.addExposedHeader("Content-Disposition");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

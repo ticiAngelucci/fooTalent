@@ -1,6 +1,8 @@
 package BackEnd.Rentary.Tenants.DTOs;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -11,4 +13,15 @@ public class TenantsResponseDto {
     private String lastName;
     private String email;
     private String phone;
+    private String dni;
+    private String warranty;
+    private String attachedDocument;
+
+    private String country;
+    private String province;
+    private String locality;
+    private String neighborhood;
+    private String street;
+    private String number;
+    private String postalCode;
 }
