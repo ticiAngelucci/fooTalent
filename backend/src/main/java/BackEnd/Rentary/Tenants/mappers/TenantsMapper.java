@@ -27,7 +27,6 @@ public class TenantsMapper {
         tenant.setWarranty(dto.getWarranty());
         tenant.setAddress(address);
 
-
         return tenant;
     }
 

@@ -5,9 +5,6 @@ import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.services.TenantsService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +37,6 @@ public class TenantsController {
         TenantsResponseDto tenant = tenantsService.findTenantsById(id);
         return ResponseEntity.ok(tenant);
     }
-
 
     @Operation(
             summary = "Crear un nuevo inquilino",
