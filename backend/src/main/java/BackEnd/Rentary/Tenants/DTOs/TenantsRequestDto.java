@@ -35,5 +35,4 @@ public class TenantsRequestDto {
     private String number;
     private String postalCode;
 
-    private MultipartFile document;
 }

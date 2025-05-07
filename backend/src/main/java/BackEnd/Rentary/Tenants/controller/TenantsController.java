@@ -40,7 +40,8 @@ public class TenantsController {
 
     @Operation(
             summary = "Crear un nuevo inquilino",
-            description = "Crea un nuevo inquilino con la posibilidad de adjuntar un documento PDF"
+            description = "Crea un nuevo inquilino con la posibilidad de adjuntar un documento PDF" +
+                    "(solo se puede utilizar por postman o apidog)"
     )
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<TenantsResponseDto> create(
