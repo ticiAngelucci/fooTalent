@@ -65,3 +65,35 @@ export const resetPassword = async (data: ResetPasswordProps, token: string) => 
     throw new Error(errorMessage);
   }
 };
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/forgot_password`, { email });
+    return response.data;
+  } catch (error: unknown) {
+    let errorMessage = "Ocurrió un error al enviar el correo";
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.message || error.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    throw new Error(errorMessage);
+  }
+};
+
+export const sendEmailConfirmation = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/send-email-confirmation`, { email });
+    return response.data;
+  } catch (error: unknown) {
+    let errorMessage = "Ocurrió un error al enviar el correo de confirmación";
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.message || error.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    throw new Error(errorMessage);
+  }
+}
