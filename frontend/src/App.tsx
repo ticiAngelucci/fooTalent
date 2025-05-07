@@ -29,8 +29,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path={AppRoute.Dashboard} element={<Dashboard />} />
           <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
+          <Route path={AppRoute.Dashboard} element={<Dashboard />} />
         </Route>
       </Routes>
     </main>

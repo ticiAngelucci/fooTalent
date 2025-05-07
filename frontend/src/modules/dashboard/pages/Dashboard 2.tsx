@@ -76,27 +76,27 @@ const infoSections = [
   },
 ];
 const Dashboard = () => {
-  //const username = useUserStore((state) => state.username);
-  //if (!username) return null;
+  const username = useUserStore((state) => state.username);
+  if (!username) return null;
 
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className="flex flex-col justify-center items-center ">
-        <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
+      <div className="flex flex-col justify-center items-center w-[90%] m-auto">
+        <div className="flex flex-row justify-end items-center w-[100%] mx-auto p-4">
           <LogoutButton />
         </div>
         <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
-          <h1 className="text-2xl font-thin">¡Bienvenido,  usuario!</h1>
+          <h1 className="text-2xl font-thin">¡Bienvenido, {username}!</h1>
           <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 max-w-[1700px] justify-items-center mt-10">
             {summary.map((item, idx) => (
               <SummaryCard key={idx} {...item} />
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 max-w-[1700px] gap-6 mt-10">
             {infoSections.map((section, idx) => (
               <InfoCard
                 key={idx}
