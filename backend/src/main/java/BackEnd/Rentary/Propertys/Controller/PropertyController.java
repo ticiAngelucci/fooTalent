@@ -25,7 +25,7 @@ public class PropertyController {
 
     private final PropertyServiceImpl propertyService;
 
-    @PostMapping("/createProperty")
+    @PostMapping("/create")
     public ResponseEntity<PropertyResponseDto> createProperty(@Valid @RequestBody PropertyRequestDto dto,
                                                               @AuthenticationPrincipal CustomUserDetails user){
         Long userId = user.user().getId();
