@@ -28,13 +28,12 @@ function App() {
         </Route>
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/immovables" element={<Immovables />} />
-        <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
-        {/* Protected Routes */}
+                {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
           <Route path={AppRoute.Dashboard} element={<Dashboard />} />
-        
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/immovables" element={<Immovables />} />
         </Route>
       </Routes>
     </main>
