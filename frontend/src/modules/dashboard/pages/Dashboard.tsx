@@ -1,7 +1,6 @@
 import { useUserStore } from "@/store/userStore";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
-import SidebarLayout from "@/shared/components/layout/SidebarLayout";
 
 const summary = [
   { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
@@ -78,7 +77,6 @@ const Dashboard = () => {
   if (!username) return null;
 
   return (
-    <SidebarLayout>
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
           {/* <LogoutButton /> */}
@@ -106,7 +104,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </SidebarLayout>
   );
 };
 

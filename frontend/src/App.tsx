@@ -31,13 +31,15 @@ function App() {
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route element={<SidebarLayout />}>
             <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
             <Route path={AppRoute.Dashboard} element={<Dashboard />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/immovables" element={<Immovables />} />
+            <Route path={AppRoute.Contact} element={<Contact />} />
+            <Route path={AppRoute.Immovables} element={<Immovables />} />
+          </Route>
         </Route>
       </Routes>
-    </main>
+    </main >
   );
 }
 

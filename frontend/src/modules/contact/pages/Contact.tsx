@@ -18,7 +18,6 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { Filter, UserPlus, X } from "lucide-react";
-import SidebarLayout from "@/shared/components/layout/SidebarLayout";
 
 interface Contacto {
     nombre: string;
@@ -85,7 +84,6 @@ export default function ContactosView() {
     };
 
     return (
-        <SidebarLayout>
             <div className="p-6 space-y-4 w-[95%] mx-auto max-w-[1700px] min-h-screen">
                 <h1 className="text-3xl mb-30 mt-20">Contactos</h1>
 
@@ -299,6 +297,5 @@ export default function ContactosView() {
                     </motion.div>
                 )}
             </div>
-        </SidebarLayout>
     );
 }

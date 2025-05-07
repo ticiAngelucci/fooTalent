@@ -1,17 +1,13 @@
-import React from 'react'
 import { SidebarProvider, SidebarTrigger } from '../ui/sidebar'
 import { AppSidebar } from '../sidebar/Sidebar'
+import { Outlet } from 'react-router-dom'
 
-interface Props{
-    children: React.ReactNode
-}
-
-const SidebarLayout = ({children}:Props) => {
+const SidebarLayout = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      {children}
+      <Outlet />
     </SidebarProvider>
   )
 }
