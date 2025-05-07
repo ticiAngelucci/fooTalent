@@ -20,7 +20,6 @@ public class TenantsResponseDto {
     private String country;
     private String province;
     private String locality;
-    private String neighborhood;
     private String street;
     private String number;
     private String postalCode;

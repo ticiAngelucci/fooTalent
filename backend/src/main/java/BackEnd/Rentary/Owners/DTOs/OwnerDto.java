@@ -21,9 +21,6 @@ public class OwnerDto {
     private String dni;
     private String email;
     private String phone;
-
     @Valid
-    @NotNull(message = "the field cannot be null")
-    private Property property;
-
+    private Address address;
 }

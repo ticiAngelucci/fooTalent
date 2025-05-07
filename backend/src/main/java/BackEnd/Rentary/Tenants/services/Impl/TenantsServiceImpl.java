@@ -101,7 +101,6 @@ public class TenantsServiceImpl implements TenantsService {
             existingTenant.getAddress().setCountry(dto.getCountry());
             existingTenant.getAddress().setProvince(dto.getProvince());
             existingTenant.getAddress().setLocality(dto.getLocality());
-            existingTenant.getAddress().setNeighborhood(dto.getNeighborhood());
             existingTenant.getAddress().setStreet(dto.getStreet());
             existingTenant.getAddress().setNumber(dto.getNumber());
             existingTenant.getAddress().setPostalCode(dto.getPostalCode());
