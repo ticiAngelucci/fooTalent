@@ -1,6 +1,9 @@
 import { GoogleLoginButton } from "../components/GoogleLoginButton";
 import LoginForm from "../components/LoginForm";
 import edificio1 from "../assets/edificio1.png";
+import { Link } from "react-router-dom";
+import { Route } from "@/shared/constants/route";
+
 
 const Login = () => {
   return (
@@ -36,9 +39,9 @@ const Login = () => {
           <GoogleLoginButton />
 
           <div className="text-center mt-6 text-sm text-[#1E40AF] cursor-default">
-            <a href="#" className="underline hover:text-emerald-600">
+            <Link to={Route.ForgotPassword} className="underline hover:text-emerald-600">
               ¿Olvidaste tu contraseña?
-            </a>
+            </Link>
           </div>
         </div>
       </section>

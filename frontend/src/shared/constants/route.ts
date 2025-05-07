@@ -8,6 +8,9 @@ enum Route {
     GetAllUsers = '/get-all-users',
     Contact = '/contact',
     Immovables = '/immovables',
+    ForgotPassword = '/forgot-password',
+    EmailSendConfirmation = '/email-send-confirmation',
+    ErrorEmailNotFound = '/error-email-not-found',
 }
 
 export {Route}
