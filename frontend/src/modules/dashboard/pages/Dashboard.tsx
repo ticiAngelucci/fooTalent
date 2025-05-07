@@ -1,9 +1,7 @@
 import { useUserStore } from "@/store/userStore";
-import LogoutButton from "@/shared/components/logoutButton/LogoutButton";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
-import { SidebarProvider } from "@/shared/components/ui/sidebar";
-import { AppSidebar } from "@/shared/components/sidebar/Sidebar";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
+import SidebarLayout from "@/shared/components/layout/SidebarLayout";
 
 const summary = [
   { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
@@ -76,18 +74,17 @@ const infoSections = [
   },
 ];
 const Dashboard = () => {
-  //const username = useUserStore((state) => state.username);
-  //if (!username) return null;
+  const username = useUserStore((state) => state.username);
+  if (!username) return null;
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <div className="flex flex-col justify-center items-center ">
+    <SidebarLayout>
+      <div className="flex flex-col justify-center items-center">
         <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
-          <LogoutButton />
+          {/* <LogoutButton /> */}
         </div>
         <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
-          <h1 className="text-2xl font-thin">¡Bienvenido,  usuario!</h1>
+          <h1 className="text-2xl font-thin">¡Bienvenido,  {username}!</h1>
           <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10">
@@ -108,9 +105,8 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-
       </div>
-    </SidebarProvider>
+    </SidebarLayout>
   );
 };
 

@@ -4,7 +4,11 @@ import { Button } from "@/shared/components/ui/button";
 import { Route } from "@/shared/constants/route";
 import { LogOut } from "lucide-react";
 
-const LogoutButton = () => {
+interface Props{
+  collapsed: boolean;
+}
+
+const LogoutButton = ({collapsed}:Props) => {
   const logout = useUserStore((state) => state.logout);
   const navigate = useNavigate();
 
@@ -14,16 +18,18 @@ const LogoutButton = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-1">
       <Button
         onClick={handleLogout}
-        variant="ghost"
-        className="bg-[#6C6B75] hover:bg-[#5c5b64] w-10 h-10 rounded-xl p-2"
+        variant={"ghost"}
+        className="flex items-center w-full p-0"
       >
-        <LogOut className="text-white w-5 h-5" />
+        <span className={`inline-flex ${collapsed ? "h-7 w-7" : "h-5 w-5"}`}>
+          <LogOut className="h-full w-full text-neutral-950" />
+        </span>
+        {!collapsed && (
+          <span className="text-neutral-950">Cerrar sesión</span>
+        )}
       </Button>
-      <span className="text-xs text-muted-foreground">Logout</span>
-    </div>
   );
 };
 

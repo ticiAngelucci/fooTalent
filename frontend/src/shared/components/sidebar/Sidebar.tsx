@@ -4,7 +4,6 @@ import {
   HousePlus,
   LayoutDashboard,
   Mailbox,
-  LogOut,
 } from "lucide-react";
 
 import {
@@ -16,16 +15,17 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/shared/components/ui/sidebar";
 
 import { useSidebar } from "@/shared/components/ui/sidebar";
+import { Route } from "@/shared/constants/route";
+import LogoutButton from "../logoutButton/LogoutButton";
 
 const items = [
-  { title: "Tablero", url: "#", icon: LayoutDashboard },
+  { title: "Tablero", url: Route.Dashboard, icon: LayoutDashboard },
   { title: "Contratos", url: "#", icon: ClipboardPenLine },
-  { title: "Inmuebles", url: "#", icon: HousePlus },
-  { title: "Contactos", url: "#", icon: Contact },
+  { title: "Inmuebles", url: Route.Immovables, icon: HousePlus },
+  { title: "Contactos", url: Route.Contact, icon: Contact },
 ];
 
 export function AppSidebar() {
@@ -35,10 +35,9 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className={`relative transition-all duration-300 flex flex-col w-[13rem] justify-between border-gray-200`}
+      className={`relative transition-all duration-300 flex flex-col justify-between border-gray-200 ${collapsed ? "w-20" : "w-[13rem]"}`}
     >
       <SidebarContent>
-        <SidebarTrigger />
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenuButton className="flex items-center justify-center w-full h-full rounded-md p-0">
@@ -46,7 +45,7 @@ export function AppSidebar() {
                 src={collapsed ? "/Frame.svg" : "/Logo.svg"}
                 alt=""
                 className={`${
-                  collapsed ? "h-8 w-8" : "h-10 w-28"
+                  collapsed ? "h-8 w-10" : "h-10 w-28"
                 } transition-all duration-300 my-5`}
               />
             </SidebarMenuButton>
@@ -96,7 +95,7 @@ export function AppSidebar() {
               collapsed ? "justify-center" : "justify-center"
             }`}
           >
-            <a href="#" className="flex items-center justify-center w-full p-0">
+            <a href="#" className="flex items-center w-full p-0">
               <span className={`inline-flex ${collapsed ? "h-6 w-6" : "h-5 w-5"}`}>
                 <Mailbox className="h-full w-full text-neutral-950" />
               </span>
@@ -116,14 +115,7 @@ export function AppSidebar() {
             asChild
             className={`hover:bg-slate-100 rounded-2xl flex items-center w-full h-full text-base justify-center`}
           >
-            <a href="#" className="flex items-center justify-center w-full">
-              <span className={`inline-flex ${collapsed ? "h-7 w-7" : "h-5 w-5"}`}>
-                <LogOut className="h-full w-full text-neutral-950" />
-              </span>
-              {!collapsed && (
-                <span className="text-neutral-950">Cerrar sesión</span>
-              )}
-            </a>
+            <LogoutButton collapsed={collapsed} />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarFooter>
