@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import Register from "./modules/auth/pages/Register";
 import Login from "./modules/auth/pages/Login";
 import Dashboard from "./modules/dashboard/pages/Dashboard";
+import Contact from "./modules/contact/pages/Contact";
+import Immovables from "./modules/immovables/pages/Immovables";
 import NotFound from "./modules/error/pages/404NotFound";
 import ApiPublica from "./modules/publicApi/pages/ApiPublica";
 import { Route as AppRoute } from "./shared/constants/route";
@@ -13,7 +15,6 @@ import OauthRedirect from "./modules/auth/pages/OAuthRedirect";
 
 
 function App() {
-  //comentario para push despues sacar
   return (
     <main>
       <Routes>
@@ -27,10 +28,12 @@ function App() {
         </Route>
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
-        {/* Protected Routes */}
+                {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
           <Route path={AppRoute.Dashboard} element={<Dashboard />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/immovables" element={<Immovables />} />
         </Route>
       </Routes>
     </main>
