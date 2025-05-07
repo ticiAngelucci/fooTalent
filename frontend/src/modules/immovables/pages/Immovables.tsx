@@ -19,7 +19,6 @@ import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { Filter, Home, X } from "lucide-react";
 import clsx from "clsx";
-import SidebarLayout from "@/shared/components/layout/SidebarLayout";
 
 interface Inmueble {
     nombre: string;
@@ -99,7 +98,6 @@ export default function InmueblesView() {
         closeModal();
     };
     return (
-        <SidebarLayout>
             <div className="p-6 space-y-4 w-[95%] mx-auto max-w-[1700px] min-h-screen">
                 <h1 className="text-3xl mb-30 mt-20">Inmuebles</h1>
 
@@ -298,6 +296,5 @@ export default function InmueblesView() {
                     </motion.div>
                 )}
             </div>
-        </SidebarLayout>
     );
 }
