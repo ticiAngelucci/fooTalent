@@ -6,6 +6,7 @@ import BackEnd.Rentary.Auth.Util.VerificationToken;
 import BackEnd.Rentary.Auth.Util.VerificationTokenRepository;
 import BackEnd.Rentary.Users.Repositories.UserRepository;
 import BackEnd.Rentary.Auth.Util.UserValidation;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -151,6 +152,7 @@ public class AuthService {
 
         return new AuthResponse(jwt, "Contraseña actualizada con éxito.", true);
     }
+    @Transactional
     public String forgotPassword(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
@@ -158,15 +160,20 @@ public class AuthService {
         }
 
         User user = optionalUser.get();
-        String token = UUID.randomUUID().toString();
 
+        // Eliminar tokens anteriores asociados al usuario
+        verificationTokenRepository.deleteByUser(user);
+
+        String token = generateUniqueToken();
+
+        // Crear nuevo token
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
         verificationToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         verificationTokenRepository.save(verificationToken);
 
-
+        // Enviar email
         String link = frontUrl + "/auth/reset_password?token=" + token;
         emailService.sendEmail(user.getEmail(), "Recuperar contraseña",
                 "<p>Hola " + user.getUsername() + ",</p>" +
@@ -176,6 +183,15 @@ public class AuthService {
 
         return "Se ha enviado un correo para restablecer la contraseña.";
     }
+
+    private String generateUniqueToken() {
+        String token;
+        do {
+            token = UUID.randomUUID().toString();
+        } while (verificationTokenRepository.findByToken(token).isPresent());
+        return token;
+    }
+
     //Verificacion de token y password, cambio de password, elimina el token usado
     public AuthResponse resetPassword(ResetPasswordRequest request) {
         if (!request.newPassword().equals(request.confirmPassword())) {

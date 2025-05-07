@@ -1,4 +1,4 @@
-package BackEnd.Rentary.OAuth2.Util;
+package BackEnd.Rentary.OAuth2;
 
 import BackEnd.Rentary.Auth.Enums.Role;
 import BackEnd.Rentary.Auth.Services.JwtService;
@@ -42,22 +42,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         user.setIsActive(true);
         String jwt = jwtService.generateToken(user);
 
-
-        // HTML que guarda el token y redirige al frontend
-        response.setContentType("text/html;charset=UTF-8");
-        String html = """
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <script>
-              localStorage.setItem("jwt", "%s");
-              window.location.href = "%s";
-            </script>
-          </head>
-          <body>Redireccionando...</body>
-        </html>
-        """.formatted(jwt, frontUrl + "/dashboard");
-
-        response.getWriter().write(html);
+        // Redireccionamiento directo con el token en la URL
+        String redirectUrl = frontUrl + "/dashboard?token=" + jwt;
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }
