@@ -6,7 +6,7 @@ const SidebarLayout = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarTrigger />
+      <SidebarTrigger className='ml-5'/>
       <Outlet />
     </SidebarProvider>
   )
