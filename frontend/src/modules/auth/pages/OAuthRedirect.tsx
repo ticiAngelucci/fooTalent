@@ -17,7 +17,7 @@ export default function OauthRedirect() {
       sessionStorage.setItem("token", token); 
 
       axios
-        .get(`${API_URL}/api/users/me`, {
+        .get(`${API_URL}/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
