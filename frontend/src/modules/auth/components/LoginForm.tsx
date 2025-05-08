@@ -21,7 +21,7 @@ import Spinner from "./Spinner";
 
 const LoginForm = () => {
   const inputClass =
-    "text-black placeholder:text-gray-400 border border-gray-400 rounded-[4px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:border-black autofill:shadow-[inset_0_0_0px_1000px_white]";
+    "text-black placeholder:text-gray-400 bg-white border border-gray-400 rounded-[4px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:border-black autofill:!bg-white autofill:!text-black autofill:!shadow-[inset_0_0_0_1000px_white] [color-scheme:light]";
 
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);

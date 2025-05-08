@@ -24,6 +24,7 @@ const RegisterForm = () => {
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
+    mode: "onChange",
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -41,6 +42,9 @@ const RegisterForm = () => {
   }, [form, registerError]);
 
   const onSubmit = async (data: RegisterFormValues) => {
+    if (!form.formState.isValid) {
+      return;
+    }
     try {
       const register = await userRegister(data);
       if (register.success == true) {
@@ -53,7 +57,7 @@ const RegisterForm = () => {
   };
 
   const inputClass =
-    "placeholder:text-gray-400 rounded-[4px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:border-black autofill:shadow-[inset_0_0_0px_1000px_white]";
+    "placeholder:text-gray-400 text-black bg-white rounded-[4px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:border-black autofill:!bg-white autofill:!text-black autofill:!shadow-[inset_0_0_0_1000px_white] [color-scheme:light]";
 
   const renderError = (message?: string) =>
     message && (
@@ -74,7 +78,7 @@ const RegisterForm = () => {
     const error = form.formState.errors[fieldName];
     const value = form.getValues(fieldName);
 
-    if (!touched || error || !value) return null;
+    if (!touched || error || !value.trim()) return null;
 
     const successMessages: Record<keyof RegisterFormValues, string> = {
       firstName: "Nombre válido.",
@@ -169,7 +173,7 @@ const RegisterForm = () => {
 
         <Button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
           className="w-full cursor-pointer mt-3 rounded-[7px] bg-[#1E40AF] text-white hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {form.formState.isSubmitting && <Spinner />}
