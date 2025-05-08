@@ -12,5 +12,5 @@ public interface IPropertyService {
     PropertyResponseDto changePropertyStatus (Long propertyId, PropertyStatus newStatus);
     void deleteProperty(Long id);
     Page<PropertyResponseDto> getAllActivePropertiesFiltered(String locality, TypeOfProperty type, Pageable pageable);
-
+    PropertyResponseDto updateProperty(Long propertyId, PropertyRequestDto dto);
 }

@@ -65,4 +65,14 @@ public class PropertyController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<PropertyResponseDto> updateProperty(
+            @PathVariable Long id,
+            @RequestBody @Valid PropertyRequestDto dto) {
+
+        PropertyResponseDto updatedProperty = propertyService.updateProperty(id, dto);
+        return ResponseEntity.ok(updatedProperty);
+    }
+
 }

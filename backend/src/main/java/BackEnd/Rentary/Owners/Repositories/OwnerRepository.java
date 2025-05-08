@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OwnerRepository extends JpaRepository<Owner, Long> {
+    boolean existsByDni(String dni);
 }

@@ -2,24 +2,28 @@ package BackEnd.Rentary.Owners.Controller;
 
 import BackEnd.Rentary.Owners.DTOs.OwnerDto;
 import BackEnd.Rentary.Owners.Services.OwnerServiceImpl;
+import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/owner")
+@RequiredArgsConstructor
 public class OwnerController {
 
-    private OwnerServiceImpl ownerService;
+    private final OwnerServiceImpl ownerService;
 
-    public OwnerController(OwnerServiceImpl ownerService) {
-        this.ownerService = ownerService;
-    }
+    @GetMapping
+    public ResponseEntity<CustomPageResponse<OwnerDto>> getOwners(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-    @GetMapping("/")
-    public ResponseEntity<?> getOwner(){
-
-        return ResponseEntity.ok(ownerService.getOwner());
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(ownerService.getOwner(pageable));
     }
 
     @GetMapping("/{id}")
@@ -34,13 +38,13 @@ public class OwnerController {
         return ownerService.createOwner(ownerDto);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteOwner(@PathVariable Long id){
 
         return ownerService.deleteOwner(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateOwner(@PathVariable Long id, @RequestBody @Valid OwnerDto ownerDto){
 
         return ownerService.updateOwner(id, ownerDto );
