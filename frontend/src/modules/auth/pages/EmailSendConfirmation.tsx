@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import { MailCheck } from "lucide-react";
 
 import { useLocation } from "react-router-dom";
+import AuthLayout from "../components/layout/AuthLayout";
 
 
 
@@ -16,8 +17,7 @@ const EmailSentConfirmation = () => {
     
 
     return (
-
-        <div className="flex">
+        <AuthLayout>       
             
             <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
                 <div className="w-full max-w-md px-6">
@@ -51,7 +51,8 @@ const EmailSentConfirmation = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        
+        </AuthLayout>
 
     );
 };
