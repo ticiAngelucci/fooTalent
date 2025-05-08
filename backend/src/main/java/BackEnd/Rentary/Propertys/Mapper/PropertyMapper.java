@@ -28,19 +28,11 @@ public class PropertyMapper {
     }
 
     public Property toEntity(PropertyRequestDto dto, Owner owner) {
-        Address address = new Address(
-                dto.country(),
-                dto.province(),
-                dto.locality(),
-                dto.street(),
-                dto.number(),
-                dto.postalCode()
-        );
 
         Property property = new Property();
-        property.setAddress(address);
+        property.setAddress(dto.address());
         property.setTypeOfProperty(dto.typeOfProperty());
-        property.setStatus(PropertyStatus.NO_ALQUILADO);
+        property.setStatus(PropertyStatus.DISPONIBLE);
         property.setObservations(dto.observations());
         property.setOwner(owner);
 

@@ -3,7 +3,10 @@ package BackEnd.Rentary.Owners.Entities;
 import BackEnd.Rentary.Common.Person;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +15,14 @@ import java.util.List;
 @Table(name = "owners")
 @Getter
 @Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Owner extends Person {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Property> properties= new ArrayList<>();
+    @Column(name = "attached_document")
+    private String attachedDocument;
 }

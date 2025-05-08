@@ -1,5 +1,6 @@
 package BackEnd.Rentary.Propertys.Repositoy;
 
+import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-
     @Query("""
     SELECT p FROM Property p
     WHERE p.status = 'NO_ALQUILADO'
@@ -23,4 +23,5 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             @Param("type") TypeOfProperty type,
             Pageable pageable
     );
+    boolean existsByAddress(Address address);
 }

@@ -1,17 +1,14 @@
 package BackEnd.Rentary.Owners.Services;
 
 import BackEnd.Rentary.Owners.DTOs.OwnerDto;
+import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface OwnerService {
-
-    public List<OwnerDto> getOwner();
-    public ResponseEntity<?> getOwnerId(Long id);
-    public ResponseEntity<?> createOwner(OwnerDto owner);
-    public ResponseEntity<?> deleteOwner(Long id);
-    public ResponseEntity<?> updateOwner(Long id, OwnerDto owner);
-
+    ResponseEntity<?> getOwnerId(Long id);
+    ResponseEntity<?> createOwner(OwnerDto owner);
+    ResponseEntity<?> deleteOwner(Long id);
+    ResponseEntity<?> updateOwner(Long id, OwnerDto owner);
+    CustomPageResponse<OwnerDto> getOwner(Pageable pageable);
 }
