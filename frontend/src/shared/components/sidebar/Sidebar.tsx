@@ -35,7 +35,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className={`relative transition-all duration-300 flex flex-col justify-between border-gray-200 ${collapsed ? "w-20" : "w-[13rem]"}`}
+      className={`transition-all duration-300 flex flex-col justify-between border-gray-200 fixed ${collapsed ? "w-20" : "w-[13rem]"}`}
     >
       <SidebarContent>
         <SidebarGroup>
