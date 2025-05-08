@@ -18,14 +18,16 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { Frown } from 'lucide-react';
+import AuthLayout from "../components/layout/AuthLayout";
 
 
 
 const forgotPasswordSchema = z.object({
     email: z.string()
-        .min(1, "① Ingrese un correo electrónico")
-        .email("① Ingrese un correo electrónico válido"),
+        .min(1, "Ingrese un correo electrónico")
+        .email("Ingrese un correo electrónico válido"),
 });
+
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
@@ -58,7 +60,7 @@ const ForgotPassword = () => {
                 if (axios.isAxiosError(error) && error.response) {
                     errorMessage = error.response.data?.message || error.message;
                     console.error(errorMessage);
-                } 
+                }
                 navigate(Route.ErrorEmailNotFound);
             }
         }
@@ -68,8 +70,8 @@ const ForgotPassword = () => {
 
 
     return (
-        <div className="flex">
-            
+
+        <AuthLayout>
             <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
                 <div className="w-full max-w-md px-6">
                     <div >
@@ -135,7 +137,8 @@ const ForgotPassword = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </AuthLayout>
+
     );
 };
 

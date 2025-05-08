@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 
 import { useLocation } from "react-router-dom";
+import AuthLayout from "../components/layout/AuthLayout";
 
 interface ErrorEmailNotFoundProps {
     
@@ -17,7 +18,8 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
     const userEmail = location.state?.email || "correo@ejemplo.com";
 
     return (
-        <div className="flex">
+        
+            <AuthLayout>
             
             <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
                 <div className="w-full max-w-md px-6">
@@ -58,7 +60,8 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </AuthLayout>
+        
     );
 };
 
