@@ -15,7 +15,7 @@ import SidebarLayout from "./shared/components/layout/SidebarLayout";
 import ForgotPassword from "./modules/auth/pages/ForgotPassword";
 import EmailSentConfirmation from "./modules/auth/pages/EmailSendConfirmation";
 import ErrorEmailNotFound from "./modules/auth/pages/ErrorEmailNotFound";
-
+import ResetPassword from "./modules/auth/pages/ResetPassword";
 
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
           <Route path={AppRoute.ForgotPassword} element={<ForgotPassword />} />        
           <Route path={AppRoute.EmailSendConfirmation} element={<EmailSentConfirmation />} />
           <Route path={AppRoute.ErrorEmailNotFound} element={<ErrorEmailNotFound/>} />
+          <Route path={AppRoute.ResetPassword} element={<ResetPassword />} />
         </Route>
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
