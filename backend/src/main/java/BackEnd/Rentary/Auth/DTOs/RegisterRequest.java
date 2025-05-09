@@ -15,12 +15,11 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "La contraseña no puede ser vacío")
-        @Size(min = 6)
+        @Size(min = 8, max = 16)
         String password,
 
         @NotBlank(message = "La contraseña no puede ser vacío")
-        @Size(min = 6)
+        @Size(min = 8, max = 16)
         String confirmPassword
-
 
 ) {}

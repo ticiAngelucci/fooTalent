@@ -19,7 +19,7 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
     @Column(unique = true, nullable = false)
     private String email;
@@ -31,6 +31,8 @@ public class User {
     private boolean isActive = true;
     private String verificationToken;
     private Date verificationTokenExpiration;
+    @Column
+    private String profileImageUrl;
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;

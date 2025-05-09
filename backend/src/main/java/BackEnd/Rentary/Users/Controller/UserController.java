@@ -1,7 +1,9 @@
 package BackEnd.Rentary.Users.Controller;
 
+import BackEnd.Rentary.Auth.DTOs.CustomUserDetails;
 import BackEnd.Rentary.Auth.Services.JwtService;
 import BackEnd.Rentary.Users.Entities.User;
+import BackEnd.Rentary.Users.Services.CloudinaryService;
 import BackEnd.Rentary.Users.Services.UserService;
 import BackEnd.Rentary.Users.DTOs.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -22,6 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final CloudinaryService cloudinaryService;
 
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -83,6 +91,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno al actualizar el perfil.");
+        }
+    }
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadProfileImage(
+            Authentication authentication,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+
+            String imageUrl = cloudinaryService.uploadImage(imageFile);
+            userService.uploadImage(email, imageUrl);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("imageUrl", imageUrl);
+
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir la imagen.");
         }
     }
 

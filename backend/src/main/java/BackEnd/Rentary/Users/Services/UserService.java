@@ -124,5 +124,13 @@ public class UserService {
         }
     }
 
-}
+    public void uploadImage(String email, String imageUrl) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        user.setProfileImageUrl(imageUrl);
+        userRepository.save(user);
+    }
+    }
+
 
