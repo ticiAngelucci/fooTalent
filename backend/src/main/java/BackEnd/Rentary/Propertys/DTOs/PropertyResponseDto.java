@@ -13,5 +13,8 @@ public record PropertyResponseDto(
         String postalCode,
         TypeOfProperty typeOfProperty,
         PropertyStatus propertyStatus,
-        String observations
+        String observations,
+        Long ownerId,
+        String firstName,
+        String lastName
 ) {}

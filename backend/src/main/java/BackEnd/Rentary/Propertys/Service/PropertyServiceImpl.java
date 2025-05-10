@@ -96,4 +96,10 @@ public class PropertyServiceImpl implements IPropertyService {
         Property updated = propertyRepository.save(existingProperty);
         return propertyMapper.toDto(updated);
     }
+
+    @Override
+    public Page<PropertyResponseDto> getAllProperties(Pageable pageable) {
+        return propertyRepository.findAll(pageable)
+                .map(propertyMapper::toDto);
+    }
 }
