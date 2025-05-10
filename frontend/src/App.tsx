@@ -11,7 +11,6 @@ import GetAllUsers from "./modules/getAllUser/page/getAllUsers";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import SemiPublicRoute from "./routes/SemiPublicRoute";
 import OauthRedirect from "./modules/auth/pages/OAuthRedirect";
-import SidebarLayout from "./shared/components/layout/SidebarLayout";
 import ForgotPassword from "./modules/auth/pages/ForgotPassword";
 import EmailSentConfirmation from "./modules/auth/pages/EmailSendConfirmation";
 import ErrorEmailNotFound from "./modules/auth/pages/ErrorEmailNotFound";
@@ -36,13 +35,11 @@ function App() {
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<SidebarLayout />}>
             <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
+        <Route element={<ProtectedRoute />}>
             <Route path={AppRoute.Dashboard} element={<Dashboard />} />
             <Route path={AppRoute.Contact} element={<Contact />} />
             <Route path={AppRoute.Immovables} element={<Immovables />} />
-          </Route>
         </Route>
       </Routes>
     </main >
