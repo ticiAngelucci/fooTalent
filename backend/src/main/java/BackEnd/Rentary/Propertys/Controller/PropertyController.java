@@ -75,4 +75,8 @@ public class PropertyController {
         return ResponseEntity.ok(updatedProperty);
     }
 
+    @GetMapping("/all")
+    public Page<PropertyResponseDto> getAllProperties(Pageable pageable){
+        return propertyService.getAllProperties(pageable);
+    }
 }

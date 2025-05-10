@@ -23,7 +23,10 @@ public class PropertyMapper {
                 address.getPostalCode(),
                 property.getTypeOfProperty(),
                 property.getStatus(),
-                property.getObservations()
+                property.getObservations(),
+                property.getOwner().getId(),
+                property.getOwner().getName(),
+                property.getOwner().getLastName()
         );
     }
 
