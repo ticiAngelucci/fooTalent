@@ -174,7 +174,7 @@ public class AuthService {
         verificationTokenRepository.save(verificationToken);
 
         // Enviar email
-        String link = frontUrl + "/auth/reset_password?token=" + token;
+        String link = frontUrl + "/reset_password?token=" + token;
         emailService.sendEmail(user.getEmail(), "Recuperar contraseña",
                 "<p>Hola " + user.getUsername() + ",</p>" +
                         "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>" +
