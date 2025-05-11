@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TenantsRepository extends JpaRepository<Tenants, Long> {
+    boolean existsByDni(String dni);
 }

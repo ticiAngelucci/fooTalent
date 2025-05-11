@@ -1,10 +1,13 @@
 package BackEnd.Rentary.Owners.Services;
 
+import BackEnd.Rentary.Exceptions.DuplicateDniException;
+import BackEnd.Rentary.Exceptions.OwnerNotFoundException;
 import BackEnd.Rentary.Owners.DTOs.OwnerDto;
 import BackEnd.Rentary.Owners.Entities.Owner;
 import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
 import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,14 +16,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
@@ -28,63 +30,59 @@ public class OwnerServiceImpl implements OwnerService{
 
     @Override
     public ResponseEntity<?> getOwnerId(Long id) {
-        Optional<Owner> optionalOwner = ownerRepository.findById(id);
-        if (optionalOwner.isPresent()){
-            OwnerDto ownerDto = convertToDto(optionalOwner.get());
-            return ResponseEntity.ok().body(ownerDto);
-        }
-        return ResponseEntity.notFound().build();
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException("No se encontró propietario con ID: " + id));
+
+        OwnerDto ownerDto = convertToDto(owner);
+        return ResponseEntity.ok().body(ownerDto);
     }
 
     @Override
     public ResponseEntity<?> createOwner(OwnerDto ownerDto) {
-
         if (ownerRepository.existsByDni(ownerDto.getDni())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un usuario con ese DNI");
+            throw new DuplicateDniException("Ya existe un propietario con DNI: " + ownerDto.getDni());
         }
 
         Owner owner = convertToOwner(ownerDto);
         ownerRepository.save(owner);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Owner created");
+
+        log.info("Propietario creado con DNI: {}", ownerDto.getDni());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Propietario creado exitosamente");
     }
 
     @Override
     public ResponseEntity<?> deleteOwner(Long id) {
-
-        Optional<Owner> optionalOwner = ownerRepository.findById(id);
-        if (optionalOwner.isPresent()){
-            ownerRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+        if (!ownerRepository.existsById(id)) {
+            throw new OwnerNotFoundException("No se encontró propietario con ID: " + id);
         }
 
-        return ResponseEntity.notFound().build();
+        ownerRepository.deleteById(id);
+        log.info("Propietario eliminado con ID: {}", id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<?> updateOwner(Long id, OwnerDto ownerDto) {
+        Owner existingOwner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException("No se encontró propietario con ID: " + id));
 
-        Optional<Owner> optionalOwner = ownerRepository.findById(id);
-
-        if (optionalOwner.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario con el id " + id + " no existe");
-        }
-
-        Owner existingOwner = optionalOwner.get();
         String newDni = ownerDto.getDni();
         if (!newDni.equals(existingOwner.getDni()) && ownerRepository.existsByDni(newDni)) {
-            return ResponseEntity.badRequest().body("El DNI ya está registrado por otro usuario");
+            throw new DuplicateDniException("El DNI " + newDni + " ya está registrado por otro propietario");
         }
 
-        Owner owner = convertToOwner(ownerDto);
-        optionalOwner.get().setDni(owner.getDni());
-        optionalOwner.get().setName(owner.getName());
-        optionalOwner.get().setLastName(owner.getLastName());
-        optionalOwner.get().setEmail(owner.getEmail());
-        optionalOwner.get().setPhone(owner.getPhone());
-        optionalOwner.get().setAddress(owner.getAddress());
+        // Actualizar propiedades
+        existingOwner.setDni(ownerDto.getDni());
+        existingOwner.setName(ownerDto.getName());
+        existingOwner.setLastName(ownerDto.getLastName());
+        existingOwner.setEmail(ownerDto.getEmail());
+        existingOwner.setPhone(ownerDto.getPhone());
+        existingOwner.setAddress(ownerDto.getAddress());
 
-        ownerRepository.save(optionalOwner.get());
-        return ResponseEntity.ok().body(optionalOwner);
+        ownerRepository.save(existingOwner);
+
+        log.info("Propietario actualizado con ID: {}", id);
+        return ResponseEntity.ok().body(convertToDto(existingOwner));
     }
 
     @Override
@@ -106,12 +104,11 @@ public class OwnerServiceImpl implements OwnerService{
         );
     }
 
-    private Owner convertToOwner (OwnerDto ownerDto) {
+    private Owner convertToOwner(OwnerDto ownerDto) {
         return modelMapper.map(ownerDto, Owner.class);
     }
 
-    private OwnerDto convertToDto (Owner owner) {
+    private OwnerDto convertToDto(Owner owner) {
         return modelMapper.map(owner, OwnerDto.class);
     }
-
 }
