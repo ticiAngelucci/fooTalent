@@ -9,38 +9,29 @@ import {
 import { useState } from "react";
 import { DownloadIcon, Trash2Icon, File } from "lucide-react";
 
-const MAX_FILES = 7;
-
 const DocumentUpload = () => {
   const { control, setValue } = useFormContext();
   const [files, setFiles] = useState<File[]>([]);
-  const [hasReachedLimit, setHasReachedLimit] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(e.target.files || []);
-    if (files.length + newFiles.length > MAX_FILES) {
-      setHasReachedLimit(true);
-      setTimeout(() => setHasReachedLimit(false), 4000);
-    }
-    const totalFiles = [...files, ...newFiles].slice(0, MAX_FILES);
-    setFiles(totalFiles);
-    setValue("file", totalFiles); // en RHF, solo guardamos si querés subir todos en backend
+    const selectedFiles = Array.from(e.target.files ?? []);
+    const combinedFiles = [...files, ...selectedFiles];
+
+    const limitedFiles = combinedFiles.slice(0, 4);
+    setFiles(limitedFiles);
+    setValue("files", limitedFiles);
   };
 
   const handleRemove = (index: number) => {
-    const updated = [...files];
-    updated.splice(index, 1);
-    setFiles(updated);
-    setValue("file", updated.length ? updated : undefined);
+    const updatedFiles = files.filter((_, i) => i !== index);
+    setFiles(updatedFiles);
+    setValue("files", updatedFiles.length ? updatedFiles : undefined);
   };
 
   return (
     <div className="space-y-4">
       {files.map((file, index) => (
-        <div
-          key={index}
-          className="flex items-center justify-between border rounded-md p-3 "
-        >
+        <div key={index} className="flex items-center justify-between border rounded-md p-3">
           <div className="flex items-center gap-3">
             <File className="text-blue-700" />
             <div className="flex flex-col">
@@ -51,28 +42,20 @@ const DocumentUpload = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a
-              href={URL.createObjectURL(file)}
-              download={file.name}
-              className="text-blue-700"
-            >
+            <a href={URL.createObjectURL(file)} download={file.name} className="text-blue-700">
               <DownloadIcon size={18} />
             </a>
-            <button
-              type="button"
-              onClick={() => handleRemove(index)}
-              className="text-red-600"
-            >
+            <button type="button" onClick={() => handleRemove(index)} className="text-red-600">
               <Trash2Icon size={18} />
             </button>
           </div>
         </div>
       ))}
 
-      {files.length < MAX_FILES && (
+      {files.length < 4 && (
         <FormField
           control={control}
-          name="file"
+          name="files"
           render={({ field: { name, ref } }) => (
             <FormItem>
               <FormLabel>Añadir documentos</FormLabel>
@@ -83,13 +66,15 @@ const DocumentUpload = () => {
                 >
                   <span className="text-blue-700 font-semibold">Subir archivo</span>
                   <span>
-                    {files.length === 0 ? "Ningún archivo seleccionado" : `${files.length} archivo(s) seleccionado(s)`}
+                    {files.length > 0
+                      ? `${files.length} archivo(s) seleccionado(s)`
+                      : "Ningún archivo seleccionado"}
                   </span>
                   <input
                     id="custom-file-upload"
                     type="file"
                     accept=".pdf,.jpg,.jpeg,.png"
-                    multiple
+                    multiple={false}
                     name={name}
                     ref={ref}
                     onChange={handleFileChange}
@@ -98,14 +83,14 @@ const DocumentUpload = () => {
                 </label>
               </FormControl>
               <FormMessage />
-              {hasReachedLimit && (
-                <p className="text-xs text-red-600 mt-1">
-                  Solo se pueden subir hasta 7 archivos.
-                </p>
-              )}
             </FormItem>
           )}
         />
+      )}
+      {files.length >= 4 && (
+        <p className="text-sm text-neutral-900">
+          Has alcanzado el máximo de 4 archivos.
+        </p>
       )}
     </div>
   );

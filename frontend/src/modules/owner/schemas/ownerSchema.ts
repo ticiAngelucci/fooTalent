@@ -26,12 +26,11 @@ export const ownerSchema = z.object({
     .trim()
     .regex(/^\d{4}$/, "El código postal debe tener exactamente 4 dígitos")
     .optional(),
-    file: z
-    .instanceof(File)
-    .refine((f) => ["application/pdf", "image/jpeg", "image/png"].includes(f.type), {
-      message: "Formato no válido. Solo PDF, JPG o PNG.",
-    })
-    .optional()
+  files: z
+    .array(z.instanceof(File))
+    .min(1, "Debés subir al menos un archivo")
+    .max(7, "Solo se permiten hasta 7 archivos")
+    .optional(),
 });
 
 export type Owner = z.infer<typeof ownerSchema>;

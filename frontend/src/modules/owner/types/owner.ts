@@ -10,4 +10,5 @@ export interface Owner {
     province?: string;
     postalCode?: string;
     file?: File;
+    attachedDocument?: string;
   }

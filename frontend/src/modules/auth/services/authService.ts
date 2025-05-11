@@ -50,14 +50,13 @@ interface ResetPasswordProps {
 
 export const resetPassword = async (data: ResetPasswordProps, token: string) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/api/auth/reset-password`, 
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+    const newData = {token,
+      newPassword: data.password,
+      confirmPassword: data.confirmPassword
+    };
+    const response = await axios.put(
+      `${API_URL}/auth/reset_password`, 
+      newData
     );
     return response.data;
   } catch (error: any) {

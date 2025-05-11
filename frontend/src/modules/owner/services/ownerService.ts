@@ -15,15 +15,14 @@ export const createOwner = async (data: Owner) => {
     city,
     province,
     postalCode,
-    files,
+    file,
   } = data;
 
   const token = useUserStore.getState().token;
 
-  let base64File: string | undefined = undefined;
-
-  if (files instanceof File) {
-    base64File = await fileToBase64(files);
+  let base64File = "";
+  if (file instanceof File) {
+    base64File = await fileToBase64(file);
   }
 
   const payload = {
@@ -40,7 +39,7 @@ export const createOwner = async (data: Owner) => {
       number,
       postalCode,
     },
-    attachedDocument: base64File ?? "",
+    attachedDocument: base64File,
   };
 
   const response = await axios.post(`${API_URL}/owner/create`, payload, {

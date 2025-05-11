@@ -16,6 +16,8 @@ import EmailSentConfirmation from "./modules/auth/pages/EmailSendConfirmation";
 import ErrorEmailNotFound from "./modules/auth/pages/ErrorEmailNotFound";
 import ResetPassword from "./modules/auth/pages/ResetPassword";
 import AddOwner from "./modules/owner/pages/AddOwner";
+import PropertyRegister from "./modules/properties/pages/PropertyRegister";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 
 function App() {
@@ -29,22 +31,24 @@ function App() {
           <Route path={AppRoute.Register} element={<Register />} />
           <Route path={AppRoute.Login} element={<Login />} />
           <Route path={AppRoute.Google} element={<OauthRedirect />} />
-          <Route path={AppRoute.ForgotPassword} element={<ForgotPassword />} />        
+          <Route path={AppRoute.ForgotPassword} element={<ForgotPassword />} />
           <Route path={AppRoute.EmailSendConfirmation} element={<EmailSentConfirmation />} />
-          <Route path={AppRoute.ErrorEmailNotFound} element={<ErrorEmailNotFound/>} />
+          <Route path={AppRoute.ErrorEmailNotFound} element={<ErrorEmailNotFound />} />
           <Route path={AppRoute.ResetPassword} element={<ResetPassword />} />
         </Route>
         {/* 404 Default Route */}
         <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
-            <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
+        <Route path={AppRoute.NewProperty} element={<PropertyRegister />} />
+        <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
         <Route element={<ProtectedRoute />}>
-            <Route path={AppRoute.Dashboard} element={<Dashboard />} />
-            <Route path={AppRoute.Contact} element={<Contact />} />
-            <Route path={AppRoute.Immovables} element={<Immovables />} />
-            <Route path={AppRoute.AddOwner} element={<AddOwner/>}/>
+          <Route path={AppRoute.Dashboard} element={<Dashboard />} />
+          <Route path={AppRoute.Contact} element={<Contact />} />
+          <Route path={AppRoute.Immovables} element={<Immovables />} />
+          <Route path={AppRoute.AddOwner} element={<AddOwner/>}/>
         </Route>
       </Routes>
+      <Toaster richColors closeButton position="bottom-right" />
     </main >
   );
 }

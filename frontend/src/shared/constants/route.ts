@@ -10,8 +10,9 @@ enum Route {
     Immovables = '/immovables',
     ForgotPassword = '/forgot-password',
     EmailSendConfirmation = '/email-send-confirmation',
-    ResetPassword = '/reset-password',
+    ResetPassword = '/reset_password',
     ErrorEmailNotFound = '/error-email-not-found',
+    NewProperty = '/new-property',
     AddOwner= '/add-owner'
 }
 

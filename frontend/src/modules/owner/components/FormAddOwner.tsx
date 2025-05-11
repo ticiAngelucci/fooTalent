@@ -1,14 +1,22 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ownerSchema, Owner } from "../schemas/ownerSchema";
+import { useNavigate } from "react-router-dom";
 
 import PersonalDataFields from "./PersonalDataFields";
 import AddressFields from "./AddressFields";
 import DocumentUpload from "./DocumentUpload";
 import FormFooter from "./FormFooter";
 import { createOwner } from "../services/ownerService";
+import { toast } from "sonner";
+
+import { CircleAlert } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 const FormAddOwner = () => {
+
+    const navigate = useNavigate();
+
   const methods = useForm<Owner>({
     resolver: zodResolver(ownerSchema),
     defaultValues: {
@@ -22,16 +30,47 @@ const FormAddOwner = () => {
       city: "",
       province: "",
       postalCode: "",
-      file: undefined,
+      files: [],
     },
   });
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      await createOwner(data);
-      console.log("✅ Propietario creado exitosamente");
-    } catch (error) {
-      console.error("❌ Error al enviar el formulario:", error);
+      await createOwner({ ...data, attachedDocument: "" });
+      toast.custom(
+        () => (
+          <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
+            <p className="text-green-700 font-semibold text-sm flex gap-2 items-center">
+               <Check/>¡Propietario creado con éxito!
+            </p>
+            <p className="text-gray-700 text-sm mt-1">
+              El propietario ha sido registrado y ahora está disponible en el
+              sistema para su gestión.
+            </p>
+          </div>
+        ),
+        {
+          duration: 5000,
+        },
+      );
+      navigate("/contact")
+
+    } catch {
+      toast.custom(
+        () => (
+          <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
+            <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
+                <CircleAlert/>¡Ha ocurrido un error!
+            </p>
+            <p className="text-gray-700 text-sm mt-1">
+              El propietario no se pudo añadir al sistema, intente nuevamente.
+            </p>
+          </div>
+        ),
+        {
+          duration: 5000,
+        }
+      );
     }
   });
 

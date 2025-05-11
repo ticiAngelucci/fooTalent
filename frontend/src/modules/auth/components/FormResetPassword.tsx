@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordFormValues, resetPasswordSchema } from "../schemas/ResetPassword";
 import { Button } from "@/shared/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { EyeIcon, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Route } from "@/shared/constants/route";
 
 interface FormResetPasswordProps {
   onSubmit: (data: ResetPasswordFormValues) => void;
@@ -30,17 +31,17 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
   // Validar la contraseña en tiempo real
   const watchPassword = form.watch("password");
   const watchConfirmPassword = form.watch("confirmPassword");
-  
+
   useEffect(() => {
     // Verificar todos los requisitos
     const hasMinLength = watchPassword.length >= 8;
     const hasMaxLength = watchPassword.length <= 16;
     const hasUpperCase = /[A-Z]/.test(watchPassword);
     const hasNumber = /[0-9]/.test(watchPassword);
-    
+
     setIsPasswordValid(hasMinLength && hasMaxLength && hasUpperCase && hasNumber);
   }, [watchPassword]);
-  
+
   // Validar que las contraseñas coincidan
   useEffect(() => {
     if (watchConfirmPassword) {
@@ -59,19 +60,21 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
   return (
     <div className="w-full max-w-md">
       <div className="flex items-center justify-center mb-6">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1e40af]">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M12 8l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <Link to={Route.Login}>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1e40af]">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M12 8l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
       </div>
-      
+
       <h2 className="text-2xl font-semibold mb-2 text-center text-gray-800">Restablece tu contraseña</h2>
-      
+
       <p className="text-base text-gray-600 mb-8 text-center">
         Ingresa una nueva contraseña.<br />
         Esta debe tener mínimo 8 caracteres y máximo 16 caracteres, al menos 1 mayúscula y 1 número.
       </p>
-      
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <div>
@@ -127,7 +130,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
               )}
             />
           </div>
-          
+
           <div>
             <FormField
               control={form.control}
@@ -191,7 +194,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
               )}
             />
           </div>
-          
+
           <Button type="submit" className="w-full bg-[#1E40AF] hover:bg-blue-800 text-white py-3 rounded-lg font-medium text-base mt-2">
             Restablecer contraseña
           </Button>
