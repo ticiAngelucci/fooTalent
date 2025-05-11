@@ -44,7 +44,7 @@ public class PropertyServiceImpl implements IPropertyService {
     @Override
     public PropertyResponseDto changePropertyStatus(Long propertyId, PropertyStatus newStatus) {
         Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmuele no encontrado. Por favor, verifique su ID."));
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmueble no encontrado. Por favor, verifique su ID."));
         property.setStatus(newStatus);
         Property updateProperty = propertyRepository.save(property);
 
@@ -54,7 +54,7 @@ public class PropertyServiceImpl implements IPropertyService {
     @Override
     public void deleteProperty(Long id) {
         Property property = propertyRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmuele no encontrado. Por favor, verifique su ID."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmueble no encontrado. Por favor, verifique su ID."));
 
         property.setStatus(PropertyStatus.NO_DISPONIBLE);
         propertyRepository.save(property);
@@ -74,7 +74,7 @@ public class PropertyServiceImpl implements IPropertyService {
     @Transactional
     public PropertyResponseDto updateProperty(Long propertyId, PropertyRequestDto dto) {
         Property existingProperty = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmuele no encontrado. Por favor, verifique su ID."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inmueble no encontrado. Por favor, verifique su ID."));
 
         if (existingProperty.getStatus() == PropertyStatus.NO_DISPONIBLE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede editar. Este inmueble fue eliminado.");

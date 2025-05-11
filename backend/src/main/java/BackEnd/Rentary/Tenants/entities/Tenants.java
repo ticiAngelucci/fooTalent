@@ -1,8 +1,12 @@
 package BackEnd.Rentary.Tenants.entities;
 
 import BackEnd.Rentary.Common.Person;
+import BackEnd.Rentary.Contracts.Entity.Contract;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,4 +21,6 @@ public class Tenants extends Person {
     private String warranty;
     @Column(name = "attached_document")
     private String attachedDocument;
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)
+    private List<Contract> contracts = new ArrayList<>();
 }

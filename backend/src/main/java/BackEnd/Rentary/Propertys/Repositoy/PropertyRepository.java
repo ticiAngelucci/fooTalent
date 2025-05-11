@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query("""
     SELECT p FROM Property p
-    WHERE p.status = 'NO_ALQUILADO'
+    WHERE p.status = 'DISPONIBLE'
     AND (:locality IS NULL OR p.address.locality = :locality)
     AND (:type IS NULL OR p.typeOfProperty = :type)
     """)
