@@ -3,21 +3,44 @@ package BackEnd.Rentary.Contracts.Entity;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "contracts")
 public class Contract {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contractId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id")
+    @JsonBackReference
     private Property property;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id")
+    @JsonBackReference
     private Tenants tenant;
-    private Date startDate;
-    private Date endDate;
-    private double value;
+    @Column(nullable = false)
+    private LocalDate startDate;
+    @Column(nullable = false)
+    private LocalDate endDate;
+    @Column(nullable = false)
     private double baseRent;
+    @Column(nullable = false)
+    private double deposit;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AdjustmentFrequency adjustmentFrequency;
+    @Column(nullable = false)
     private int deadline;
+    @Column(nullable = false)
+    private boolean active;
+    @Column(nullable = false)
+    private double adjustmentPercentage;
 }
