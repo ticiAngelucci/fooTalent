@@ -12,6 +12,7 @@ enum Route {
     EmailSendConfirmation = '/email-send-confirmation',
     ResetPassword = '/reset_password',
     ErrorEmailNotFound = '/error-email-not-found',
+    NewProperty = '/new-property'
 }
 
 export {Route}

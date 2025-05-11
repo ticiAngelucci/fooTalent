@@ -5,14 +5,14 @@ import { SidebarProvider, SidebarTrigger } from "../../ui/sidebar"
 import { useNavigate } from "react-router-dom"
 import UserAvatar from "../../UserAvatar/UserAvatar"
 
-interface LayoutProps{
+interface LayoutProps {
     title?: string;
     subtitle?: string;
     redirect?: string;
     children: React.ReactNode;
 }
 
-const DashboardLayout = ({title, subtitle, redirect, children}: LayoutProps) => {
+const DashboardLayout = ({ title, subtitle, redirect, children }: LayoutProps) => {
     const navigate = useNavigate();
 
     return (
@@ -24,15 +24,15 @@ const DashboardLayout = ({title, subtitle, redirect, children}: LayoutProps) => 
                         <SidebarTrigger />
                         <UserAvatar />
                     </header>
-                    <div className="flex gap-4 mx-8 pb-4 items-center font-semibold text-5xl border-b">
-                        {redirect &&(
-                        <Button onClick={()=> navigate(redirect)} className="size-10 !p-0 bg-white text-black">
-                            <ChevronLeft className="p-0 size-6" />
-                        </Button>
-                        )}
-                        {title? <h1 className="!text-5xl">{title}</h1> : <h2 className="text-4xl">{subtitle}</h2>}
-                    </div>
-                    <main className="flex flex-col ml-5 overflow-y-auto">
+                    <main className="flex flex-col gap-6 overflow-y-auto mx-8">
+                        <div className="flex gap-4 pb-4 items-center font-semibold text-5xl border-b">
+                            {redirect && (
+                                <Button onClick={() => navigate(redirect)} className="size-10 !p-0 btn-secondary">
+                                    <ChevronLeft className="p-0 size-6" />
+                                </Button>
+                            )}
+                            {title ? <h1 className="!text-5xl">{title}</h1> : <h2 className="text-4xl">{subtitle}</h2>}
+                        </div>
                         {children}
                     </main>
                 </div>
