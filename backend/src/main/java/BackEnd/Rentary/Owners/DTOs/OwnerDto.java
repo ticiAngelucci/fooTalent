@@ -16,6 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OwnerDto {
+    @NotNull
+    private Long id;
     @NotNull(message = "Este campo es necesario.")
     private String name;
     @NotNull(message = "Este campo es necesario.")
