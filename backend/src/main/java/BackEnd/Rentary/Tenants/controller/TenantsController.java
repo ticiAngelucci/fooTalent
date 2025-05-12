@@ -40,40 +40,35 @@ public class TenantsController {
 
     @Operation(
             summary = "Crear un nuevo inquilino",
-            description = "Crea un nuevo inquilino con la posibilidad de adjuntar un documento PDF" +
-                    "(solo se puede utilizar por postman o apidog)"
+            description = "Crea un nuevo inquilino con la posibilidad de adjuntar múltiples documentos (PDF e imágenes)"
     )
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<TenantsResponseDto> create(
             @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
-            @RequestPart(value = "document", required = false) MultipartFile document) {
+            @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        log.info("Creando nuevo inquilino: {}", tenantData.getFirstName());
-        if (document != null) {
-            log.info("Con documento adjunto: nombre={}, tamaño={}, tipo={}",
-                    document.getOriginalFilename(),
-                    document.getSize(),
-                    document.getContentType());
+        log.info("Creando nuevo inquilino: {} con {} documentos",
+                tenantData.getFirstName(),
+                documents != null ? documents.length : 0);
 
-            log.info("Tipo de archivo: {}", document.getContentType());
-        }
-
-        TenantsResponseDto createdTenant = tenantsService.saveTenant(tenantData, document);
+        TenantsResponseDto createdTenant = tenantsService.saveTenant(tenantData, documents);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTenant);
     }
 
     @Operation(
             summary = "Actualizar un inquilino existente",
-            description = "Actualiza los datos de un inquilino existente, incluyendo la posibilidad de reemplazar su documento PDF"
+            description = "Actualiza los datos de un inquilino existente, incluyendo la posibilidad de añadir nuevos documentos"
     )
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TenantsResponseDto> update(
             @PathVariable Long id,
             @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
-            @RequestPart(value = "document", required = false) MultipartFile document) {
+            @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        log.info("Actualizando inquilino con ID: {}", id);
-        TenantsResponseDto updatedTenant = tenantsService.updateTenant(id, tenantData, document);
+        log.info("Actualizando inquilino con ID: {} y añadiendo {} documentos",
+                id, documents != null ? documents.length : 0);
+
+        TenantsResponseDto updatedTenant = tenantsService.updateTenant(id, tenantData, documents);
         return ResponseEntity.ok(updatedTenant);
     }
 

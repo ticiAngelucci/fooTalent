@@ -40,10 +40,7 @@ public class TenantsMapper {
         dto.setPhone(entity.getPhone());
         dto.setDni(entity.getDni());
         dto.setWarranty(entity.getWarranty());
-        dto.setAttachedDocument(entity.getAttachedDocument());
-        dto.setDocumentName(entity.getDocumentName());
-        dto.setDocumentType(entity.getDocumentType());
-        dto.setDocumentExtension(entity.getDocumentExtension());
+
         
         if (entity.getAddress() != null) {
             dto.setCountry(entity.getAddress().getCountry());

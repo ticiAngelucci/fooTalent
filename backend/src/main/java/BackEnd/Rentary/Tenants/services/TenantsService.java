@@ -10,9 +10,9 @@ public interface TenantsService {
 
     TenantsResponseDto findTenantsById(Long id);
 
-    TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile document);
+    TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile[] documents);
 
-    TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile document);
+    TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile[] documents);
 
     void deleteTenant(Long id);
 }

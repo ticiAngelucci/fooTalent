@@ -1,12 +1,15 @@
 package BackEnd.Rentary.Tenants.entities;
 
+import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Common.Person;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -19,23 +22,13 @@ public class Tenants extends Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String warranty;
-    @Column(name = "attached_document")
-    private String attachedDocument;
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)
     private List<Contract> contracts = new ArrayList<>();
-    // @Column(name = "attached_document", length = 500)
-    // private String attachedDocument;
+    @ElementCollection
+    @CollectionTable(
+            name = "tenant_documents",
+            joinColumns = @JoinColumn(name = "tenant_id")
+    )
+    private Set<AttachedDocument> documents = new HashSet<>();
 
-    // Nuevos campos para el documento
-    @Column(name = "document_name", length = 255)
-    private String documentName;
-
-    @Column(name = "document_type", length = 50)
-    private String documentType;
-
-    @Column(name = "document_extension", length = 10)
-    private String documentExtension;
-
-    @Column(name = "document_public_id", length = 255)
-    private String documentPublicId;
 }
