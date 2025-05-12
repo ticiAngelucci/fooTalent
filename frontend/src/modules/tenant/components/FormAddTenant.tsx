@@ -36,7 +36,7 @@ const FormAddTenant = () => {
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      await createTenant({ ...data, attachedDocument: "" });
+      await createTenant({ ...data });
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">

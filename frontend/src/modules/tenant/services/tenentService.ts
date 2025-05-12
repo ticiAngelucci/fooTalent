@@ -15,17 +15,16 @@ export const createTenant = async (data: Tenant) => {
     city,
     province,
     postalCode,
-    file,
+   files = [], 
   } = data;
 
   const token = useUserStore.getState().token;
+  console.log("file",files)
+ const base64Files = await Promise.all(
+    files.map((file) => fileToBase64(file)) 
+  );
 
-  let base64File = "";
-  if (file instanceof File) {
-    base64File = await fileToBase64(file);
-  }
-
-  const payload = {
+  const tenant = {
     name: firstName,
     lastName,
     dni,
@@ -39,15 +38,20 @@ export const createTenant = async (data: Tenant) => {
       number,
       postalCode,
     },
-    attachedDocument: base64File,
   };
 
-  const response = await axios.post(`${API_URL}/tenant`, payload, {
+  const payload = {
+    tenant,
+    documents: base64Files,
+  };
+  
+  const response = await axios.post(`${API_URL}/tenants`, payload, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
+
   return response.data;
 };
 
@@ -56,8 +60,8 @@ const fileToBase64 = (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(",")[1];
+      const base64 = reader.result as string;
+      console.log("base",base64)
       resolve(base64);
     };
     reader.onerror = (error) => reject(error);

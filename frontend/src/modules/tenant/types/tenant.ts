@@ -9,6 +9,6 @@ export interface Tenant {
     city?: string;
     province?: string;
     postalCode?: string;
-    file?: File;
+    files?: File[];
     attachedDocument?: string;
   }
