@@ -10,6 +10,7 @@ import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.mappers.TenantsMapper;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
 import BackEnd.Rentary.Tenants.services.FileUploadService;
+import BackEnd.Rentary.Tenants.services.FileUploadService.FileUploadResult;
 import BackEnd.Rentary.Tenants.services.TenantsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,7 @@ public class TenantsServiceImpl implements TenantsService {
         return new TenantsPageResponseDto(
                 tenantsDtos,
                 page,
-                tenantPage.getTotalElements()
-        );
+                tenantPage.getTotalElements());
     }
 
     @Override
@@ -65,7 +65,8 @@ public class TenantsServiceImpl implements TenantsService {
     @Override
     @Transactional
     public TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile document) {
-        log.info("Guardando nuevo inquilino: {}", tenantsRequestDto.getFirstName() + " " + tenantsRequestDto.getLastName());
+        log.info("Guardando nuevo inquilino: {}",
+                tenantsRequestDto.getFirstName() + " " + tenantsRequestDto.getLastName());
 
         // Verificar si ya existe un inquilino con ese DNI
         if (tenantsRepository.existsByDni((tenantsRequestDto.getDni()))) {
@@ -79,8 +80,12 @@ public class TenantsServiceImpl implements TenantsService {
         // Si hay documento adjunto, subirlo a Cloudinary
         if (document != null && !document.isEmpty()) {
             try {
-                String documentUrl = fileUploadService.uploadFile(document);
-                tenant.setAttachedDocument(documentUrl);
+                FileUploadResult uploadResult = fileUploadService.uploadFileWithDetails(document);
+                tenant.setAttachedDocument(uploadResult.getUrl());
+                tenant.setDocumentName(uploadResult.getOriginalName());
+                tenant.setDocumentType(uploadResult.getFileType());
+                tenant.setDocumentExtension(uploadResult.getExtension());
+                tenant.setDocumentPublicId(uploadResult.getPublicId());
             } catch (Exception e) {
                 log.error("Error al subir documento: {}", e.getMessage());
                 throw new FileUploadException("Error al subir el documento: " + e.getMessage());
@@ -179,8 +184,8 @@ public class TenantsServiceImpl implements TenantsService {
             String publicIdWithVersion = lastDotIndex != -1 ? path.substring(0, lastDotIndex) : path;
 
             int versionEndIndex = publicIdWithVersion.indexOf("/");
-            String publicId = versionEndIndex != -1 ?
-                    publicIdWithVersion.substring(versionEndIndex + 1) : publicIdWithVersion;
+            String publicId = versionEndIndex != -1 ? publicIdWithVersion.substring(versionEndIndex + 1)
+                    : publicIdWithVersion;
 
             return "rentary/tenants/documents/" + publicId;
         } catch (Exception e) {

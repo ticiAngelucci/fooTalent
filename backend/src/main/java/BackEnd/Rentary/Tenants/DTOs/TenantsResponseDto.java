@@ -16,7 +16,9 @@ public class TenantsResponseDto {
     private String dni;
     private String warranty;
     private String attachedDocument;
-
+    private String documentName;
+    private String documentType;
+    private String documentExtension;
     private String country;
     private String province;
     private String locality;

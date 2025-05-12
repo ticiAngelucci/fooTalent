@@ -8,16 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TenantsMapper {
-
+    
     public Tenants toEntity(TenantsRequestDto dto) {
-        Address address = new Address();
-        address.setCountry(dto.getCountry());
-        address.setProvince(dto.getProvince());
-        address.setLocality(dto.getLocality());
-        address.setStreet(dto.getStreet());
-        address.setNumber(dto.getNumber());
-        address.setPostalCode(dto.getPostalCode());
-
         Tenants tenant = new Tenants();
         tenant.setName(dto.getFirstName());
         tenant.setLastName(dto.getLastName());
@@ -25,11 +17,20 @@ public class TenantsMapper {
         tenant.setPhone(dto.getPhone());
         tenant.setDni(dto.getDni());
         tenant.setWarranty(dto.getWarranty());
+        
+        Address address = new Address();
+        address.setCountry(dto.getCountry());
+        address.setProvince(dto.getProvince());
+        address.setLocality(dto.getLocality());
+        address.setStreet(dto.getStreet());
+        address.setNumber(dto.getNumber());
+        address.setPostalCode(dto.getPostalCode());
+        
         tenant.setAddress(address);
-
+        
         return tenant;
     }
-
+    
     public TenantsResponseDto toDto(Tenants entity) {
         TenantsResponseDto dto = new TenantsResponseDto();
         dto.setId(entity.getId());
@@ -40,7 +41,10 @@ public class TenantsMapper {
         dto.setDni(entity.getDni());
         dto.setWarranty(entity.getWarranty());
         dto.setAttachedDocument(entity.getAttachedDocument());
-
+        dto.setDocumentName(entity.getDocumentName());
+        dto.setDocumentType(entity.getDocumentType());
+        dto.setDocumentExtension(entity.getDocumentExtension());
+        
         if (entity.getAddress() != null) {
             dto.setCountry(entity.getAddress().getCountry());
             dto.setProvince(entity.getAddress().getProvince());
@@ -49,7 +53,7 @@ public class TenantsMapper {
             dto.setNumber(entity.getAddress().getNumber());
             dto.setPostalCode(entity.getAddress().getPostalCode());
         }
-
+        
         return dto;
     }
 }
