@@ -27,5 +27,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     );
     boolean existsByAddress(Address address);
 
-    List<Property> findByAddressStreetContainingIgnoreCaseOrTypeOfPropertyContainingIgnoreCaseOrObservationsContainingIgnoreCase(String street, String type, String observations);
+    List<Property> findByAddress_StreetContainingIgnoreCaseOrTypeOfPropertyOrObservationsContainingIgnoreCase(String street, TypeOfProperty typeOfProperty, String observations);
+
+    List<Property> findByAddress_StreetContainingIgnoreCaseOrObservationsContainingIgnoreCase(String street, String observations);
+
 }
