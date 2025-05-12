@@ -9,10 +9,11 @@ interface LayoutProps {
     title?: string;
     subtitle?: string;
     redirect?: string;
+    dashBtn?: React.ReactNode;
     children: React.ReactNode;
 }
 
-const DashboardLayout = ({ title, subtitle, redirect, children }: LayoutProps) => {
+const DashboardLayout = ({ title, subtitle, redirect, dashBtn, children }: LayoutProps) => {
     const navigate = useNavigate();
 
     return (
@@ -20,18 +21,23 @@ const DashboardLayout = ({ title, subtitle, redirect, children }: LayoutProps) =
             <div className="flex h-screen w-full bg-neutral-50">
                 <AppSidebar />
                 <div className="flex flex-col gap-6 w-full">
-                    <header className="h-14 w-full px-7 bg-white flex items-center justify-between border-b" role="banner">
+                    <header className="h-14 w-full px-7 justify-between bg-white flex items-center border-b" role="banner">
                         <SidebarTrigger />
                         <UserAvatar />
                     </header>
-                    <main className="flex flex-col gap-6 overflow-y-auto mx-8">
-                        <div className="flex gap-4 pb-4 items-center font-semibold text-5xl border-b">
-                            {redirect && (
-                                <Button onClick={() => navigate(redirect)} className="size-10 !p-0 btn-secondary">
-                                    <ChevronLeft className="p-0 size-6" />
-                                </Button>
-                            )}
-                            {title ? <h1 className="!text-5xl">{title}</h1> : <h2 className="text-4xl">{subtitle}</h2>}
+                    <main className="flex flex-col gap-6 overflow-y-auto overflow-x-hidden px-8">
+                        <div className="flex gap-4 w-full items-center justify-between font-semibold border-b">
+                            <div className="display flex gap-4">
+                                {redirect && (
+                                    <Button onClick={() => navigate(redirect)} className="size-10 !p-0 btn-secondary">
+                                        <ChevronLeft className="p-0 size-6" />
+                                    </Button>
+                                )}
+                                {title ? <h1 className="!text-5xl">{title}</h1> : <h2 className="text-4xl">{subtitle}</h2>}
+                            </div>
+                            {dashBtn && (<>
+                                {dashBtn}
+                            </>)}
                         </div>
                         {children}
                     </main>
