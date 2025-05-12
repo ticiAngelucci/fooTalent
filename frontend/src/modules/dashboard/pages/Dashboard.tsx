@@ -1,6 +1,7 @@
 import { useUserStore } from "@/store/userStore";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
+import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
 
 const summary = [
   { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
@@ -77,12 +78,11 @@ const Dashboard = () => {
   if (!username) return null;
 
   return (
-      <div className="flex flex-col justify-center items-center">
+    <DashboardLayout title={`¡Bienvenido,  ${username}`}>
         <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
           {/* <LogoutButton /> */}
         </div>
         <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
-          <h1 className="text-2xl font-thin">¡Bienvenido,  {username}!</h1>
           <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10">
@@ -103,7 +103,7 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-      </div>
+    </DashboardLayout>
   );
 };
 

@@ -4,9 +4,7 @@ import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayou
 import { usePropertyStore } from "../store/propertyStore";
 import { getPropertyColumns } from "../components/PropertyColumns";
 import { PropertyTable } from "../components/PropertyTables";
-import { Route } from "@/shared/constants/route";
-import { Link } from "react-router-dom";
-import { Button } from "@/shared/components/ui/button";
+
 
 
 export default function InmueblesView() {
@@ -21,14 +19,7 @@ export default function InmueblesView() {
     return (
         <DashboardLayout title="Inmuebles">
             <div className="p-6 space-y-4 w-[95%] mx-auto max-w-[1700px] min-h-screen">
-                <Link to={Route.NewProperty}
-
-                >
-                    <Button className="btn-primary">
-                        Crear inmueble
-                    </Button>
-
-                </Link>
+                
 
                 <Tabs defaultValue="inmuebles" className="space-y-4">
                     <TabsContent value="inmuebles">
