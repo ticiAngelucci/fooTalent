@@ -109,7 +109,7 @@ public class TenantsServiceImpl implements TenantsService {
             throw new DuplicateDniException("Ya existe otro inquilino con DNI: " + dto.getDni());
         }
 
-        existingTenant.setName(dto.getFirstName());
+        existingTenant.setFirstName(dto.getFirstName());
         existingTenant.setLastName(dto.getLastName());
         existingTenant.setEmail(dto.getEmail());
         existingTenant.setPhone(dto.getPhone());

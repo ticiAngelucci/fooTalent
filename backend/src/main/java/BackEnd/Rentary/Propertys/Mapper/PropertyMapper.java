@@ -25,7 +25,7 @@ public class PropertyMapper {
                 property.getStatus(),
                 property.getObservations(),
                 property.getOwner().getId(),
-                property.getOwner().getName(),
+                property.getOwner().getFirstName(),
                 property.getOwner().getLastName()
         );
     }

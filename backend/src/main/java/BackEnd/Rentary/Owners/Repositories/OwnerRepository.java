@@ -10,5 +10,5 @@ import java.util.List;
 public interface OwnerRepository extends JpaRepository<Owner, Long> {
     boolean existsByDni(String dni);
 
-    List<Owner> findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String lastName, String dni, String email);
+    List<Owner> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(String firstName, String lastName, String dni, String email);
 }

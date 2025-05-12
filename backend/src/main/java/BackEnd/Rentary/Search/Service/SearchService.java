@@ -29,13 +29,13 @@ public class SearchService {
 
         if ("owner".equalsIgnoreCase(entityType)) {
             List<Owner> owners = ownerRepository
-                    .findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                    .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
                             term, term, term, term);
             result.put("owners", owners);
 
         } else if ("tenant".equalsIgnoreCase(entityType)) {
             List<Tenants> tenants = tenantRepository
-                    .findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                    .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
                             term, term, term, term);
             result.put("tenants", tenants);
 
@@ -54,10 +54,10 @@ public class SearchService {
         } else {
             // Búsqueda en todas las entidades
             List<Owner> owners = ownerRepository
-                    .findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                    .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
                             term, term, term, term);
             List<Tenants> tenants = tenantRepository
-                    .findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                    .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
                             term, term, term, term);
             List<Property> properties;
             if (type != null) {

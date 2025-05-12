@@ -19,7 +19,7 @@ public class TenantsMapper {
         address.setPostalCode(dto.getPostalCode());
 
         Tenants tenant = new Tenants();
-        tenant.setName(dto.getFirstName());
+        tenant.setFirstName(dto.getFirstName());
         tenant.setLastName(dto.getLastName());
         tenant.setEmail(dto.getEmail());
         tenant.setPhone(dto.getPhone());
@@ -33,7 +33,7 @@ public class TenantsMapper {
     public TenantsResponseDto toDto(Tenants entity) {
         TenantsResponseDto dto = new TenantsResponseDto();
         dto.setId(entity.getId());
-        dto.setFirstName(entity.getName());
+        dto.setFirstName(entity.getFirstName());
         dto.setLastName(entity.getLastName());
         dto.setEmail(entity.getEmail());
         dto.setPhone(entity.getPhone());
