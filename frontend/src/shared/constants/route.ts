@@ -13,7 +13,8 @@ enum Route {
     ResetPassword = '/reset_password',
     ErrorEmailNotFound = '/error-email-not-found',
     NewProperty = '/new-property',
-    AddOwner= '/add-owner'
+    AddOwner= '/add-owner',
+    AddTenant= '/add-tenant'
 }
 
 export {Route}
