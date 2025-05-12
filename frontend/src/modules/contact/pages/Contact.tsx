@@ -18,6 +18,9 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { Filter, UserPlus, X } from "lucide-react";
+import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
+import { useNavigate } from "react-router-dom";
+import { Route } from "@/shared/constants/route";
 
 interface Contacto {
     nombre: string;
@@ -63,8 +66,14 @@ export default function ContactosView() {
     const [tab, setTab] = useState("inquilinos");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const navigate = useNavigate();
+
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    const handleRedirect = ()=>{
+        tab == "inquilinos" ? setIsModalOpen(true) : navigate(Route.AddOwner); 
+    }
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -84,9 +93,7 @@ export default function ContactosView() {
     };
 
     return (
-            <div className="p-6 space-y-4 w-[95%] mx-auto max-w-[1700px] min-h-screen">
-                <h1 className="text-3xl mb-30 mt-20">Contactos</h1>
-
+        <DashboardLayout title="Contactos">
                 <Tabs value={tab} onValueChange={setTab} className="space-y-4">
                     <div className="flex flex-wrap justify-between items-center gap-2">
                         <TabsList className="flex gap-2 bg-[#E5E7EB] p-1 rounded-md w-[35%]">
@@ -127,9 +134,16 @@ export default function ContactosView() {
                                 <Filter className="w-6 h-6" />
                             </Button>
 
-                            <Button
+                            {/* <Button
                                 className="bg-[#1E40AF]"
                                 onClick={openModal}
+                            >
+                                <UserPlus className="mr-2 w-4 h-4" />
+                                {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
+                            </Button> */}
+                            <Button
+                                className="bg-[#1E40AF]"
+                                onClick={handleRedirect}
                             >
                                 <UserPlus className="mr-2 w-4 h-4" />
                                 {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
@@ -296,6 +310,6 @@ export default function ContactosView() {
                         </motion.div>
                     </motion.div>
                 )}
-            </div>
+        </DashboardLayout>
     );
 }
