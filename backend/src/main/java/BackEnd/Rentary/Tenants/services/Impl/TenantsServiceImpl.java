@@ -77,10 +77,11 @@ public class TenantsServiceImpl implements TenantsService {
         // Convertir DTO a entidad
         Tenants tenant = tenantsMapper.toEntity(tenantsRequestDto);
 
-        // Si hay documento adjunto, subirlo a Cloudinary
+        // Si hay documento adjunto, subirlo a Cloudinary con el DNI
         if (document != null && !document.isEmpty()) {
             try {
-                FileUploadResult uploadResult = fileUploadService.uploadFileWithDetails(document);
+                // Pasar el DNI al servicio de carga de archivos
+                FileUploadResult uploadResult = fileUploadService.uploadFileWithDetails(document, tenant.getDni());
                 tenant.setAttachedDocument(uploadResult.getUrl());
                 tenant.setDocumentName(uploadResult.getOriginalName());
                 tenant.setDocumentType(uploadResult.getFileType());

@@ -76,12 +76,12 @@ public class FileUploadService {
         }
     }
 
-    public FileUploadResult uploadFileWithDetails(MultipartFile file) {
+    public FileUploadResult uploadFileWithDetails(MultipartFile file, String dni) {
         try {
             String contentType = file.getContentType();
             String originalFilename = file.getOriginalFilename();
 
-            log.info("Subiendo archivo: {} con tipo de contenido: {}", originalFilename, contentType);
+            log.info("Subiendo archivo: {} con tipo de contenido: {} para DNI: {}", originalFilename, contentType, dni);
 
             // Determinar un nombre "limpio" para el archivo (sin caracteres especiales)
             String cleanFileName = originalFilename != null ? originalFilename.replaceAll("[^a-zA-Z0-9.-]", "_")
@@ -139,19 +139,26 @@ public class FileUploadService {
                                 + contentType);
             }
 
-            // Generar un nombre de archivo descriptivo que incluya parte del nombre
-            // original + UUID + extensión
+            // Generar un nombre de archivo descriptivo que incluya:
+            // - parte del nombre original
+            // - DNI del inquilino
+            // - UUID para garantizar unicidad
             String uniqueId = UUID.randomUUID().toString().substring(0, 8);
-            // Tomamos hasta 10 caracteres del nombre original para hacerlo más legible
+
+            // Limitar el nombre original para que no sea demasiado largo
             String shortOriginalName = cleanFileName.length() > 10 ? cleanFileName.substring(0, 10) : cleanFileName;
 
-            String uniqueFileName = shortOriginalName + "_" + uniqueId + fileExtension;
+            // Incorporar el DNI al nombre del archivo (limpiar el DNI por si acaso)
+            String cleanDni = dni != null ? dni.replaceAll("[^a-zA-Z0-9]", "") : "noID";
+
+            String uniqueFileName = shortOriginalName + "_dni" + cleanDni + "_" + uniqueId + fileExtension;
             params.put("public_id", uniqueFileName);
 
             // Establecer un nombre fácil de leer en los metadatos de Cloudinary
             Map<String, String> metadata = new HashMap<>();
             metadata.put("original_filename", originalFilename);
             metadata.put("content_type", contentType);
+            metadata.put("dni", dni); // Agregar el DNI como metadato
             params.put("context", metadata);
 
             // Subir el archivo a Cloudinary
@@ -176,8 +183,18 @@ public class FileUploadService {
 
     // Mantener el método original para compatibilidad
     public String uploadFile(MultipartFile file) {
-        return uploadFileWithDetails(file).getUrl();
+        return uploadFileWithDetails(file, null).getUrl();
     }
+
+    // Nuevo método que incluye el dni
+    public String uploadFile(MultipartFile file, String dni) {
+        return uploadFileWithDetails(file, dni).getUrl();
+    }
+
+    // Mantener el método original para compatibilidad
+    // public String uploadFile(MultipartFile file) {
+    //     return uploadFileWithDetails(file).getUrl();
+    // }
 
     public void deleteFile(String publicId) {
         try {
