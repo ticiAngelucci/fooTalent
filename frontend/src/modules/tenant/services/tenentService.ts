@@ -42,7 +42,7 @@ export const createTenant = async (data: Tenant) => {
     attachedDocument: base64File,
   };
 
-  const response = await axios.post(`${API_URL}/tenant/create`, payload, {
+  const response = await axios.post(`${API_URL}/tenant`, payload, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
