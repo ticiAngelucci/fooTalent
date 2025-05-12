@@ -56,20 +56,20 @@ public class ContractServiceImpl implements IContractService {
         log.info("Contrato creado exitosamente para propiedad ID: {} y inquilino ID: {}",
                 request.propertyId(), request.tenantId());
 
-        return contractMapper.toResponse(contract);
+        return contractMapper.toDto(contract);
     }
 
     @Override
     public ContractResponse getContractById(Long id) {
         return contractRepository.findById(id)
-                .map(contractMapper::toResponse)
+                .map(contractMapper::toDto)
                 .orElseThrow(() -> new ContractNorFoundException(id.toString()));
     }
 
     @Override
     public Page<ContractResponse> getAllContracts(Pageable pageable) {
         return contractRepository.findAll(pageable)
-                .map(contractMapper::toResponse);
+                .map(contractMapper::toDto);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ContractServiceImpl implements IContractService {
 
         log.info("Contrato actualizado: ID {}", id);
 
-        return contractMapper.toResponse(contractRepository.save(updated));
+        return contractMapper.toDto(contractRepository.save(updated));
     }
 
     @Override

@@ -1,10 +1,11 @@
 package BackEnd.Rentary.Owners.Controller;
 
-import BackEnd.Rentary.Owners.DTOs.OwnerDto;
+import BackEnd.Rentary.Owners.DTOs.OwnerRequestDto;
+import BackEnd.Rentary.Owners.DTOs.OwnerResponseDto;
 import BackEnd.Rentary.Owners.Services.OwnerServiceImpl;
-import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class OwnerController {
     private final OwnerServiceImpl ownerService;
 
     @GetMapping
-    public ResponseEntity<CustomPageResponse<OwnerDto>> getOwners(
+    public ResponseEntity<Page<OwnerResponseDto>> getOwners(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
 
@@ -33,7 +34,7 @@ public class OwnerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createOwner(@RequestBody @Valid OwnerDto ownerDto){
+    public ResponseEntity<?> createOwner(@RequestBody @Valid OwnerRequestDto ownerDto){
 
         return ownerService.createOwner(ownerDto);
     }
@@ -45,7 +46,7 @@ public class OwnerController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateOwner(@PathVariable Long id, @RequestBody @Valid OwnerDto ownerDto){
+    public ResponseEntity<?> updateOwner(@PathVariable Long id, @RequestBody @Valid OwnerRequestDto ownerDto){
 
         return ownerService.updateOwner(id, ownerDto );
     }

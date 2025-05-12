@@ -24,7 +24,7 @@ public class ContractMapper {
         return contract;
     }
 
-    public ContractResponse toResponse(Contract contract) {
+    public ContractResponse toDto(Contract contract) {
         return new ContractResponse(
                 contract.getContractId(),
                 contract.getProperty().getId_property(),

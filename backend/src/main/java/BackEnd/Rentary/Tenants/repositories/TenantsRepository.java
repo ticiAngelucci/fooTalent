@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface TenantsRepository extends JpaRepository<Tenants, Long> {
     boolean existsByDni(String dni);
-    List<Tenants> findByNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String lastName, String dni, String email);
+    List<Tenants> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String lastName, String dni, String email);
 }
