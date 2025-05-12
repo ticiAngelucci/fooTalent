@@ -35,7 +35,7 @@ const EmailSentConfirmation = () => {
                                 Hemos enviado un enlace a <span className="font-bold">{userEmail}</span>
                             </p>
                             <p className="text-gray-600">
-                                Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseña.
+                                Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseñas.
                             </p>
                         </div>
 

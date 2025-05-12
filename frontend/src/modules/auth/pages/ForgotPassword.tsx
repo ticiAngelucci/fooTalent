@@ -20,20 +20,16 @@ import { Link } from "react-router-dom";
 import { Frown } from 'lucide-react';
 import AuthLayout from "../components/layout/AuthLayout";
 
-
-
 const forgotPasswordSchema = z.object({
     email: z.string()
         .min(1, "Ingrese un correo electrónico")
         .email("Ingrese un correo electrónico válido"),
 });
 
-
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
-
 
     const form = useForm<ForgotPasswordFormValues>({
         resolver: zodResolver(forgotPasswordSchema),
@@ -48,12 +44,16 @@ const ForgotPassword = () => {
             navigate(Route.EmailSendConfirmation, { state: { email: data.email } });
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response?.status === 500) {
-
+                
+                sessionStorage.setItem('errorEmail', data.email);
+                
+                
                 navigate(Route.ErrorEmailNotFound, {
                     state: {
                         email: data.email,
                         from: 'forgot_password'
-                    }
+                    },
+                    replace: false 
                 });
             } else {
                 let errorMessage = "Ocurrió un error al enviar el correo";
@@ -61,16 +61,16 @@ const ForgotPassword = () => {
                     errorMessage = error.response.data?.message || error.message;
                     console.error(errorMessage);
                 }
+                
+                
+                sessionStorage.setItem('errorEmail', data.email || "");
+                
                 navigate(Route.ErrorEmailNotFound);
             }
         }
     };
 
-
-
-
     return (
-
         <AuthLayout>
             <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
                 <div className="w-full max-w-md px-6">
@@ -138,7 +138,6 @@ const ForgotPassword = () => {
                 </div>
             </div>
         </AuthLayout>
-
     );
 };
 
