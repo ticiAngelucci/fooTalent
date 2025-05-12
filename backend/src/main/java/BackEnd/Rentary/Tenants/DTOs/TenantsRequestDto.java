@@ -22,9 +22,9 @@ public class TenantsRequestDto {
 
     @NotNull(message = "El teléfono es requerido")
     private String phone;
-
+    @NotNull(message = "La fecha de nacimiento es requerida")
     private String warranty;
-
+    @NotNull(message = "El DNI es requerido")
     private String dni;
 
     private String country;

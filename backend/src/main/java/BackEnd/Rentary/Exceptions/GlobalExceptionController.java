@@ -132,7 +132,136 @@ public class GlobalExceptionController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
-// Errores Personalizados
+    // Errores Personalizados
+    @ExceptionHandler(ContractNorFoundException.class)
+    public ResponseEntity<ErrorResponse> handleContractNotFoundException(ContractNorFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "CONTRACT_NOT_FOUND",
+                "El contrato solicitado no existe",
+                Collections.singletonList("ID del contrato: " + ex.getMessage())
+        );
 
+        log.warn("Contract not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentNotFoundException(PaymentNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "PAYMENT_NOT_FOUND",
+                "El pago solicitado no existe",
+                Collections.singletonList("ID del pago: " + ex.getMessage())
+        );
+
+        log.warn("Payment not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(ContractAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleContractAlreadyExistsException(ContractAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "CONTRACT_ALREADY_EXISTS",
+                "El contrato ya existe",
+                Collections.singletonList("ID del contrato: " + ex.getMessage())
+        );
+
+        log.warn("Contract already exists: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(PropertyNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyNotFoundException(PropertyNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "PROPERTY_NOT_FOUND",
+                "El inmueble solicitado no existe",
+                Collections.singletonList("ID del inmueble: " + ex.getMessage())
+        );
+
+        log.warn("Property not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(TenantNotFoundExceptions.class)
+    public ResponseEntity<ErrorResponse> handleTenantNotFoundException(TenantNotFoundExceptions ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "TENANT_NOT_FOUND",
+                "El inquilino solicitado no existe",
+                Collections.singletonList("ID del inquilino: " + ex.getMessage())
+        );
+
+        log.warn("Tenant not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PropertyUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyUnavailableException(PropertyUnavailableException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "PROPERTY_UNAVAILABLE",
+                "El inmueble no está disponible",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("Property unavailable: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(OwnerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleOwnerNotFoundException(OwnerNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "OWNER_NOT_FOUND",
+                "El propietario solicitado no existe",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("Owner not found: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateDniException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateDniException(DuplicateDniException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "DUPLICATE_DNI",
+                "DNI duplicado",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("Duplicate DNI: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(PropertyAddressExistsException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyAddressExistsException(PropertyAddressExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "PROPERTY_ADDRESS_EXISTS",
+                "Dirección de inmueble duplicada",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("Property address exists: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(PropertyDeletedStatusException.class)
+    public ResponseEntity<ErrorResponse> handlePropertyDeletedStatusException(PropertyDeletedStatusException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "PROPERTY_DELETED",
+                "Inmueble no disponible para modificación",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("Attempt to modify deleted property: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ErrorResponse> handleFileUploadException(FileUploadException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "FILE_UPLOAD_ERROR",
+                "Error al subir o procesar el archivo",
+                Collections.singletonList(ex.getMessage())
+        );
+
+        log.warn("File upload error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }
