@@ -25,8 +25,6 @@ import { Property } from "../types/property";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { Download } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Route } from "@/shared/constants/route";
 
 interface PropertyTableProps {
   data: Property[];
@@ -111,11 +109,6 @@ export function PropertyTable({
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
         />
-        <Link to={Route.NewProperty}>
-          <Button className="btn-primary my-4">
-            Crear inmueble
-          </Button>
-        </Link>
         <Button
           variant="outline"
           className="ml-auto"
