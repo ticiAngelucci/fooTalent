@@ -15,55 +15,45 @@ export const createTenant = async (data: Tenant) => {
     city,
     province,
     postalCode,
-   files = [], 
+    files = [],
   } = data;
 
   const token = useUserStore.getState().token;
-  console.log("file",files)
- const base64Files = await Promise.all(
-    files.map((file) => fileToBase64(file)) 
-  );
+  const formData = new FormData();
 
   const tenant = {
-    name: firstName,
-    lastName,
-    dni,
-    phone,
-    email,
+    name: firstName ?? "",
+    lastName: lastName ?? "",
+    dni: dni ?? "",
+    phone: phone ?? "",
+    email: email ?? "",
     address: {
-      country: "",
-      province,
-      locality: city,
-      street,
-      number,
-      postalCode,
+      street: street ?? "",
+      number: number?.toString() ?? "",
+      locality: city ?? "",
+      province: province ?? "",
+      postalCode: postalCode ?? "",
     },
   };
 
-  const payload = {
-    tenant,
-    documents: base64Files,
-  };
-  
-  const response = await axios.post(`${API_URL}/tenants`, payload, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  formData.append("tenant", JSON.stringify(tenant));
 
-  return response.data;
-};
-
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      console.log("base",base64)
-      resolve(base64);
-    };
-    reader.onerror = (error) => reject(error);
+  files.forEach((file) => {
+    formData.append("documents[]", file);
   });
+  console.log(formData)
+  try {
+    const response = await axios.post(`${API_URL}/tenants`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear el inquilino:", error);
+    throw error;
+  }
+
+
 };

@@ -1,100 +1,110 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useForm, Controller } from "react-hook-form";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/shared/components/ui/tabs";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/shared/components/ui/table";
-import { Input } from "@/shared/components/ui/input";
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { API_URL } from "@/shared/constants/api";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
-import { Filter, UserPlus, X } from "lucide-react";
+import { UserPlus, MoreVertical } from "lucide-react";  
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "@/shared/components/ui/dropdown-menu";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
 import { useNavigate } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
+import axios from "axios";
 
 interface Contacto {
-    nombre: string;
-    apellido: string;
+    id: number;
+    name: string;
+    lastName: string;
     dni: string;
-    telefono: string;
+    phone: string;
     email: string;
-    direccion: string;
-    provincia: string;
+    street: string;
+    address: Address;
+    number: number;
+    province: string;
 }
-
-const contactos: Contacto[] = [
-    {
-        nombre: "Juan José",
-        apellido: "Gómez",
-        dni: "99199999",
-        telefono: "11 99 999 999",
-        email: "JJGomez@dominio.com",
-        direccion: "Av.Renta 1122",
-        provincia: "Buenos Aires",
-    },
-    {
-        nombre: "Ana",
-        apellido: "Garcia",
-        dni: "99199998",
-        telefono: "11 99 999 999",
-        email: "AGarcia@dominio.com",
-        direccion: "Av.Venta 1122",
-        provincia: "Mendoza",
-    },
-    {
-        nombre: "Elizabeth",
-        apellido: "Perez",
-        dni: "99199997",
-        telefono: "11 99 999 999",
-        email: "EPerez@dominio.com",
-        direccion: "Av.Rentar 1122",
-        provincia: "Buenos Aires",
-    },
-];
+interface Address {
+    street: string;
+    locality: string;
+    province: string;
+    number: string;
+    postalCode: string;
+}
 
 export default function ContactosView() {
     const [tab, setTab] = useState("inquilinos");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [contactos, setContactos] = useState<Contacto[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [contactosPerPage] = useState(5);  
     const navigate = useNavigate();
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
-
     const handleRedirect = () => {
-        tab == "inquilinos" ? setIsModalOpen(true) : navigate(Route.AddOwner);
+    if (tab === "inquilinos") {
+        navigate(Route.AddTenant);
+    } else {
+        navigate(Route.AddOwner);
     }
+};
+    const handleDelete = async (id: number,tipo: string) => {
+        setLoading(true);
+        setError('');
+        const token = sessionStorage.getItem('token');  
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: {
-            nombre: "",
-            apellido: "",
-            dni: "",
-            telefono: "",
-            email: "",
-            direccion: "",
-            provincia: "",
+        try {
+            
+            const response = await axios.delete(
+               `${API_URL}${tipo === "inquilinos" ? "/tenants" : "/owner"}/delete/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log("response",response.data)
+            setContactos(contactos.filter(contacto => contacto.id !== id));
+        } catch (err) {
+            setError('Error al eliminar el contacto.');
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-    });
-
-    const onSubmit = (data: any) => {
-        console.log(data);
-        closeModal();
     };
+    const fetchContactos = async (tipo: string) => {
+        setLoading(true);
+        setError(null);
+        const token = sessionStorage.getItem('token');
+        try {
+            const response = await axios.get(
+                `${API_URL}${tipo === "inquilinos" ? "/tenants" : "/owner"}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setContactos(response.data.content || []);
+        } catch (err) {
+            setError("Error al cargar contactos.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchContactos(tab);
+    }, [tab]);
+
+    const indexOfLastContact = currentPage * contactosPerPage;
+    const indexOfFirstContact = indexOfLastContact - contactosPerPage;
+    const currentContactos = contactos.slice(indexOfFirstContact, indexOfLastContact);
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <DashboardLayout title="Contactos"
-        redirect={Route.Dashboard}
+            redirect={Route.Dashboard}
             dashBtn={<Button
                 className="bg-[#1E40AF]"
                 onClick={handleRedirect}
@@ -103,215 +113,85 @@ export default function ContactosView() {
                 {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
             </Button>}>
             <Tabs value={tab} onValueChange={setTab} className="space-y-4">
-                <div className="flex flex-wrap justify-between items-center gap-2">
-                    <TabsList className="flex gap-2 bg-[#E5E7EB] p-1 rounded-md w-[35%]">
-                        <TabsTrigger
-                            value="propietarios"
-                            className="px-4 py-2 text-sm font-medium rounded-md transition-all 
-                            bg-[#E5E7EB]
-                            data-[state=active]:!bg-white 
-                            data-[state=active]:text-black 
-                            data-[state=inactive]:text-gray-600
-                            focus:outline-none"
-                        >
-                            Propietarios
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="inquilinos"
-                            className="px-4 py-2 text-sm font-medium rounded-md transition-all 
-                            bg-[#E5E7EB]
-                            data-[state=active]:!bg-white 
-                            data-[state=active]:text-black 
-                            data-[state=inactive]:text-gray-600
-                            focus:outline-none"
-                        >
-                            Inquilinos
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <div className="flex gap-2">
-                        <Input
-                            placeholder="Buscar..."
-                            className="w-[75%] text-lg py-3 px-4"
-                        />
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="text-lg py-3 px-6 bg-transparent border border-gray-300 hover:bg-gray-100 hover:border-gray-500"
-                        >
-                            <Filter className="w-6 h-6" />
-                        </Button>
-
-                        {/* <Button
-                                className="bg-[#1E40AF]"
-                                onClick={openModal}
-                            >
-                                <UserPlus className="mr-2 w-4 h-4" />
-                                {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
-                            </Button> */}
-
-                    </div>
-                </div>
-
-                <TabsContent value="inquilinos">
-                    <div className="rounded-md border mt-4 overflow-x-auto">
-                        <Table>
-                            <TableHeader className="bg-[#E5E7EB]">
+                <TabsList>
+                    <TabsTrigger value="inquilinos">Inquilinos</TabsTrigger>
+                    <TabsTrigger value="propietarios">Propietarios</TabsTrigger>
+                </TabsList>
+                <TabsContent value={tab}>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Nombre</TableHead>
+                                <TableHead>Apellido</TableHead>
+                                <TableHead>DNI</TableHead>
+                                <TableHead>Teléfono</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Dirección</TableHead>
+                                <TableHead>Provincia</TableHead>
+                                <TableHead></TableHead> 
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {loading ? (
                                 <TableRow>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Nombre</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Apellido</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">DNI</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Teléfono</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Correo electrónico</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Dirección</TableHead>
-                                    <TableHead className="pt-4 pb-4 pl-8 pr-8">Provincia</TableHead>
+                                    <TableCell colSpan={7} className="text-center py-4">
+                                        Cargando...
+                                    </TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {contactos.map((contacto, index) => (
+                            ) : error ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center text-red-500 py-4">
+                                        {error}
+                                    </TableCell>
+                                </TableRow>
+                            ) : currentContactos.length > 0 ? (
+                                currentContactos.map((contacto, index) => (
                                     <TableRow key={index}>
-                                        <TableCell className="p-8">{contacto.nombre}</TableCell>
-                                        <TableCell className="p-8">{contacto.apellido}</TableCell>
+                                        <TableCell className="p-8">{contacto.name}</TableCell>
+                                        <TableCell className="p-8">{contacto.lastName}</TableCell>
                                         <TableCell className="p-8">{contacto.dni}</TableCell>
-                                        <TableCell className="p-8">{contacto.telefono}</TableCell>
+                                        <TableCell className="p-8">{contacto.phone}</TableCell>
                                         <TableCell className="p-8">{contacto.email}</TableCell>
-                                        <TableCell className="p-8">{contacto.direccion}</TableCell>
-                                        <TableCell className="p-8">{contacto.provincia}</TableCell>
+                                        <TableCell className="p-8">
+                                            {contacto.address ? `${contacto.address.street}, ${contacto.address.number}` : 'No disponible'}
+                                        </TableCell>
+                                        <TableCell className="p-8">
+                                            {contacto.address ? contacto.address.province : 'No disponible'}
+                                        </TableCell>
+                                        <TableCell className="p-8">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>
+                                                    <MoreVertical />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuItem onClick={() => handleEdit(contacto)}>Editar</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleDelete(contacto.id)}>Eliminar</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                </TabsContent>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center text-red-500 py-4">
+                                        Datos no válidos.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
 
-                <TabsContent value="propietarios">
-                    <div className="text-muted-foreground p-4">
-                        Sin datos de propietarios aún.
+                    <div className="flex justify-center mt-4">
+                        <Button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+                            Anterior
+                        </Button>
+                        <span className="mx-2">Página {currentPage}</span>
+                        <Button onClick={() => paginate(currentPage + 1)} disabled={indexOfLastContact >= contactos.length}>
+                            Siguiente
+                        </Button>
                     </div>
                 </TabsContent>
             </Tabs>
-
-            {/* Modal */}
-            {isModalOpen && (
-                <motion.div
-                    className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-50"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <motion.div
-                        className="bg-white p-8 rounded-md w-[500px] max-w-[90%]"
-                        initial={{ scale: 0.95 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0.95 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl">
-                                {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
-                            </h2>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={closeModal}
-                                className="text-gray-600 hover:bg-gray-200"
-                            >
-                                <X className="w-5 h-5" />
-                            </Button>
-                        </div>
-
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Nombre</label>
-                                <Controller
-                                    name="nombre"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Nombre" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Apellido</label>
-                                <Controller
-                                    name="apellido"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Apellido" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">DNI</label>
-                                <Controller
-                                    name="dni"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="DNI" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Teléfono</label>
-                                <Controller
-                                    name="telefono"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Teléfono" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Correo electrónico</label>
-                                <Controller
-                                    name="email"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Correo electrónico" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Dirección</label>
-                                <Controller
-                                    name="direccion"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Dirección" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Provincia</label>
-                                <Controller
-                                    name="provincia"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input {...field} placeholder="Provincia" className="w-full" />
-                                    )}
-                                />
-                            </div>
-                            <div className="flex justify-between">
-                                <Button
-                                    type="button"
-                                    onClick={closeModal}
-                                    className="bg-transparent border-2 border-gray-700 text-gray-700 hover:bg-red-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 px-6 py-2 rounded-md transition-all"
-                                >
-                                    Cancelar
-                                </Button>
-
-                                <Button
-                                    type="submit"
-                                    className="bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 px-6 py-2 rounded-md transition-all"
-                                >
-                                    Guardar
-                                </Button>
-                            </div>
-                        </form>
-                    </motion.div>
-                </motion.div>
-            )}
         </DashboardLayout>
     );
 }
