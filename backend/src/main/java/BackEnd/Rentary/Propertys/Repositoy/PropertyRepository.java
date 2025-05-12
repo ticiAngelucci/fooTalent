@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
     @Query("""
@@ -24,4 +26,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             Pageable pageable
     );
     boolean existsByAddress(Address address);
+
+    List<Property> findByAddressStreetContainingIgnoreCaseOrTypeOfPropertyContainingIgnoreCaseOrObservationsContainingIgnoreCase(String street, String type, String observations);
 }
