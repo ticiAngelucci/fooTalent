@@ -7,26 +7,19 @@ import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import BackEnd.Rentary.Propertys.Repositoy.PropertyRepository;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@RequiredArgsConstructor
 @Service
 public class SearchService {
 
     private final OwnerRepository ownerRepository;
     private final TenantsRepository tenantRepository;
     private final PropertyRepository propertyRepository;
-
-    @Autowired
-    public SearchService(OwnerRepository ownerRepository, TenantsRepository tenantRepository, PropertyRepository propertyRepository) {
-        this.ownerRepository = ownerRepository;
-        this.tenantRepository = tenantRepository;
-        this.propertyRepository = propertyRepository;
-    }
 
     public Map<String, Object> search(String term, String entityType) {
         Map<String, Object> result = new HashMap<>();
