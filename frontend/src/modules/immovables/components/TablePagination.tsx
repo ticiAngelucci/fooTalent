@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table } from "@tanstack/react-table";
 
-
-
 export function TablePagination<T>({ table }: { table: Table<T> }) {
   const pageCount = table.getPageCount();
   const currentPage = table.getState().pagination.pageIndex;
@@ -59,9 +57,9 @@ export function TablePagination<T>({ table }: { table: Table<T> }) {
         <button
           key={pageIndex}
           onClick={() => table.setPageIndex(pageIndex)}
-          className={`w-8 h-8 rounded-md text-center ${
+          className={`w-8 h-8 rounded-md flex items-center justify-center ${
             currentPage === pageIndex
-              ? "bg-blue-600 text-white font-semibold"
+              ? "btn-primary text-white"
               : "hover:bg-gray-200"
           }`}
         >

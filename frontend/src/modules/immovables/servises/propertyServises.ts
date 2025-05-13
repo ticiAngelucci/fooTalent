@@ -1,23 +1,30 @@
 import axios from "axios";
-import { Property } from "../types/property";
+import { defaultPageSize, Property } from "../types/property";
+const API_URL = import.meta.env.VITE_API_URL;
 
-const API_URL = "https://rentaryy.koyeb.app";
+interface PropertiesResponse {
+  content: Property[];
+  totalPages: number;
+  totalElements: number;
+  
+}
 
-export async function fetchAllProperties(): Promise<Property[]> {
+export async function fetchAllProperties(page: number = 0, size: number = defaultPageSize): Promise<PropertiesResponse> {
   try {
     const token = sessionStorage.getItem('token');
-    
+
     if (!token) {
       throw new Error("No se encontró token de autenticación");
     }
 
-    const response = await axios.get(`${API_URL}/properties/all`, {
+    const response = await axios.get(`${API_URL}/properties/all?page=${page}&size=${size}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    return response.data.content;
+    
+    return response.data;
   } catch (error) {
     console.error("Error al obtener propiedades:", error);
     throw error;
