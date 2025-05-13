@@ -1,5 +1,6 @@
 package BackEnd.Rentary.Contracts.Entity;
 
+import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
@@ -9,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -43,4 +46,10 @@ public class Contract {
     private boolean active;
     @Column(nullable = false)
     private double adjustmentPercentage;
+    @ElementCollection
+    @CollectionTable(
+            name = "contract_documents",
+            joinColumns = @JoinColumn(name = "contract_id")
+    )
+    private Set<AttachedDocument> documents = new HashSet<>();
 }

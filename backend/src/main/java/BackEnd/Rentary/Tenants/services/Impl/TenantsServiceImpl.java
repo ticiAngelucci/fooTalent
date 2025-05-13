@@ -1,5 +1,9 @@
 package BackEnd.Rentary.Tenants.services.Impl;
 
+import BackEnd.Rentary.Common.AttachedDocument;
+import BackEnd.Rentary.Common.DocumentUploadResult;
+import BackEnd.Rentary.Common.Enums.EntityType;
+import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Exceptions.DuplicateDniException;
 import BackEnd.Rentary.Exceptions.FileUploadException;
 import BackEnd.Rentary.Exceptions.TenantNotFoundExceptions;
@@ -9,7 +13,6 @@ import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.mappers.TenantsMapper;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
-import BackEnd.Rentary.Tenants.services.FileUploadService;
 import BackEnd.Rentary.Tenants.services.TenantsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,8 +51,7 @@ public class TenantsServiceImpl implements TenantsService {
         return new TenantsPageResponseDto(
                 tenantsDtos,
                 page,
-                tenantPage.getTotalElements()
-        );
+                tenantPage.getTotalElements());
     }
 
     @Override
@@ -64,31 +66,54 @@ public class TenantsServiceImpl implements TenantsService {
 
     @Override
     @Transactional
-    public TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile document) {
-        log.info("Guardando nuevo inquilino: {}", tenantsRequestDto.firstName() + " " + tenantsRequestDto.lastName());
+    public TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile[] documents) {
+        log.info("Guardando nuevo inquilino: {}",
+                tenantsRequestDto.firstName() + " " + tenantsRequestDto.firstName());
 
-        // Verificar si ya existe un inquilino con ese DNI
         if (tenantsRepository.existsByDni((tenantsRequestDto.dni()))) {
             log.error("Ya existe un inquilino con DNI: {}", tenantsRequestDto.dni());
             throw new DuplicateDniException("Ya existe un inquilino con DNI: " + tenantsRequestDto.dni());
         }
 
-        // Convertir DTO a entidad
         Tenants tenant = tenantsMapper.toEntity(tenantsRequestDto);
 
-        // Si hay documento adjunto, subirlo a Cloudinary
-        if (document != null && !document.isEmpty()) {
+        tenant = tenantsRepository.save(tenant);
+
+        if (documents != null && documents.length > 0) {
             try {
-                String documentUrl = fileUploadService.uploadFile(document);
-                tenant.setAttachedDocument(documentUrl);
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
+                        documents,
+                        EntityType.TENANT,
+                        tenant.getId().toString(),
+                        tenant.getDni());
+
+                Set<AttachedDocument> attachedDocs = new HashSet<>();
+
+                for (DocumentUploadResult result : results) {
+                    AttachedDocument doc = AttachedDocument.builder()
+                            .id(UUID.randomUUID().toString())
+                            .url(result.getUrl())
+                            .publicId(result.getPublicId())
+                            .originalName(result.getOriginalName())
+                            .fileType(result.getFileType())
+                            .extension(result.getExtension())
+                            .build();
+
+                    attachedDocs.add(doc);
+                }
+
+                tenant.setDocuments(attachedDocs);
+
             } catch (Exception e) {
-                log.error("Error al subir documento: {}", e.getMessage());
-                throw new FileUploadException("Error al subir el documento: " + e.getMessage());
+                log.error("Error al subir documentos: {}", e.getMessage());
+                throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
         }
 
         Tenants savedTenant = tenantsRepository.save(tenant);
-        log.info("Inquilino guardado con ID: {}", savedTenant.getId());
+        log.info("Inquilino guardado con ID: {} y {} documentos asociados",
+                savedTenant.getId(),
+                savedTenant.getDocuments().size());
 
         return tenantsMapper.toDto(savedTenant);
     }
@@ -96,13 +121,12 @@ public class TenantsServiceImpl implements TenantsService {
     @Override
     @Transactional
     @CacheEvict(value = "tenant", key = "#id")
-    public TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile document) {
+    public TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile[] documents) {
         log.info("Actualizando inquilino con ID: {}", id);
 
         Tenants existingTenant = tenantsRepository.findById(id)
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
-        // Verificar que el DNI no esté en uso por otro inquilino
         if (!existingTenant.getDni().equals(dto.dni()) &&
                 tenantsRepository.existsByDni(dto.dni())) {
             log.error("Ya existe otro inquilino con DNI: {}", dto.dni());
@@ -115,21 +139,45 @@ public class TenantsServiceImpl implements TenantsService {
         existingTenant.setPhone(dto.phone());
         existingTenant.setDni(dto.dni());
         existingTenant.setWarranty(dto.warranty());
-        existingTenant.setAddress(dto.address());
 
+        if (existingTenant.getAddress() != null) {
+            existingTenant.getAddress().setCountry(dto.address().getCountry());
+            existingTenant.getAddress().setProvince(dto.address().getProvince());
+            existingTenant.getAddress().setLocality(dto.address().getLocality());
+            existingTenant.getAddress().setStreet(dto.address().getStreet());
+            existingTenant.getAddress().setNumber(dto.address().getNumber());
+            existingTenant.getAddress().setPostalCode(dto.address().getPostalCode());
+        }
 
-        if (document != null && !document.isEmpty()) {
+        if (documents != null && documents.length > 0) {
             try {
-                String documentUrl = fileUploadService.uploadFile(document);
-                existingTenant.setAttachedDocument(documentUrl);
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
+                        documents,
+                        EntityType.TENANT,
+                        existingTenant.getId().toString(),
+                        existingTenant.getDni());
+
+                for (DocumentUploadResult result : results) {
+                    AttachedDocument doc = AttachedDocument.builder()
+                            .url(result.getUrl())
+                            .publicId(result.getPublicId())
+                            .originalName(result.getOriginalName())
+                            .fileType(result.getFileType())
+                            .extension(result.getExtension())
+                            .build();
+
+                    existingTenant.getDocuments().add(doc);
+                }
+
             } catch (Exception e) {
-                log.error("Error al actualizar documento: {}", e.getMessage());
-                throw new FileUploadException("Error al actualizar el documento: " + e.getMessage());
+                log.error("Error al actualizar documentos: {}", e.getMessage());
+                throw new FileUploadException("Error al actualizar documentos: " + e.getMessage());
             }
         }
 
         Tenants updatedTenant = tenantsRepository.save(existingTenant);
-        log.info("Inquilino actualizado con éxito");
+        log.info("Inquilino actualizado con éxito, ahora tiene {} documentos",
+                updatedTenant.getDocuments().size());
 
         return tenantsMapper.toDto(updatedTenant);
     }
@@ -143,14 +191,19 @@ public class TenantsServiceImpl implements TenantsService {
         Tenants tenant = tenantsRepository.findById(id)
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
-        if (tenant.getAttachedDocument() != null && !tenant.getAttachedDocument().isEmpty()) {
-            String publicId = extractPublicIdFromUrl(tenant.getAttachedDocument());
-            if (publicId != null) {
-                try {
-                    fileUploadService.deleteFile(publicId);
-                } catch (Exception e) {
-                    log.warn("No se pudo eliminar el archivo de Cloudinary: {}", e.getMessage());
-                }
+        List<String> publicIds = new ArrayList<>();
+
+        for (AttachedDocument doc : tenant.getDocuments()) {
+            if (doc.getPublicId() != null && !doc.getPublicId().isEmpty()) {
+                publicIds.add(doc.getPublicId());
+            }
+        }
+
+        if (!publicIds.isEmpty()) {
+            try {
+                fileUploadService.deleteMultipleFiles(publicIds);
+            } catch (Exception e) {
+                log.warn("Error al eliminar algunos documentos de Cloudinary: {}", e.getMessage());
             }
         }
 
@@ -158,27 +211,39 @@ public class TenantsServiceImpl implements TenantsService {
         log.info("Inquilino eliminado con éxito");
     }
 
-    // Método auxiliar para extraer el public_id de una URL de Cloudinary
-    private String extractPublicIdFromUrl(String url) {
-        try {
-            // https://res.cloudinary.com/{cloud_name}/image/upload/v{version}/{public_id}.{format}
-            int uploadIndex = url.indexOf("/upload/");
-            if (uploadIndex == -1)
-                return null;
+    @Override
+    @Transactional
+    public void removeTenantDocumentById(Long tenantId, String documentId) {
+        log.info("Eliminando documento {} del inquilino ID: {}", documentId, tenantId);
 
-            String path = url.substring(uploadIndex + 8);
-            int lastDotIndex = path.lastIndexOf(".");
+        Tenants tenant = tenantsRepository.findById(tenantId)
+                .orElseThrow(() -> new TenantNotFoundExceptions(tenantId.toString()));
 
-            String publicIdWithVersion = lastDotIndex != -1 ? path.substring(0, lastDotIndex) : path;
+        AttachedDocument docToRemove = null;
+        for (AttachedDocument doc : tenant.getDocuments()) {
+            if (doc.getId() != null && doc.getId().equals(documentId)) {
+                docToRemove = doc;
+                break;
+            }
+        }
 
-            int versionEndIndex = publicIdWithVersion.indexOf("/");
-            String publicId = versionEndIndex != -1 ?
-                    publicIdWithVersion.substring(versionEndIndex + 1) : publicIdWithVersion;
+        if (docToRemove != null) {
+            // Guardar el publicId para eliminarlo de Cloudinary
+            String publicId = docToRemove.getPublicId();
 
-            return "rentary/tenants/documents/" + publicId;
-        } catch (Exception e) {
-            log.error("Error al extraer public_id de URL: {}", url, e);
-            return null;
+            // Eliminar el documento de la colección
+            tenant.getDocuments().remove(docToRemove);
+            tenantsRepository.save(tenant);
+
+            // Eliminar de Cloudinary
+            try {
+                fileUploadService.deleteFile(publicId);
+                log.info("Documento eliminado del inquilino ID: {}", tenantId);
+            } catch (Exception e) {
+                log.warn("Error al eliminar documento de Cloudinary: {}", e.getMessage());
+            }
+        } else {
+            log.warn("No se encontró el documento con ID {} para el inquilino {}", documentId, tenantId);
         }
     }
 }

@@ -1,11 +1,16 @@
 package BackEnd.Rentary.Contracts.Mapper;
 
+import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ContractMapper {
@@ -24,7 +29,20 @@ public class ContractMapper {
         return contract;
     }
 
-    public ContractResponse toDto(Contract contract) {
+    public ContractResponse toResponse(Contract contract) {
+        List<DocumentDto> documentDtos = contract.getDocuments() != null ?
+                contract.getDocuments().stream()
+                        .map(doc -> new DocumentDto(
+                                doc.getId(),
+                                doc.getUrl(),
+                                doc.getPublicId(),
+                                doc.getOriginalName(),
+                                doc.getFileType(),
+                                doc.getExtension()
+                        ))
+                        .collect(Collectors.toList()) :
+                new ArrayList<>();
+
         return new ContractResponse(
                 contract.getContractId(),
                 contract.getProperty().getId_property(),
@@ -32,11 +50,12 @@ public class ContractMapper {
                 contract.getStartDate(),
                 contract.getEndDate(),
                 contract.getBaseRent(),
-                contract.getDeposit(),
+                contract.getBaseRent(),
                 contract.getAdjustmentFrequency(),
                 contract.getDeadline(),
                 contract.isActive(),
-                contract.getAdjustmentPercentage()
+                contract.getAdjustmentPercentage(),
+                documentDtos
         );
     }
 }

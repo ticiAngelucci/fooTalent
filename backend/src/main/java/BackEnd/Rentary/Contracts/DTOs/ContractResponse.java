@@ -1,8 +1,10 @@
 package BackEnd.Rentary.Contracts.DTOs;
 
+import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record ContractResponse(
         Long id,
@@ -15,5 +17,6 @@ public record ContractResponse(
         AdjustmentFrequency adjustmentFrequency,
         int deadline,
         boolean active,
-        double adjustmentPercentage
+        double adjustmentPercentage,
+        List<DocumentDto> documents
 ) {}
