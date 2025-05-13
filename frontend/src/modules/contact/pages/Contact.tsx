@@ -11,8 +11,8 @@ import { Route } from "@/shared/constants/route";
 import axios from "axios";
 
 interface Contacto {
-    id: number;
-    name: string;
+    idOwner: number;
+    firstName: string;
     lastName: string;
     dni: string;
     phone: string;
@@ -62,7 +62,7 @@ export default function ContactosView() {
                 }
             );
             console.log("response",response.data)
-            setContactos(contactos.filter(contacto => contacto.id !== id));
+            setContactos(contactos.filter(contacto => contacto.idOwner !== id));
         } catch (err) {
             setError('Error al eliminar el contacto.');
             console.error(err);
@@ -90,6 +90,14 @@ export default function ContactosView() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleEdit = (id: number) => {
+        navigate(
+            tab === "inquilinos"
+              ? `/tenant/edit/${id}`
+              : `/owner/edit/${id}`
+          );        
     };
 
     useEffect(() => {
@@ -147,7 +155,7 @@ export default function ContactosView() {
                             ) : currentContactos.length > 0 ? (
                                 currentContactos.map((contacto, index) => (
                                     <TableRow key={index}>
-                                        <TableCell className="p-8">{contacto.name}</TableCell>
+                                        <TableCell className="p-8">{contacto.firstName}</TableCell>
                                         <TableCell className="p-8">{contacto.lastName}</TableCell>
                                         <TableCell className="p-8">{contacto.dni}</TableCell>
                                         <TableCell className="p-8">{contacto.phone}</TableCell>
@@ -164,8 +172,8 @@ export default function ContactosView() {
                                                     <MoreVertical />
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                    <DropdownMenuItem onClick={() => handleEdit(contacto)}>Editar</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => handleDelete(contacto.id)}>Eliminar</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleEdit(contacto.idOwner)}>Editar</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleDelete(contacto.idOwner)}>Eliminar</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>

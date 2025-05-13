@@ -12,7 +12,7 @@ export const createOwner = async (data: Owner) => {
     email,
     street,
     number,
-    city,
+    locality,
     province,
     postalCode,
     file,
@@ -26,7 +26,7 @@ export const createOwner = async (data: Owner) => {
   }
 
   const payload = {
-    name: firstName,
+    firstName,
     lastName,
     dni,
     phone,
@@ -34,7 +34,7 @@ export const createOwner = async (data: Owner) => {
     address: {
       country: "",
       province,
-      locality: city,
+      locality,
       street,
       number,
       postalCode,
