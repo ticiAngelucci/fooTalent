@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Register from "./modules/auth/pages/Register";
 import Login from "./modules/auth/pages/Login";
 import Dashboard from "./modules/dashboard/pages/Dashboard";
+import LandingPage from "./modules/landingPage/page/LandingPage";
 import Contact from "./modules/contact/pages/Contact";
 import Immovables from "./modules/immovables/pages/Immovables";
 import NotFound from "./modules/error/pages/404NotFound";
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path={AppRoute.PublicApi} element={<ApiPublica />} />
+        <Route path="/" element={<LandingPage />} />
         {/* Semi Public Routes */}
         <Route element={<SemiPublicRoute />}>
           <Route path={AppRoute.Register} element={<Register />} />
