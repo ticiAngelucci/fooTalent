@@ -27,7 +27,7 @@ const FormAddOwner = () => {
       email: "",
       street: "",
       number: "",
-      city: "",
+      locality: "",
       province: "",
       postalCode: "",
       files: [],
@@ -80,7 +80,7 @@ const FormAddOwner = () => {
         {/* Datos + Documentos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <PersonalDataFields />
+            <PersonalDataFields disabled={false}/>
           </div>
           <div>
             <DocumentUpload />
@@ -90,7 +90,7 @@ const FormAddOwner = () => {
         {/* Dirección */}
         <div className="pt-2">
           <h4 className="text-md font-semibold mb-2">Dirección</h4>
-          <AddressFields />
+          <AddressFields disabled={false}/>
         </div>
 
         {/* Botones */}

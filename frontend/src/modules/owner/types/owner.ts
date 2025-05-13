@@ -1,4 +1,5 @@
 export interface Owner {
+    id?: number;
     firstName: string;
     lastName: string;
     dni: string;
@@ -6,7 +7,8 @@ export interface Owner {
     email?: string;
     street?: string;
     number?: string;
-    city?: string;
+    locality?: string;
+    country?: string,
     province?: string;
     postalCode?: string;
     file?: File;

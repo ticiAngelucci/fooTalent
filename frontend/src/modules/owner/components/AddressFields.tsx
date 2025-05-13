@@ -8,7 +8,11 @@ import {
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 
-const AddressFields = () => {
+interface AddressFieldsProps {
+  disabled: boolean;
+}
+
+const AddressFields = ({disabled}: AddressFieldsProps) => {
   const { control } = useFormContext();
 
   return (
@@ -20,7 +24,7 @@ const AddressFields = () => {
           <FormItem className="md:col-span-2">
             <FormLabel>Calle</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: Av. Rivadavia" {...field} />
+              <Input placeholder="Ej: Av. Rivadavia" {...field}  disabled={disabled}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -34,7 +38,7 @@ const AddressFields = () => {
           <FormItem>
             <FormLabel>Número</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 1234" {...field} />
+              <Input placeholder="Ej: 1234" {...field}  disabled={disabled}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,12 +47,12 @@ const AddressFields = () => {
 
       <FormField
         control={control}
-        name="city"
+        name="locality"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Localidad</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: Belgrano" {...field} />
+              <Input placeholder="Ej: Belgrano" {...field}  disabled={disabled}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -62,7 +66,7 @@ const AddressFields = () => {
           <FormItem>
             <FormLabel>Provincia</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: Buenos Aires" {...field} />
+              <Input placeholder="Ej: Buenos Aires" {...field}  disabled={disabled}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -76,7 +80,7 @@ const AddressFields = () => {
           <FormItem>
             <FormLabel>Código postal</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 1234" {...field} />
+              <Input placeholder="Ej: 1234" {...field}  disabled={disabled}/>
             </FormControl>
             <FormMessage />
           </FormItem>

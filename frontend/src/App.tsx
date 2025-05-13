@@ -19,6 +19,7 @@ import AddOwner from "./modules/owner/pages/AddOwner";
 import AddTenant from "./modules/tenant/pages/AddTenant";
 import PropertyRegister from "./modules/properties/pages/PropertyRegister";
 import { Toaster } from "@/shared/components/ui/sonner";
+import EditOwner from "./modules/owner/pages/EditOwner";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           <Route path={AppRoute.Immovables} element={<Immovables />} />
           <Route path={AppRoute.AddOwner} element={<AddOwner/>}/>
           <Route path={AppRoute.AddTenant} element={<AddTenant/>}/>
+          <Route path={AppRoute.EditOwner} element={<EditOwner/>}/>
         </Route>
       </Routes>
       <Toaster richColors closeButton position="bottom-right" />

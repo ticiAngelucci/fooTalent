@@ -14,7 +14,8 @@ enum Route {
     ErrorEmailNotFound = '/error-email-not-found',
     NewProperty = '/new-property',
     AddOwner= '/add-owner',
-    AddTenant= '/add-tenant'
+    AddTenant= '/add-tenant',
+    EditOwner='/owner/edit/:id',
 }
 
 export {Route}
