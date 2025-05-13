@@ -1,8 +1,9 @@
 package BackEnd.Rentary.Contracts.Service;
 
 import BackEnd.Rentary.Common.AttachedDocument;
-import BackEnd.Rentary.Common.FileUploadService;
-import BackEnd.Rentary.Common.FileUploadService.FileUploadResult;
+import BackEnd.Rentary.Common.DocumentUploadResult;
+import BackEnd.Rentary.Common.Enums.EntityType;
+import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
@@ -63,22 +64,20 @@ public class ContractServiceImpl implements IContractService {
         property.setStatus(PropertyStatus.OCUPADO);
         propertyRepository.save(property);
 
-        // Guardar contrato para obtener ID
         contract = contractRepository.save(contract);
 
-        // Procesar documentos si los hay
         if (documents != null && documents.length > 0) {
             try {
                 String contractNumber = "CONT-" + contract.getContractId();
-                List<FileUploadResult> results = fileUploadService.uploadMultipleFiles(
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
                         documents,
-                        FileUploadService.EntityType.CONTRACT,
+                        EntityType.CONTRACT,
                         contract.getContractId().toString(),
                         contractNumber
                 );
 
                 Set<AttachedDocument> attachedDocs = new HashSet<>();
-                for (FileUploadResult result : results) {
+                for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
@@ -93,7 +92,8 @@ public class ContractServiceImpl implements IContractService {
                 contract.setDocuments(attachedDocs);
                 contract = contractRepository.save(contract);
 
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 log.error("Error al subir documentos del contrato: {}", e.getMessage());
                 throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
@@ -133,21 +133,19 @@ public class ContractServiceImpl implements IContractService {
         Contract updated = contractMapper.toEntity(request, property, tenant);
         updated.setContractId(id);
 
-        // Mantener los documentos existentes
         updated.setDocuments(existing.getDocuments());
 
-        // Añadir nuevos documentos si existen
         if (documents != null && documents.length > 0) {
             try {
                 String contractNumber = "CONT-" + updated.getContractId();
-                List<FileUploadResult> results = fileUploadService.uploadMultipleFiles(
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
                         documents,
-                        FileUploadService.EntityType.CONTRACT,
+                        EntityType.CONTRACT,
                         updated.getContractId().toString(),
                         contractNumber
                 );
 
-                for (FileUploadResult result : results) {
+                for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
@@ -159,7 +157,8 @@ public class ContractServiceImpl implements IContractService {
                     updated.getDocuments().add(doc);
                 }
 
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 log.error("Error al actualizar documentos: {}", e.getMessage());
                 throw new FileUploadException("Error al actualizar documentos: " + e.getMessage());
             }
@@ -176,7 +175,6 @@ public class ContractServiceImpl implements IContractService {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ContractNorFoundException(id.toString()));
 
-        // Eliminar documentos de Cloudinary
         List<String> publicIds = new ArrayList<>();
         for (AttachedDocument doc : contract.getDocuments()) {
             if (doc.getPublicId() != null && !doc.getPublicId().isEmpty()) {
@@ -187,12 +185,12 @@ public class ContractServiceImpl implements IContractService {
         if (!publicIds.isEmpty()) {
             try {
                 fileUploadService.deleteMultipleFiles(publicIds);
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 log.warn("Error al eliminar algunos documentos de Cloudinary: {}", e.getMessage());
             }
         }
 
-        // Actualizar estado de la propiedad
         Property property = contract.getProperty();
         property.setStatus(PropertyStatus.DISPONIBLE);
         propertyRepository.save(property);
@@ -222,7 +220,8 @@ public class ContractServiceImpl implements IContractService {
             try {
                 fileUploadService.deleteFile(documentPublicId);
                 log.info("Documento eliminado del contrato ID: {}", contractId);
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 log.warn("Error al eliminar documento de Cloudinary: {}", e.getMessage());
             }
         }

@@ -1,8 +1,9 @@
 package BackEnd.Rentary.Tenants.services.Impl;
 
 import BackEnd.Rentary.Common.AttachedDocument;
-import BackEnd.Rentary.Common.FileUploadService;
-import BackEnd.Rentary.Common.FileUploadService.FileUploadResult;
+import BackEnd.Rentary.Common.DocumentUploadResult;
+import BackEnd.Rentary.Common.Enums.EntityType;
+import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Exceptions.DuplicateDniException;
 import BackEnd.Rentary.Exceptions.FileUploadException;
 import BackEnd.Rentary.Exceptions.TenantNotFoundExceptions;
@@ -72,32 +73,27 @@ public class TenantsServiceImpl implements TenantsService {
         log.info("Guardando nuevo inquilino: {}",
                 tenantsRequestDto.getFirstName() + " " + tenantsRequestDto.getLastName());
 
-        // Verificar si ya existe un inquilino con ese DNI
         if (tenantsRepository.existsByDni((tenantsRequestDto.getDni()))) {
             log.error("Ya existe un inquilino con DNI: {}", tenantsRequestDto.getDni());
             throw new DuplicateDniException("Ya existe un inquilino con DNI: " + tenantsRequestDto.getDni());
         }
 
-        // Convertir DTO a entidad
         Tenants tenant = tenantsMapper.toEntity(tenantsRequestDto);
 
-        // Guardar primero para obtener el ID
         tenant = tenantsRepository.save(tenant);
 
-        // Procesar documentos si hay
         if (documents != null && documents.length > 0) {
             try {
-                List<FileUploadResult> results = fileUploadService.uploadMultipleFiles(
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
                         documents,
-                        FileUploadService.EntityType.TENANT,
+                        EntityType.TENANT,
                         tenant.getId().toString(),
                         tenant.getDni()
                 );
 
-                // Convertir resultados a AttachedDocument y añadir a tenant
                 Set<AttachedDocument> attachedDocs = new HashSet<>();
 
-                for (FileUploadResult result : results) {
+                for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
@@ -136,7 +132,6 @@ public class TenantsServiceImpl implements TenantsService {
         Tenants existingTenant = tenantsRepository.findById(id)
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
-        // Verificar que el DNI no esté en uso por otro inquilino
         if (!existingTenant.getDni().equals(dto.getDni()) &&
                 tenantsRepository.existsByDni(dto.getDni())) {
             log.error("Ya existe otro inquilino con DNI: {}", dto.getDni());
@@ -159,17 +154,16 @@ public class TenantsServiceImpl implements TenantsService {
             existingTenant.getAddress().setPostalCode(dto.getPostalCode());
         }
 
-        // Procesar nuevos documentos si hay
         if (documents != null && documents.length > 0) {
             try {
-                List<FileUploadResult> results = fileUploadService.uploadMultipleFiles(
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
                         documents,
-                        FileUploadService.EntityType.TENANT,
+                        EntityType.TENANT,
                         existingTenant.getId().toString(),
                         existingTenant.getDni()
                 );
 
-                for (FileUploadResult result : results) {
+                for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
@@ -205,10 +199,8 @@ public class TenantsServiceImpl implements TenantsService {
         Tenants tenant = tenantsRepository.findById(id)
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
-        // Eliminar documentos de Cloudinary
         List<String> publicIds = new ArrayList<>();
 
-        // Recopilar IDs de documentos nuevos
         for (AttachedDocument doc : tenant.getDocuments()) {
             if (doc.getPublicId() != null && !doc.getPublicId().isEmpty()) {
                 publicIds.add(doc.getPublicId());
@@ -216,7 +208,6 @@ public class TenantsServiceImpl implements TenantsService {
         }
 
 
-        // Intentar eliminar todos los archivos
         if (!publicIds.isEmpty()) {
             try {
                 fileUploadService.deleteMultipleFiles(publicIds);
