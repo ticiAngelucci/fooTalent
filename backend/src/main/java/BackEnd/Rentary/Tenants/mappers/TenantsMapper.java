@@ -2,10 +2,15 @@ package BackEnd.Rentary.Tenants.mappers;
 
 import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Common.AttachedDocument;
+import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TenantsMapper {
@@ -43,11 +48,22 @@ public class TenantsMapper {
         dto.setWarranty(entity.getWarranty());
 
         if (entity.getDocuments() != null && !entity.getDocuments().isEmpty()) {
-            AttachedDocument firstDoc = entity.getDocuments().iterator().next();
-            dto.setAttachedDocument(firstDoc.getUrl());
-            dto.setDocumentName(firstDoc.getOriginalName());
-            dto.setDocumentType(firstDoc.getFileType());
-            dto.setDocumentExtension(firstDoc.getExtension());
+
+
+            List<DocumentDto> documentDtos = entity.getDocuments().stream()
+                    .map(doc -> DocumentDto.builder()
+                            .id(doc.getId())
+                            .url(doc.getUrl())
+                            .publicId(doc.getPublicId())
+                            .originalName(doc.getOriginalName())
+                            .fileType(doc.getFileType())
+                            .extension(doc.getExtension())
+                            .build())
+                    .collect(Collectors.toList());
+
+            dto.setDocuments(documentDtos);
+        } else {
+            dto.setDocuments(new ArrayList<>());
         }
 
         if (entity.getAddress() != null) {

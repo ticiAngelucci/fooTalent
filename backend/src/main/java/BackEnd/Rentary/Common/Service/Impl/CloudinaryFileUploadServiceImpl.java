@@ -92,7 +92,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             return;
         }
 
-        // Separar los IDs por tipo para eliminarlos por lotes cuando sea posible
         List<String> imagePublicIds = new ArrayList<>();
         List<String> pdfPublicIds = new ArrayList<>();
 
@@ -101,7 +100,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
                 continue;
             }
 
-            // Clasificar los publicIds por tipo
             boolean isPdfFile = publicId.contains("/documents/") || publicId.endsWith(".pdf");
             if (isPdfFile) {
                 pdfPublicIds.add(publicId);
@@ -110,7 +108,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             }
         }
 
-        // Eliminar imágenes
         for (String imageId : imagePublicIds) {
             try {
                 cloudinary.uploader().destroy(imageId, ObjectUtils.emptyMap());
@@ -120,7 +117,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             }
         }
 
-        // Eliminar PDFs
         Map<String, Object> rawOptions = ObjectUtils.asMap("resource_type", "raw");
         for (String pdfId : pdfPublicIds) {
             try {
@@ -135,13 +131,11 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
     @Override
     public void deleteFile(String publicId) {
         try {
-            // Determinar si es un documento PDF basado en el publicId
             boolean isPdfFile = publicId != null &&
                     (publicId.contains("/documents/") || publicId.endsWith(".pdf"));
 
             Map<String, Object> options = new HashMap<>();
 
-            // Configurar opciones específicas si es un archivo raw (PDF)
             if (isPdfFile) {
                 options.put("resource_type", "raw");
             }
@@ -157,33 +151,27 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
     @Override
     public String extractPublicIdFromUrl(String url) {
         try {
-            // Detectar si es un archivo raw (como PDF)
             boolean isRawFile = url.contains("/raw/upload/");
 
-            // El índice de upload varía dependiendo si es raw o no
             String uploadPattern = isRawFile ? "/raw/upload/" : "/upload/";
             int uploadIndex = url.indexOf(uploadPattern);
 
             if (uploadIndex == -1)
                 return null;
 
-            // Para archivos raw, necesitamos tomar la URL después de "/raw/upload/"
             String path = isRawFile ? url.substring(uploadIndex + uploadPattern.length())
                     : url.substring(uploadIndex + uploadPattern.length());
 
-            // Extraer el folder y filename del path
             int lastSlashIndex = path.lastIndexOf("/");
             if (lastSlashIndex == -1)
-                return path; // No hay carpetas, retornar todo el path
+                return path; 
 
             String folderAndFile = path.substring(0, path.lastIndexOf("/") + 1) +
                     path.substring(path.lastIndexOf("/") + 1);
 
-            // Si es un archivo raw (PDF), mantener la extensión en el publicId
             if (isRawFile) {
                 return folderAndFile;
             }
-            // Para imágenes, quitar la extensión
             else {
                 int lastDotIndex = folderAndFile.lastIndexOf(".");
                 if (lastDotIndex != -1) {

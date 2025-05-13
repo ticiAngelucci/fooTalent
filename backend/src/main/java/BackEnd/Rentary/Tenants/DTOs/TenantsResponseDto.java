@@ -1,8 +1,11 @@
 package BackEnd.Rentary.Tenants.DTOs;
 
+import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,14 +18,11 @@ public class TenantsResponseDto {
     private String phone;
     private String dni;
     private String warranty;
-    private String attachedDocument;
-    private String documentName;
-    private String documentType;
-    private String documentExtension;
     private String country;
     private String province;
     private String locality;
     private String street;
     private String number;
     private String postalCode;
+    private List<DocumentDto> documents;
 }

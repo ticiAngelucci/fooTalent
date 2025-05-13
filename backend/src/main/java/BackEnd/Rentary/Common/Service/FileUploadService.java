@@ -6,25 +6,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
 public interface FileUploadService {
 
-
     List<DocumentUploadResult> uploadMultipleFiles(MultipartFile[] files,
-                                                   EntityType entityType,
-                                                   String entityId,
-                                                   String identifier);
+            EntityType entityType,
+            String entityId,
+            String identifier);
 
     DocumentUploadResult uploadFile(MultipartFile file,
-                                    EntityType entityType,
-                                    String entityId,
-                                    String identifier);
-
+            EntityType entityType,
+            String entityId,
+            String identifier);
 
     void deleteMultipleFiles(List<String> publicIds);
 
     void deleteFile(String publicId);
-
 
     String extractPublicIdFromUrl(String url);
 }
