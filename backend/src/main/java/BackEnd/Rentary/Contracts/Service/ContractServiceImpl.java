@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ContractServiceImpl implements IContractService {
 
     private final IContractRepository contractRepository;
@@ -37,7 +36,6 @@ public class ContractServiceImpl implements IContractService {
                 .orElseThrow(() -> new PropertyNotFoundException(request.propertyId().toString()));
 
         if (property.getStatus() == PropertyStatus.OCUPADO) {
-            log.error("Inmueble con ID: {} ya está ocupado", request.propertyId());
             throw new PropertyUnavailableException("Inmueble con ID: " + request.propertyId() + " ya está ocupado");
         }
 
@@ -52,9 +50,6 @@ public class ContractServiceImpl implements IContractService {
         propertyRepository.save(property);
 
         contractRepository.save(contract);
-
-        log.info("Contrato creado exitosamente para propiedad ID: {} y inquilino ID: {}",
-                request.propertyId(), request.tenantId());
 
         return contractMapper.toDto(contract);
     }
@@ -87,8 +82,6 @@ public class ContractServiceImpl implements IContractService {
         Contract updated = contractMapper.toEntity(request, property, tenant);
         updated.setContractId(id);
 
-        log.info("Contrato actualizado: ID {}", id);
-
         return contractMapper.toDto(contractRepository.save(updated));
     }
 
@@ -102,6 +95,5 @@ public class ContractServiceImpl implements IContractService {
         propertyRepository.save(property);
 
         contractRepository.deleteById(id);
-        log.info("Contrato eliminado: ID {}", id);
     }
 }

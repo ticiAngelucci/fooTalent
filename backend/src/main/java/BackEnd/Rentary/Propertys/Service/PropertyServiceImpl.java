@@ -45,8 +45,7 @@ public class PropertyServiceImpl implements IPropertyService {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + id + " no encontrado."));
 
-        property.setStatus(PropertyStatus.NO_DISPONIBLE);
-        propertyRepository.save(property);
+        propertyRepository.delete(property);
     }
 
     @Override
