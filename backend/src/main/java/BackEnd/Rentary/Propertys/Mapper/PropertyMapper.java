@@ -25,13 +25,12 @@ public class PropertyMapper {
                 property.getStatus(),
                 property.getObservations(),
                 property.getOwner().getId(),
-                property.getOwner().getName(),
+                property.getOwner().getFirstName(),
                 property.getOwner().getLastName()
         );
     }
 
     public Property toEntity(PropertyRequestDto dto, Owner owner) {
-
         Property property = new Property();
         property.setAddress(dto.address());
         property.setTypeOfProperty(dto.typeOfProperty());

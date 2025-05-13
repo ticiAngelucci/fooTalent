@@ -17,20 +17,20 @@ public class TenantsMapper {
 
     public Tenants toEntity(TenantsRequestDto dto) {
         Tenants tenant = new Tenants();
-        tenant.setName(dto.getFirstName());
-        tenant.setLastName(dto.getLastName());
-        tenant.setEmail(dto.getEmail());
-        tenant.setPhone(dto.getPhone());
-        tenant.setDni(dto.getDni());
-        tenant.setWarranty(dto.getWarranty());
+        tenant.setFirstName(dto.firstName());
+        tenant.setLastName(dto.lastName());
+        tenant.setEmail(dto.email());
+        tenant.setPhone(dto.phone());
+        tenant.setDni(dto.dni());
+        tenant.setWarranty(dto.warranty());
 
         Address address = new Address();
-        address.setCountry(dto.getCountry());
-        address.setProvince(dto.getProvince());
-        address.setLocality(dto.getLocality());
-        address.setStreet(dto.getStreet());
-        address.setNumber(dto.getNumber());
-        address.setPostalCode(dto.getPostalCode());
+        address.setCountry(dto.address().getCountry());
+        address.setProvince(dto.address().getProvince());
+        address.setLocality(dto.address().getLocality());
+        address.setStreet(dto.address().getStreet());
+        address.setNumber(dto.address().getNumber());
+        address.setPostalCode(dto.address().getPostalCode());
 
         tenant.setAddress(address);
 
@@ -40,7 +40,7 @@ public class TenantsMapper {
     public TenantsResponseDto toDto(Tenants entity) {
         TenantsResponseDto dto = new TenantsResponseDto();
         dto.setId(entity.getId());
-        dto.setFirstName(entity.getName());
+        dto.setFirstName(entity.getFirstName());
         dto.setLastName(entity.getLastName());
         dto.setEmail(entity.getEmail());
         dto.setPhone(entity.getPhone());

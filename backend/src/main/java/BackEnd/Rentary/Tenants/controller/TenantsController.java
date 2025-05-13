@@ -45,7 +45,7 @@ public class TenantsController {
                         @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
                 log.info("Creando nuevo inquilino: {} con {} documentos",
-                                tenantData.getFirstName(),
+                                tenantData.firstName(),
                                 documents != null ? documents.length : 0);
 
                 TenantsResponseDto createdTenant = tenantsService.saveTenant(tenantData, documents);

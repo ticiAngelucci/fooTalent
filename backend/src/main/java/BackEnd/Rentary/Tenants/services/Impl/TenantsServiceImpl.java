@@ -68,11 +68,11 @@ public class TenantsServiceImpl implements TenantsService {
     @Transactional
     public TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile[] documents) {
         log.info("Guardando nuevo inquilino: {}",
-                tenantsRequestDto.getFirstName() + " " + tenantsRequestDto.getLastName());
+                tenantsRequestDto.firstName() + " " + tenantsRequestDto.firstName());
 
-        if (tenantsRepository.existsByDni((tenantsRequestDto.getDni()))) {
-            log.error("Ya existe un inquilino con DNI: {}", tenantsRequestDto.getDni());
-            throw new DuplicateDniException("Ya existe un inquilino con DNI: " + tenantsRequestDto.getDni());
+        if (tenantsRepository.existsByDni((tenantsRequestDto.dni()))) {
+            log.error("Ya existe un inquilino con DNI: {}", tenantsRequestDto.dni());
+            throw new DuplicateDniException("Ya existe un inquilino con DNI: " + tenantsRequestDto.dni());
         }
 
         Tenants tenant = tenantsMapper.toEntity(tenantsRequestDto);
@@ -127,26 +127,26 @@ public class TenantsServiceImpl implements TenantsService {
         Tenants existingTenant = tenantsRepository.findById(id)
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
-        if (!existingTenant.getDni().equals(dto.getDni()) &&
-                tenantsRepository.existsByDni(dto.getDni())) {
-            log.error("Ya existe otro inquilino con DNI: {}", dto.getDni());
-            throw new DuplicateDniException("Ya existe otro inquilino con DNI: " + dto.getDni());
+        if (!existingTenant.getDni().equals(dto.dni()) &&
+                tenantsRepository.existsByDni(dto.dni())) {
+            log.error("Ya existe otro inquilino con DNI: {}", dto.dni());
+            throw new DuplicateDniException("Ya existe otro inquilino con DNI: " + dto.dni());
         }
 
-        existingTenant.setName(dto.getFirstName());
-        existingTenant.setLastName(dto.getLastName());
-        existingTenant.setEmail(dto.getEmail());
-        existingTenant.setPhone(dto.getPhone());
-        existingTenant.setDni(dto.getDni());
-        existingTenant.setWarranty(dto.getWarranty());
+        existingTenant.setFirstName(dto.firstName());
+        existingTenant.setLastName(dto.lastName());
+        existingTenant.setEmail(dto.email());
+        existingTenant.setPhone(dto.phone());
+        existingTenant.setDni(dto.dni());
+        existingTenant.setWarranty(dto.warranty());
 
         if (existingTenant.getAddress() != null) {
-            existingTenant.getAddress().setCountry(dto.getCountry());
-            existingTenant.getAddress().setProvince(dto.getProvince());
-            existingTenant.getAddress().setLocality(dto.getLocality());
-            existingTenant.getAddress().setStreet(dto.getStreet());
-            existingTenant.getAddress().setNumber(dto.getNumber());
-            existingTenant.getAddress().setPostalCode(dto.getPostalCode());
+            existingTenant.getAddress().setCountry(dto.address().getCountry());
+            existingTenant.getAddress().setProvince(dto.address().getProvince());
+            existingTenant.getAddress().setLocality(dto.address().getLocality());
+            existingTenant.getAddress().setStreet(dto.address().getStreet());
+            existingTenant.getAddress().setNumber(dto.address().getNumber());
+            existingTenant.getAddress().setPostalCode(dto.address().getPostalCode());
         }
 
         if (documents != null && documents.length > 0) {

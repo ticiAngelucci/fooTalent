@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Person {
-    private String name;
+    private String firstName;
     private String lastName;
     private String dni;
     private String email;
