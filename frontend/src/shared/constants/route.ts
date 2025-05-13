@@ -17,6 +17,8 @@ enum Route {
     AddOwner= '/add-owner',
     AddTenant= '/add-tenant',
     EditOwner='/owner/edit/:id',
+    Profile = '/profile',
+
 }
 
 export {Route}
