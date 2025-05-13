@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,16 +21,18 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 import { TablePagination } from "./TablePagination";
-import { Property } from "../types/property";
+import { defaultPageSize, Property } from "../types/property";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
-import { Download } from "lucide-react";
+import { Search } from "lucide-react";
+import { usePropertyStore } from "../store/propertyStore";
 
 interface PropertyTableProps {
   data: Property[];
   isLoading: boolean;
   error: string | null;
   columns: ColumnDef<Property>[];
+  totalElements: number;
 }
 
 export function PropertyTable({
@@ -38,16 +40,21 @@ export function PropertyTable({
   isLoading,
   error,
   columns,
+  totalElements,
 }: PropertyTableProps) {
+  const { fetchProperties } = usePropertyStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 5,
+    pageSize: defaultPageSize,
   });
+
+  const [columnSizing, setColumnSizing] = useState({});
 
   const table = useReactTable({
     data,
@@ -58,30 +65,60 @@ export function PropertyTable({
       columnVisibility,
       rowSelection,
       pagination,
+      globalFilter,
+      columnSizing,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnSizingChange: setColumnSizing,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true, 
+    pageCount: Math.ceil(totalElements / pagination.pageSize), 
+    columnResizeMode: "onChange",
+    globalFilterFn: (row, _columnId, filterValue) => {
+      return Object.values(row.original).some((value) =>
+        String(value).toLowerCase().includes(filterValue.toLowerCase())
+      );
+    },
   });
+
+  useEffect(() => {
+    const initialSizing: Record<string, number> = {};
+    columns.forEach(column => {
+      if ('id' in column && column.id && 'size' in column) {
+        initialSizing[column.id] = column.size as number;
+      }
+    });
+
+    if (Object.keys(initialSizing).length > 0) {
+      setColumnSizing(initialSizing);
+    }
+  }, [columns]);
+
+  useEffect(() => {
+    fetchProperties(table.getState().pagination.pageIndex, table.getState().pagination.pageSize);
+  }, [table, fetchProperties]);
+
+  const { pageIndex, pageSize } = table.getState().pagination;
+
+  useEffect(() => {
+    fetchProperties(pageIndex, pageSize);
+  }, [pageIndex, pageSize, fetchProperties]);
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
-    if (value) {
-      table.getColumn("direccion")?.setFilterValue(value);
-    } else {
-      table.resetColumnFilters();
-    }
+    setGlobalFilter(value);
   };
 
-  const handleExport = () => {
-    console.log("Exportando datos...");
-    // Aquí iría la lógica para exportar los datos a CSV, Excel, etc.
+  const handleSearchButton = () => {
+    setGlobalFilter(searchQuery);
   };
 
   if (isLoading) {
@@ -102,71 +139,108 @@ export function PropertyTable({
 
   return (
     <>
-      <div className="flex gap-2 justify-between items-center w-full mb-4">
-        <Input
-          placeholder="Buscar por dirección"
-          className="w-64 text-lg py-3 px-4"
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+      <div className="flex gap-2 justify-start items-center w-full mb-4">
+        <div className="relative w-64">
+          <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+            <Search />
+          </span>
+          <Input
+            placeholder="Buscar"
+            className="w-full text-lg py-3 pl-10 pr-4"
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
         <Button
           variant="outline"
-          className="ml-auto"
-          onClick={handleExport}
+          onClick={handleSearchButton}
         >
-          <Download className="mr-2 h-4 w-4" />
-          Exportar
+          Buscar
         </Button>
       </div>
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
-        <Table>
-          <TableHeader className="bg-[#E5E7EB]">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+
+        <div className="w-full relative">
+          <Table className="w-full table-fixed">
+            <TableHeader className="bg-[#E5E7EB]">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      style={{ width: `${header.getSize()}px` }}
+                      className="relative"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+
+                      {header.column.getCanResize() && (
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={`resizer ${
+                            header.column.getIsResizing() ? 'isResizing' : ''
+                          }`}
+                          style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 0,
+                            height: '100%',
+                            width: '5px',
+                            background: header.column.getIsResizing() ? 'blue' : 'transparent',
+                            cursor: 'col-resize',
+                            userSelect: 'none',
+                            touchAction: 'none',
+                          }}
+                        />
                       )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="p-4">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No se encontraron resultados.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="pt-2 pr-4 pb-2 pl-4"
+                        style={{ width: `${cell.column.getSize()}px` }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No se encontraron resultados.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-      <TablePagination table={table} />
+      <div className="flex justify-end">
+        <TablePagination table={table} />
+      </div>
     </>
   );
 }

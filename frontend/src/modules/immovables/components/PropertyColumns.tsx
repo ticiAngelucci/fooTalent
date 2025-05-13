@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import { Property } from "../types/property";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ChevronsUpDown, MoreHorizontal, Trash2, MoveUpRight } from "lucide-react";
 import clsx from "clsx";
 import {
   DropdownMenu,
@@ -20,11 +20,15 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
         className="font-semibold"
       >
         Dirección
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     accessorFn: (row) => `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
-    cell: ({ getValue }) => <div>{getValue() as string}</div>,
+    cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
+    // Definiendo el ancho de la columna
+    size: 407,
+    minSize: 407,
+    maxSize: 407,
   },
   {
     id: "propietario",
@@ -35,11 +39,14 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
         className="font-semibold"
       >
         Propietario
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    cell: ({ getValue }) => <div>{getValue() as string}</div>,
+    cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
+    size: 203,
+    minSize: 203,
+    maxSize: 203,
   },
   {
     id: "tipoInmueble",
@@ -51,50 +58,59 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
         className="font-semibold"
       >
         Tipo de inmueble
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }) => <div>{row.getValue("tipoInmueble")}</div>,
+    size: 179,
+    minSize: 179,
+    maxSize: 179,
   },
   {
-    id: "disponibilidad",
-    accessorKey: "propertyStatus",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
-      >
-        Disponibilidad
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const estado = row.getValue("disponibilidad") as string;
-      return (
-        <span
-          className={clsx(
-            "px-3 py-1 rounded-full text-xs font-semibold border",
-            {
-              "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
-              "text-black bg-gray-700 border-black": estado === "OCUPADO"
-            }
-          )}
+      id: "disponibilidad",
+      accessorKey: "propertyStatus",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="font-semibold"
         >
-          {estado}
-        </span>
-      );
+          Estado
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const estado = row.getValue("disponibilidad") as string;
+        return (
+          <span
+            className={clsx(
+              "px-3 py-1 rounded-full text-xs font-semibold border",
+              {
+                "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
+                "text-black bg-gray-700 border-black": estado === "OCUPADO"
+              }
+            )}
+          >
+            {estado}
+          </span>
+        );
+      },
+      size: 118,
+      minSize: 118,
+      maxSize: 118,
     },
-  },
   {
     id: "observaciones",
     accessorKey: "observations",
     header: "Observaciones",
     cell: ({ row }) => (
-      <div className="max-w-sm whitespace-pre-wrap text-sm text-muted-foreground">
+      <div className="max-w-sm truncate text-sm text-muted-foreground">
         {row.getValue("observaciones") || "-"}
       </div>
     ),
+    size: 261,
+    minSize: 261,
+    maxSize: 261,
   },
   {
     id: "actions",
@@ -108,11 +124,14 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Ver detalles</DropdownMenuItem>
-            <DropdownMenuItem>Editar inmueble</DropdownMenuItem>
+            <DropdownMenuItem><MoveUpRight className="text-black"/>Acceder</DropdownMenuItem>
+            <DropdownMenuItem><Trash2 className="text-black"/>Eliminar</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
+    size: 50,
+    minSize: 50,
+    maxSize: 50,
   },
 ];
