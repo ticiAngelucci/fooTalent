@@ -31,7 +31,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ContractServiceImpl implements IContractService {
 
     private final IContractRepository contractRepository;
@@ -47,7 +46,6 @@ public class ContractServiceImpl implements IContractService {
                 .orElseThrow(() -> new PropertyNotFoundException(request.propertyId().toString()));
 
         if (property.getStatus() == PropertyStatus.OCUPADO) {
-            log.error("Inmueble con ID: {} ya está ocupado", request.propertyId());
             throw new PropertyUnavailableException("Inmueble con ID: " + request.propertyId() + " ya está ocupado");
         }
 
@@ -95,9 +93,6 @@ public class ContractServiceImpl implements IContractService {
                 throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
         }
-
-        log.info("Contrato creado exitosamente para propiedad ID: {} y inquilino ID: {}, con {} documentos",
-                request.propertyId(), request.tenantId(), contract.getDocuments().size());
 
         return contractMapper.toResponse(contract);
     }
@@ -192,7 +187,6 @@ public class ContractServiceImpl implements IContractService {
         propertyRepository.save(property);
 
         contractRepository.deleteById(id);
-        log.info("Contrato eliminado: ID {}", id);
     }
 
     @Override
