@@ -15,4 +15,5 @@ public interface TenantsService {
     TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile[] documents);
 
     void deleteTenant(Long id);
+    void removeTenantDocumentById(Long tenantId, String documentId);
 }

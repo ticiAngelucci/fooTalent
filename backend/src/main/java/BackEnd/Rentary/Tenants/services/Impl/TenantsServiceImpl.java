@@ -85,8 +85,7 @@ public class TenantsServiceImpl implements TenantsService {
                         documents,
                         EntityType.TENANT,
                         tenant.getId().toString(),
-                        tenant.getDni()
-                );
+                        tenant.getDni());
 
                 Set<AttachedDocument> attachedDocs = new HashSet<>();
 
@@ -105,9 +104,7 @@ public class TenantsServiceImpl implements TenantsService {
 
                 tenant.setDocuments(attachedDocs);
 
-
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 log.error("Error al subir documentos: {}", e.getMessage());
                 throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
@@ -158,8 +155,7 @@ public class TenantsServiceImpl implements TenantsService {
                         documents,
                         EntityType.TENANT,
                         existingTenant.getId().toString(),
-                        existingTenant.getDni()
-                );
+                        existingTenant.getDni());
 
                 for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
@@ -173,9 +169,7 @@ public class TenantsServiceImpl implements TenantsService {
                     existingTenant.getDocuments().add(doc);
                 }
 
-
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 log.error("Error al actualizar documentos: {}", e.getMessage());
                 throw new FileUploadException("Error al actualizar documentos: " + e.getMessage());
             }
@@ -205,17 +199,51 @@ public class TenantsServiceImpl implements TenantsService {
             }
         }
 
-
         if (!publicIds.isEmpty()) {
             try {
                 fileUploadService.deleteMultipleFiles(publicIds);
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 log.warn("Error al eliminar algunos documentos de Cloudinary: {}", e.getMessage());
             }
         }
 
         tenantsRepository.deleteById(id);
         log.info("Inquilino eliminado con éxito");
+    }
+
+    @Override
+    @Transactional
+    public void removeTenantDocumentById(Long tenantId, String documentId) {
+        log.info("Eliminando documento {} del inquilino ID: {}", documentId, tenantId);
+
+        Tenants tenant = tenantsRepository.findById(tenantId)
+                .orElseThrow(() -> new TenantNotFoundExceptions(tenantId.toString()));
+
+        AttachedDocument docToRemove = null;
+        for (AttachedDocument doc : tenant.getDocuments()) {
+            if (doc.getId() != null && doc.getId().equals(documentId)) {
+                docToRemove = doc;
+                break;
+            }
+        }
+
+        if (docToRemove != null) {
+            // Guardar el publicId para eliminarlo de Cloudinary
+            String publicId = docToRemove.getPublicId();
+
+            // Eliminar el documento de la colección
+            tenant.getDocuments().remove(docToRemove);
+            tenantsRepository.save(tenant);
+
+            // Eliminar de Cloudinary
+            try {
+                fileUploadService.deleteFile(publicId);
+                log.info("Documento eliminado del inquilino ID: {}", tenantId);
+            } catch (Exception e) {
+                log.warn("Error al eliminar documento de Cloudinary: {}", e.getMessage());
+            }
+        } else {
+            log.warn("No se encontró el documento con ID {} para el inquilino {}", documentId, tenantId);
+        }
     }
 }
