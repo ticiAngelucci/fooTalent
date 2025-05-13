@@ -1,5 +1,7 @@
 package BackEnd.Rentary.Common;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -10,6 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AttachedDocument {
+    @Column(name = "document_id", length = 36)
+    private String id = UUID.randomUUID().toString();
     @Column(name = "document_url", length = 500)
     private String url;
 

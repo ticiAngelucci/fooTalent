@@ -12,5 +12,5 @@ public interface IContractService {
     Page<ContractResponse> getAllContracts(Pageable pageable);
     ContractResponse updateContract(Long id, ContractRequest request, MultipartFile[] documents);
     void deleteContract(Long id);
-    void removeContractDocument(Long contractId, String documentPublicId);
+    void removeContractDocumentById(Long contractId, String documentId);
 }

@@ -83,12 +83,12 @@ public class ContractController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{contractId}/documents/{publicId}")
+    @DeleteMapping("/{contractId}/documents/{documentId}")
     public ResponseEntity<Void> removeContractDocument(
             @PathVariable Long contractId,
-            @PathVariable String publicId) {
-        log.info("Eliminando documento {} del contrato ID: {}", publicId, contractId);
-        contractService.removeContractDocument(contractId, publicId);
+            @PathVariable String documentId) {
+        log.info("Eliminando documento {} del contrato ID: {}", documentId, contractId);
+        contractService.removeContractDocumentById(contractId, documentId);
         return ResponseEntity.noContent().build();
     }
 }

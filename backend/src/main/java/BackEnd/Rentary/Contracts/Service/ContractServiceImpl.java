@@ -27,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -73,12 +70,12 @@ public class ContractServiceImpl implements IContractService {
                         documents,
                         EntityType.CONTRACT,
                         contract.getContractId().toString(),
-                        contractNumber
-                );
+                        contractNumber);
 
                 Set<AttachedDocument> attachedDocs = new HashSet<>();
                 for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
+                            .id(UUID.randomUUID().toString())
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
                             .originalName(result.getOriginalName())
@@ -142,8 +139,7 @@ public class ContractServiceImpl implements IContractService {
                         documents,
                         EntityType.CONTRACT,
                         updated.getContractId().toString(),
-                        contractNumber
-                );
+                        contractNumber);
 
                 for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
@@ -201,24 +197,29 @@ public class ContractServiceImpl implements IContractService {
 
     @Override
     @Transactional
-    public void removeContractDocument(Long contractId, String documentPublicId) {
+    public void removeContractDocumentById(Long contractId, String documentId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ContractNorFoundException(contractId.toString()));
 
         AttachedDocument docToRemove = null;
         for (AttachedDocument doc : contract.getDocuments()) {
-            if (doc.getPublicId().equals(documentPublicId)) {
+            if (doc.getId().equals(documentId)) {
                 docToRemove = doc;
                 break;
             }
         }
 
         if (docToRemove != null) {
+            // Guardar el publicId para eliminarlo de Cloudinary
+            String publicId = docToRemove.getPublicId();
+
+            // Eliminar el documento de la colección
             contract.getDocuments().remove(docToRemove);
             contractRepository.save(contract);
 
+            // Eliminar de Cloudinary
             try {
-                fileUploadService.deleteFile(documentPublicId);
+                fileUploadService.deleteFile(publicId);
                 log.info("Documento eliminado del contrato ID: {}", contractId);
             } catch (
                     Exception e) {

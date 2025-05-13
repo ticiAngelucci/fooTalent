@@ -26,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,6 +92,7 @@ public class TenantsServiceImpl implements TenantsService {
 
                 for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
+                            .id(UUID.randomUUID().toString())
                             .url(result.getUrl())
                             .publicId(result.getPublicId())
                             .originalName(result.getOriginalName())

@@ -1,6 +1,7 @@
 package BackEnd.Rentary.Tenants.mappers;
 
 import BackEnd.Rentary.Common.Address;
+import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.entities.Tenants;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TenantsMapper {
-    
+
     public Tenants toEntity(TenantsRequestDto dto) {
         Tenants tenant = new Tenants();
         tenant.setName(dto.getFirstName());
@@ -17,7 +18,7 @@ public class TenantsMapper {
         tenant.setPhone(dto.getPhone());
         tenant.setDni(dto.getDni());
         tenant.setWarranty(dto.getWarranty());
-        
+
         Address address = new Address();
         address.setCountry(dto.getCountry());
         address.setProvince(dto.getProvince());
@@ -25,12 +26,12 @@ public class TenantsMapper {
         address.setStreet(dto.getStreet());
         address.setNumber(dto.getNumber());
         address.setPostalCode(dto.getPostalCode());
-        
+
         tenant.setAddress(address);
-        
+
         return tenant;
     }
-    
+
     public TenantsResponseDto toDto(Tenants entity) {
         TenantsResponseDto dto = new TenantsResponseDto();
         dto.setId(entity.getId());
@@ -41,7 +42,14 @@ public class TenantsMapper {
         dto.setDni(entity.getDni());
         dto.setWarranty(entity.getWarranty());
 
-        
+        if (entity.getDocuments() != null && !entity.getDocuments().isEmpty()) {
+            AttachedDocument firstDoc = entity.getDocuments().iterator().next();
+            dto.setAttachedDocument(firstDoc.getUrl());
+            dto.setDocumentName(firstDoc.getOriginalName());
+            dto.setDocumentType(firstDoc.getFileType());
+            dto.setDocumentExtension(firstDoc.getExtension());
+        }
+
         if (entity.getAddress() != null) {
             dto.setCountry(entity.getAddress().getCountry());
             dto.setProvince(entity.getAddress().getProvince());
@@ -50,7 +58,7 @@ public class TenantsMapper {
             dto.setNumber(entity.getAddress().getNumber());
             dto.setPostalCode(entity.getAddress().getPostalCode());
         }
-        
+
         return dto;
     }
 }
