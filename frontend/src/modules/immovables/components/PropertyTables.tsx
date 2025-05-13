@@ -55,6 +55,12 @@ export function PropertyTable({
   });
 
   const [columnSizing, setColumnSizing] = useState({});
+  const normalizeString = (str: string | number | null | undefined): string => {
+    if (typeof str !== 'string') {
+      return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  };
 
   const table = useReactTable({
     data,
@@ -83,9 +89,11 @@ export function PropertyTable({
     pageCount: Math.ceil(totalElements / pagination.pageSize), 
     columnResizeMode: "onChange",
     globalFilterFn: (row, _columnId, filterValue) => {
-      return Object.values(row.original).some((value) =>
-        String(value).toLowerCase().includes(filterValue.toLowerCase())
-      );
+      const normalizedFilterValue = normalizeString(filterValue);
+      return Object.values(row.original).some((value) => {
+        const normalizedCellValue = normalizeString(value);
+        return normalizedCellValue.includes(normalizedFilterValue);
+      });
     },
   });
 
