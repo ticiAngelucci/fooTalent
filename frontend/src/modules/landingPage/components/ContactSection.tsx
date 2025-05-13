@@ -7,7 +7,7 @@ import Form from "../assets/form.png"
 export default function ContactSection() {
   return (
     <section className="px-6 py-16 bg-white flex flex-col items-center">
-      <h1 className="text-3xl sm:text-4xl text-center mb-12 w-1/2">
+      <h1 className="text-xl md:text-3xl mb-12 w-full md:w-1/2 text-center  break-words">
         <span className="text-[#1E40AF]">Contáctanos</span> ahora y descubre cómo optimizar tu gestión.
       </h1>
 

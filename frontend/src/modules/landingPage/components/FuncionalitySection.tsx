@@ -33,12 +33,11 @@ const features = [
 const FuncionalitySection = () => {
   return (
     <section className="px-6 py-12 text-center flex flex-col items-center">
-      <h1 className="text-3xl mb-12 w-1/2 ">
+      <h1 className="text-xl md:text-3xl mb-12 w-full md:w-1/2 text-center  break-words">
         Descubre algunas de nuestras{" "}
         <span className="text-[#1E40AF]">funcionalidades</span>{" "}
         principales
       </h1>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-left text-left">
