@@ -21,6 +21,7 @@ import AddTenant from "./modules/tenant/pages/AddTenant";
 import PropertyRegister from "./modules/properties/pages/PropertyRegister";
 import { Toaster } from "@/shared/components/ui/sonner";
 import EditOwner from "./modules/owner/pages/EditOwner";
+import PropertyEdit from "./modules/properties/pages/PropertyEdit";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route path={AppRoute.NewProperty} element={<PropertyRegister />} />
         <Route path={AppRoute.GetAllUsers} element={<GetAllUsers />} />
         <Route element={<ProtectedRoute />}>
+        <Route path={AppRoute.EditProperty} element={<PropertyEdit />} />
           <Route path={AppRoute.Dashboard} element={<Dashboard />} />
           <Route path={AppRoute.Contact} element={<Contact />} />
           <Route path={AppRoute.Immovables} element={<Immovables />} />

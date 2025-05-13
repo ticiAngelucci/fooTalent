@@ -9,6 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
+import { Route } from "@/shared/constants/route";
 
 export const getPropertyColumns = (): ColumnDef<Property>[] => [
   {
@@ -67,38 +69,38 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
     maxSize: 179,
   },
   {
-      id: "disponibilidad",
-      accessorKey: "propertyStatus",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="font-semibold"
+    id: "disponibilidad",
+    accessorKey: "propertyStatus",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="font-semibold"
+      >
+        Estado
+        <ChevronsUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const estado = row.getValue("disponibilidad") as string;
+      return (
+        <span
+          className={clsx(
+            "px-3 py-1 rounded-full text-xs font-semibold border",
+            {
+              "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
+              "text-black bg-gray-700 border-black": estado === "OCUPADO"
+            }
+          )}
         >
-          Estado
-          <ChevronsUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: ({ row }) => {
-        const estado = row.getValue("disponibilidad") as string;
-        return (
-          <span
-            className={clsx(
-              "px-3 py-1 rounded-full text-xs font-semibold border",
-              {
-                "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
-                "text-black bg-gray-700 border-black": estado === "OCUPADO"
-              }
-            )}
-          >
-            {estado}
-          </span>
-        );
-      },
-      size: 118,
-      minSize: 118,
-      maxSize: 118,
+          {estado}
+        </span>
+      );
     },
+    size: 118,
+    minSize: 118,
+    maxSize: 118,
+  },
   {
     id: "observaciones",
     accessorKey: "observations",
@@ -115,7 +117,7 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
   {
     id: "actions",
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,10 +126,16 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem><MoveUpRight className="text-black"/>Acceder</DropdownMenuItem>
-            <DropdownMenuItem><Trash2 className="text-black"/>Eliminar</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link className="text-black" to={Route.EditProperty} state={{ property: row.original }}>
+                <MoveUpRight className="text-black inline" />Acceder
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+                <Trash2 className="text-black" />Eliminar
+            </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu >
       );
     },
     size: 50,

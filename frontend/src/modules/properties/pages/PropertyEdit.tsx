@@ -1,5 +1,5 @@
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form"
 import { Input } from "@/shared/components/ui/input"
 import { Route } from "@/shared/constants/route"
 import { useForm } from "react-hook-form"
@@ -8,15 +8,22 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/components/ui/select"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { Button } from "@/shared/components/ui/button"
-import { Link, useNavigate } from "react-router-dom"
-import { Check, CircleAlert, Save, UserPlus } from "lucide-react"
-import { createProperty, getOwnerList } from "../services/PropertyService"
+import { useLocation, useNavigate } from "react-router-dom"
+import { PencilLine, Save, X } from "lucide-react"
+import { editProperty, getOwnerList } from "../services/PropertyService"
 import { TypeOfProperty } from "../enums/TypeOfProperty"
 import { toast } from "sonner"
 import { useEffect, useState } from "react"
+import SuccessToast from "@/shared/components/Toasts/SuccessToast"
+import ErrorToast from "@/shared/components/Toasts/ErrorToast"
+import DeletePropertyModal from "../components/DeletePropertyModal"
 
-const PropertyRegister = () => {
 
+
+const PropertyEdit = () => {
+    const location = useLocation();
+    const property = location.state?.property;
+    const [isDisabled, setDisabled] = useState(true);
     const [ownerList, setOwnerList] = useState([]);
 
     useEffect(() => {
@@ -27,39 +34,40 @@ const PropertyRegister = () => {
         getOwners();
     }, [])
 
+    const handleDisable = () => {
+        setDisabled(!isDisabled);
+    }
+
+    if (!property) return null;
+
+    const id = property.id_property;
+
+
     const navigate = useNavigate();
     const form = useForm<PropertyFormData>({
         resolver: zodResolver(PropertySchema),
         defaultValues: {
             address: {
-                country: "",
-                province: "",
-                locality: "",
-                street: "",
-                number: "",
-                postalCode: "",
+                country: property.country,
+                province: property.province,
+                locality: property.locality,
+                street: property.street,
+                number: property.number,
+                postalCode: property.postalCode,
             },
-            typeOfProperty: undefined,
-            observations: "",
-            ownerId: undefined,
+            typeOfProperty: property.typeOfProperty,
+            observations: property.observations,
+            ownerId: property.ownerId,
         },
     });
 
     const onSubmit = async (data: PropertyFormData) => {
-
         try {
-            await createProperty(data);
+            await editProperty(id, data);
             toast.custom(
                 () => (
-                    <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
-                        <p className="text-green-700 font-semibold text-sm flex gap-2 items-center">
-                            <Check />¡Propiedad creada con éxito!
-                        </p>
-                        <p className="text-gray-700 text-sm mt-1">
-                            La propiedad ha sido registrada y ahora está disponible en el
-                            sistema para su gestión.
-                        </p>
-                    </div>
+                    <SuccessToast title="Propiedad modificada con éxito"
+                        description="La propiedad ha sido editada y esta disponible en el sistema" />
                 ),
                 {
                     duration: 5000,
@@ -69,14 +77,8 @@ const PropertyRegister = () => {
         } catch (error) {
             toast.custom(
                 () => (
-                    <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
-                        <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-                            <CircleAlert />¡Ha ocurrido un error!
-                        </p>
-                        <p className="text-gray-700 text-sm mt-1">
-                            La propiedad no se pudo añadir al sistema, intente nuevamente.
-                        </p>
-                    </div>
+                    <ErrorToast title="¡Ha ocurrido un error!"
+                        description="La propiedad no se pudo editar, intente nuevamente." />
                 ),
                 {
                     duration: 5000,
@@ -97,43 +99,36 @@ const PropertyRegister = () => {
                             name="ownerId"
                             render={({ field }) => (
                                 <FormItem className="col-span-2">
-                                    <FormDescription className="text-base text-neutral-950">
-                                        Si el propietario ya existe, selecciónalo. Si no, puedes registrarlo ahora.
-                                    </FormDescription>
-                                    <FormLabel className="form-label-custom">Propietario existente</FormLabel>
+                                    <FormLabel className="form-label-custom">Propietario</FormLabel>
                                     <FormControl>
-                                        <Select
-                                            value={field.value || ""}
-                                            onValueChange={(val) => field.onChange(Number(val))}
-                                        >
-                                            <SelectTrigger className="w-full form-input-custom">
-                                                <SelectValue placeholder="Seleccione un propietario" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Propietarios</SelectLabel>
-                                                    {ownerList.map(({ idOwner, firstName, lastName }) => (
-                                                        <SelectItem key={idOwner} value={idOwner}>
-                                                            {firstName} {lastName}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                        {isDisabled ?
+                                            (<Input type="text" value={`${property.firstName} ${property.lastName}`} disabled={isDisabled ? true : false} />)
+                                            :
+                                            (
+                                                <Select
+                                                    value={field.value || ""}
+                                                    onValueChange={(val) => field.onChange(Number(val))}>
+                                                    <SelectTrigger className="w-full form-input-custom">
+                                                        <SelectValue placeholder="Seleccione un propietario" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectLabel>Propietarios</SelectLabel>
+                                                            {ownerList.map(({ idOwner, firstName, lastName }) => (
+                                                                <SelectItem key={idOwner} value={idOwner}>
+                                                                    {firstName} {lastName}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-
-                        {/* Agregar nuevo propietario */}
-                        <div className="col-span-2 flex flex-col justify-end">
-                            <label className="text-sm font-semibold">Agregar Nuevo Propietario</label>
-                            <Link className="flex gap-2 text-base text-brand-800" to="#">
-                                <UserPlus />
-                                <span>Agregar propietario</span>
-                            </Link>
-                        </div>
+                        <br />
 
                         <FormField
                             name="typeOfProperty"
@@ -147,6 +142,7 @@ const PropertyRegister = () => {
                                         <Select
                                             value={field.value || ""}
                                             onValueChange={field.onChange}
+                                            disabled={isDisabled ? true : false}
                                         >
                                             <SelectTrigger className="w-full form-input-custom">
                                                 <SelectValue placeholder="Seleccione tipo de inmueble" />
@@ -177,7 +173,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: Av. Rivadavia" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: Av. Rivadavia" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -193,7 +189,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: 12" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: 12" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -209,7 +205,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: 12154" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: 12154" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -225,7 +221,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: Flores" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: Flores" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -241,7 +237,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: Argentina" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: Argentina" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -257,7 +253,7 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input className="form-input-custom" placeholder="Ej: Buenos Aires" {...field} />
+                                        <Input className="form-input-custom" placeholder="Ej: Buenos Aires" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -274,22 +270,33 @@ const PropertyRegister = () => {
                                         <span className="text-neutral-600 font-normal">(Requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Textarea className="min-h-32 form-input-custom" placeholder="Ej: Escriba aquí" {...field} />
+                                        <Textarea className="min-h-32 form-input-custom" placeholder="Ej: Escriba aquí" {...field} disabled={isDisabled ? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <br />
-                        <Button type="submit" className="col-span-2 flex items-center w-full text-base btn-primary">
+                        <Button type="submit" className="col-span-2 flex items-center w-full text-base btn-primary" disabled={isDisabled ? true : false}>
                             <Save className="size-6 mr-2" /> Guardar
                         </Button>
+                        <br />
+                        <Button type="button" className="col-span-2 btn-secondary" onClick={() => handleDisable()}>
+                            <PencilLine />
+                            {isDisabled ? "Editar" : "Cancelar"}
+                        </Button>
+                        <br />
+                        <DeletePropertyModal id={id}>
+                            <Button type="button" className="col-span-2 btn-tertiary" disabled={!isDisabled ? true : false}>
+                                <X />
+                                Eliminar
+                            </Button>
+                        </DeletePropertyModal>
                     </form>
                 </Form>
-
             </section>
         </DashboardLayout>
     )
 }
 
-export default PropertyRegister
+export default PropertyEdit
