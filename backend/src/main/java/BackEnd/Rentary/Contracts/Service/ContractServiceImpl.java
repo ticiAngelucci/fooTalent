@@ -31,6 +31,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ContractServiceImpl implements IContractService {
 
     private final IContractRepository contractRepository;
