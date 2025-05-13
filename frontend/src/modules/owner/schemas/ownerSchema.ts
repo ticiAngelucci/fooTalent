@@ -19,7 +19,7 @@ export const ownerSchema = z.object({
   email: z.string().trim().email("Debes ingresar un email válido").optional(),
   street: z.string().trim().optional(),
   number: z.string().trim().optional(),
-  city: z.string().trim().optional(),
+  locality: z.string().trim().optional(),
   province: z.string().trim().optional(),
   postalCode: z
     .string()
@@ -28,7 +28,6 @@ export const ownerSchema = z.object({
     .optional(),
   files: z
     .array(z.instanceof(File))
-    .min(1, "Debés subir al menos un archivo")
     .max(7, "Solo se permiten hasta 7 archivos")
     .optional(),
 });

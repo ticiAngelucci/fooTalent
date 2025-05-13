@@ -12,7 +12,7 @@ import { UserRoundPlus } from "lucide-react";
 
 
 export default function InmueblesView() {
-    const { properties, isLoading, error, fetchProperties } = usePropertyStore();
+    const { properties, isLoading, error, fetchProperties, totalElements } = usePropertyStore();
 
     useEffect(() => {
         fetchProperties();
@@ -22,22 +22,22 @@ export default function InmueblesView() {
 
     return (
         <DashboardLayout title="Inmuebles"
-        redirect={Route.Dashboard}
+            redirect={Route.Dashboard}
             dashBtn={<Link to={Route.NewProperty}>
                 <Button className="btn-primary my-4">
                     <UserRoundPlus />Crear inmueble
                 </Button>
             </Link>}>
-            <div className="p-6 space-y-4 w-[95%] mx-auto max-w-[1700px] min-h-screen">
-
-
-                <Tabs defaultValue="inmuebles" className="space-y-4">
+            <div className="rounded-md border mt-4 overflow-x-auto ">
+                <Tabs defaultValue="inmuebles" className="space-y-4 m-5">
                     <TabsContent value="inmuebles">
                         <PropertyTable
                             data={properties}
                             isLoading={isLoading}
                             error={error}
                             columns={columns}
+                            totalElements={totalElements}
+                            
                         />
                     </TabsContent>
                 </Tabs>
