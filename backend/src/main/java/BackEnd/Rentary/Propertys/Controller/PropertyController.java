@@ -4,7 +4,6 @@ import BackEnd.Rentary.Auth.DTOs.CustomUserDetails;
 import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
 import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
 import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
 import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import BackEnd.Rentary.Propertys.Service.PropertyServiceImpl;
 import jakarta.validation.Valid;
@@ -37,12 +36,6 @@ public class PropertyController {
     public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId){
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{propertyId}")
-    public ResponseEntity<PropertyResponseDto> changePropertyStatus(@PathVariable Long propertyId,
-                                                                    @RequestParam PropertyStatus newStatus){
-        return ResponseEntity.ok(propertyService.changePropertyStatus(propertyId, newStatus));
     }
 
     @GetMapping("/available")
@@ -79,5 +72,11 @@ public class PropertyController {
     @GetMapping("/all")
     public Page<PropertyResponseDto> getAllProperties(@PageableDefault(size = 15) Pageable pageable){
         return propertyService.getAllProperties(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id){
+        PropertyResponseDto property = propertyService.getPropertyById(id);
+        return ResponseEntity.ok(property);
     }
 }

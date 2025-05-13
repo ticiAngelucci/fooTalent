@@ -31,7 +31,6 @@ public class PropertyMapper {
     }
 
     public Property toEntity(PropertyRequestDto dto, Owner owner) {
-
         Property property = new Property();
         property.setAddress(dto.address());
         property.setTypeOfProperty(dto.typeOfProperty());

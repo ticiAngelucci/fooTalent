@@ -12,7 +12,6 @@ import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import BackEnd.Rentary.Propertys.Mapper.PropertyMapper;
 import BackEnd.Rentary.Propertys.Repositoy.PropertyRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PropertyServiceImpl implements IPropertyService {
 
     private final PropertyRepository propertyRepository;
@@ -35,25 +33,11 @@ public class PropertyServiceImpl implements IPropertyService {
 
         Property property = propertyMapper.toEntity(dto, owner);
         if (propertyRepository.existsByAddress(property.getAddress())) {
-            log.error("Ya existe un inmueble con la dirección: {}", property.getAddress());
             throw new PropertyAddressExistsException("Ya existe un inmueble con la dirección especificada.");
         }
 
-        log.info("Creando nueva propiedad para propietario ID: {}", dto.ownerId());
         propertyRepository.save(property);
         return propertyMapper.toDto(property);
-    }
-
-    @Override
-    public PropertyResponseDto changePropertyStatus(Long propertyId, PropertyStatus newStatus) {
-        Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new PropertyNotFoundException(propertyId.toString()));
-
-        log.info("Cambiando estado de propiedad ID: {} a: {}", propertyId, newStatus);
-        property.setStatus(newStatus);
-        Property updateProperty = propertyRepository.save(property);
-
-        return propertyMapper.toDto(updateProperty);
     }
 
     @Override
@@ -61,14 +45,12 @@ public class PropertyServiceImpl implements IPropertyService {
         Property property = propertyRepository.findById(id)
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + id + " no encontrado."));
 
-        log.info("Marcando propiedad ID: {} como NO_DISPONIBLE", id);
         property.setStatus(PropertyStatus.NO_DISPONIBLE);
         propertyRepository.save(property);
     }
 
     @Override
     public Page<PropertyResponseDto> getAllActivePropertiesFiltered(String locality, TypeOfProperty type, Pageable pageable) {
-        log.info("Buscando propiedades disponibles con filtros - Localidad: {}, Tipo: {}", locality, type);
         Page<Property> properties = propertyRepository.findAvailablePropertiesWithFilters(locality, type, pageable);
 
         if (properties.isEmpty()){
@@ -84,7 +66,6 @@ public class PropertyServiceImpl implements IPropertyService {
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + propertyId + " no encontrado."));
 
         if (existingProperty.getStatus() == PropertyStatus.NO_DISPONIBLE) {
-            log.error("No se puede editar. El inmueble ID: {} fue eliminado.", propertyId);
             throw new PropertyDeletedStatusException("No se puede editar. Este inmueble fue eliminado.");
         }
 
@@ -92,11 +73,9 @@ public class PropertyServiceImpl implements IPropertyService {
         Address currentAddress = existingProperty.getAddress();
 
         if (!newAddress.equals(currentAddress) && propertyRepository.existsByAddress(newAddress)) {
-            log.error("Ya existe un inmueble con la dirección: {}", newAddress);
             throw new PropertyAddressExistsException("Ya existe un inmueble con la dirección especificada.");
         }
 
-        log.info("Actualizando propiedad ID: {}", propertyId);
         existingProperty.setAddress(newAddress);
         existingProperty.setTypeOfProperty(dto.typeOfProperty());
         existingProperty.setStatus(PropertyStatus.DISPONIBLE);
@@ -108,9 +87,14 @@ public class PropertyServiceImpl implements IPropertyService {
 
     @Override
     public Page<PropertyResponseDto> getAllProperties(Pageable pageable) {
-        log.info("Obteniendo todas las propiedades - Página: {}, Tamaño: {}",
-                pageable.getPageNumber(), pageable.getPageSize());
         return propertyRepository.findAll(pageable)
                 .map(propertyMapper::toDto);
+    }
+
+    @Override
+    public PropertyResponseDto getPropertyById(Long id) {
+        Property property = propertyRepository.findById(id)
+                .orElseThrow(() -> new PropertyNotFoundException(id.toString()));
+        return propertyMapper.toDto(property);
     }
 }

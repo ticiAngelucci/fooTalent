@@ -1,37 +1,29 @@
 package BackEnd.Rentary.Tenants.DTOs;
 
+import BackEnd.Rentary.Common.Address;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TenantsRequestDto {
-    @NotNull(message = "El nombre es requerido")
-    private String firstName;
+public record TenantsRequestDto (
+        @NotNull(message = "El nombre es requerido.")
+        String firstName,
 
-    @NotNull(message = "El apellido es requerido")
-    private String lastName;
+        @NotNull(message = "El apellido es requerido.")
+        String lastName,
 
-    @Email(message = "El email debe ser válido")
-    @NotNull(message = "El email es requerido")
-    private String email;
+        @Email(message = "El email debe ser válido.")
+        @NotNull(message = "El email es requerido.")
+        String email,
 
-    @NotNull(message = "El teléfono es requerido")
-    private String phone;
-    @NotNull(message = "La fecha de nacimiento es requerida")
-    private String warranty;
-    @NotNull(message = "El DNI es requerido")
-    private String dni;
+        @NotNull(message = "El teléfono es requerido.")
+        String phone,
+        @NotNull(message = "La fecha de nacimiento es requerida.")
+        String warranty,
+        @NotNull(message = "El DNI es requerido.")
+        String dni,
 
-    private String country;
-    private String province;
-    private String locality;
-    private String street;
-    private String number;
-    private String postalCode;
-
-}
+        @Valid
+        @NotNull(message = "La dirección es requerida")
+        Address address
+) {}
