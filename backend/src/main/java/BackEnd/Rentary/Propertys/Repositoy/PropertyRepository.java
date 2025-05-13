@@ -30,5 +30,4 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByAddress_StreetContainingIgnoreCaseOrTypeOfPropertyOrObservationsContainingIgnoreCase(String street, TypeOfProperty typeOfProperty, String observations);
 
     List<Property> findByAddress_StreetContainingIgnoreCaseOrObservationsContainingIgnoreCase(String street, String observations);
-
 }

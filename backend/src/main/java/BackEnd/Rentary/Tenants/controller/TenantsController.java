@@ -48,7 +48,6 @@ public class TenantsController {
             @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
             @RequestPart(value = "document", required = false) MultipartFile document) {
 
-        log.info("Creando nuevo inquilino: {}", tenantData.getFirstName());
         if (document != null) {
             log.info("Con documento adjunto: nombre={}, tamaño={}, tipo={}",
                     document.getOriginalFilename(),
@@ -72,7 +71,6 @@ public class TenantsController {
             @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
             @RequestPart(value = "document", required = false) MultipartFile document) {
 
-        log.info("Actualizando inquilino con ID: {}", id);
         TenantsResponseDto updatedTenant = tenantsService.updateTenant(id, tenantData, document);
         return ResponseEntity.ok(updatedTenant);
     }
