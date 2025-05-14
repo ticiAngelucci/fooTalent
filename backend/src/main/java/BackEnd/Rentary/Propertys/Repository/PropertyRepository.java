@@ -1,4 +1,4 @@
-package BackEnd.Rentary.Propertys.Repositoy;
+package BackEnd.Rentary.Propertys.Repository;
 
 import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Propertys.Entities.Property;

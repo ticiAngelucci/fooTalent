@@ -10,7 +10,7 @@ import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
 import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import BackEnd.Rentary.Propertys.Mapper.PropertyMapper;
-import BackEnd.Rentary.Propertys.Repositoy.PropertyRepository;
+import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

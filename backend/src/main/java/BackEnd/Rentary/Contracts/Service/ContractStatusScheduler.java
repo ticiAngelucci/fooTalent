@@ -4,7 +4,7 @@ import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Contracts.Respository.IContractRepository;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
-import BackEnd.Rentary.Propertys.Repositoy.PropertyRepository;
+import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
