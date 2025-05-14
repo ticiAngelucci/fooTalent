@@ -24,8 +24,7 @@ public class ContractController {
 
     @Operation(
             summary = "Crear un nuevo contrato",
-            description = "Crea un nuevo contrato con la posibilidad de adjuntar múltiples documentos (PDF e imágenes)"
-    )
+            description = "Crea un nuevo contrato con la posibilidad de adjuntar múltiples documentos (PDF e imágenes)")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ContractResponse> createContract(
             @RequestPart("contract") @Valid ContractRequest contractRequest,
@@ -35,16 +34,18 @@ public class ContractController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Obtener un contrato por un ID")
     @GetMapping("/{id}")
     public ResponseEntity<ContractResponse> getContractById(@PathVariable Long id) {
         ContractResponse response = contractService.getContractById(id);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Obtener todos los contratos", description = "Listado paginado por 15 contratos por página")
     @GetMapping
     public ResponseEntity<Page<ContractResponse>> getAllContracts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "15") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ContractResponse> response = contractService.getAllContracts(pageable);
@@ -65,12 +66,14 @@ public class ContractController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Eliminar un contrato")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContract(@PathVariable Long id) {
         contractService.deleteContract(id);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Eliminar documentos de contrato")
     @DeleteMapping("/{contractId}/documents/{documentId}")
     public ResponseEntity<Void> removeContractDocument(
             @PathVariable Long contractId,

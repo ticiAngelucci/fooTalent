@@ -6,6 +6,7 @@ import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
 import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
 import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
 import BackEnd.Rentary.Propertys.Service.PropertyServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,8 @@ public class PropertyController {
 
     private final PropertyServiceImpl propertyService;
 
+    @Operation(summary = "Crear un contrato nuevo",
+            description = "Crear un contrato que vincula un inquilino con una propiedad")
     @PostMapping("/create")
     public ResponseEntity<PropertyResponseDto> createProperty(@Valid @RequestBody PropertyRequestDto dto,
                                                               @AuthenticationPrincipal CustomUserDetails user){
@@ -32,12 +35,14 @@ public class PropertyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.createProperty(dto, userId));
     }
 
+    @Operation(summary = "Eliminar contrato", description = "Eliminar contrato pasando un ID")
     @DeleteMapping("/{propertyId}")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId){
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Listar contratos disponibles")
     @GetMapping("/available")
     public ResponseEntity<CustomPageResponse<PropertyResponseDto>> getAvailableProperties(
             @RequestParam(required = false) String locality,
@@ -60,6 +65,7 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Editar una propiedad pasado por ID")
     @PatchMapping("/update/{id}")
     public ResponseEntity<PropertyResponseDto> updateProperty(
             @PathVariable Long id,
@@ -69,11 +75,13 @@ public class PropertyController {
         return ResponseEntity.ok(updatedProperty);
     }
 
+    @Operation(summary = "Listar todas las propiedades", description = "Listar propiedades paginadas con 15 items por página")
     @GetMapping("/all")
     public Page<PropertyResponseDto> getAllProperties(@PageableDefault(size = 15) Pageable pageable){
         return propertyService.getAllProperties(pageable);
     }
 
+    @Operation(summary = "Obtener propiedades por un ID")
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id){
         PropertyResponseDto property = propertyService.getPropertyById(id);

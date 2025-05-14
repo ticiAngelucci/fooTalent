@@ -24,14 +24,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class TenantsController {
         private final TenantsService tenantsService;
 
+        @Operation(summary = "Obtener todos los inquilinos", description = "Obtener todos los inquilinos paginados por 15 items por página")
         @GetMapping("")
         public ResponseEntity<TenantsPageResponseDto> getAllTenants(
                         @RequestParam(defaultValue = "0") @Min(value = 0, message = "La página debe ser 0 o mayor") int page,
-                        @RequestParam(defaultValue = "10") @Min(value = 1, message = "El tamaño debe ser 1 o mayor") int size) {
+                        @RequestParam(defaultValue = "15") @Min(value = 1, message = "El tamaño debe ser 1 o mayor") int size) {
                 var response = tenantsService.findAllTenants(page, size);
                 return ResponseEntity.ok(response);
         }
 
+        @Operation(summary = "Obtener un inquilino por ID")
         @GetMapping("/{id}")
         public ResponseEntity<TenantsResponseDto> getTenantsById(@PathVariable Long id) {
                 TenantsResponseDto tenant = tenantsService.findTenantsById(id);
@@ -66,6 +68,7 @@ public class TenantsController {
                 return ResponseEntity.ok(updatedTenant);
         }
 
+        @Operation(summary = "Eliminar un inquilino")
         @DeleteMapping("/{id}")
         public ResponseEntity<Void> deleteTenantsById(@PathVariable Long id) {
                 log.info("Eliminando inquilino con ID: {}", id);
