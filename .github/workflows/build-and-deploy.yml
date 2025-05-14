@@ -43,7 +43,7 @@ jobs:
       - name: Update service on Koyeb
         run: |
           koyeb service redeploy rentary/footalent-backend \
-            --docker "${{ secrets.DOCKER_USERNAME }}/footalent-backend:latest" \
+            --image "${{ secrets.DOCKER_USERNAME }}/footalent-backend:latest" \
             --token ${{ secrets.KOYEB_API_TOKEN }}
 
       - name: Redeploy service on Koyeb
