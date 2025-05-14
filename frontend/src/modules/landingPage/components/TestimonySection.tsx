@@ -48,8 +48,6 @@ const TestimonySection = () => {
       <h1 className="text-2xl md:text-4xl lg:text-5xl leading-snug md:leading-tight mb-4 md:mb-8 w-full md:w-1/2">
         <span className="text-[#1E40AF]">Testimonios</span> de quienes ya optimizan su día a día
       </h1>
-
-      {/* Carrusel para MOBILE */}
       <div className="relative flex items-center justify-center overflow-hidden w-full max-w-xs mx-auto block md:hidden">
         <button onClick={prev} className="absolute left-2 z-10 text-2xl px-2 py-1">
           ‹
@@ -73,8 +71,6 @@ const TestimonySection = () => {
           ›
         </button>
       </div>
-
-      {/* Carrusel para DESKTOP */}
       <div className="relative items-center justify-center overflow-hidden max-w-6xl mx-auto hidden md:flex">
         <button onClick={prev} className="absolute left-0 z-10 text-3xl px-4 py-2">
           ‹

@@ -32,7 +32,7 @@ const features = [
 
 const FuncionalitySection = () => {
   return (
-    <section className="px-6 py-12 text-center flex flex-col items-center">
+    <section id="funcionalidades" className="px-6 py-12 text-center flex flex-col items-center">
       <h1 className="text-xl md:text-3xl mb-12 w-full md:w-1/2 text-center  break-words">
         Descubre algunas de nuestras{" "}
         <span className="text-[#1E40AF]">funcionalidades</span>{" "}

@@ -20,23 +20,17 @@ export const createTenant = async (data: Tenant) => {
 
   const token = useUserStore.getState().token;
   const formData = new FormData();
-
-  const tenant = {
-    name: firstName ?? "",
-    lastName: lastName ?? "",
-    dni: dni ?? "",
-    phone: phone ?? "",
-    email: email ?? "",
-    address: {
-      street: street ?? "",
-      number: number?.toString() ?? "",
-      locality: city ?? "",
-      province: province ?? "",
-      postalCode: postalCode ?? "",
-    },
-  };
-
-  formData.append("tenant", JSON.stringify(tenant));
+  console.log(token)
+   formData.append("firstName", firstName || "");
+  formData.append("lastName", lastName || "");   
+  formData.append("dni", dni || "");               
+  formData.append("phone", phone || "");         
+  formData.append("email", email || "");           
+  formData.append("street", street || "");        
+  formData.append("number", number?.toString() || ""); 
+  formData.append("city", city || "");             
+  formData.append("province", province || "");   
+  formData.append("postalCode", postalCode || ""); 
 
   files.forEach((file) => {
     formData.append("documents[]", file);
