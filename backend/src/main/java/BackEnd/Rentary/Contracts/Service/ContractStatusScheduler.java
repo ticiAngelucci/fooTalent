@@ -21,7 +21,7 @@ public class ContractStatusScheduler {
     private final PropertyRepository propertyRepository;
 
     @Transactional
-    @Scheduled(cron = "0 22 13 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateContractStatus(){
         List<Contract> activeContracts = contractRepository.findByActiveTrue();
         LocalDate today = LocalDate.now();
