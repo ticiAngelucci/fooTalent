@@ -88,7 +88,6 @@ public class PaymentServiceImpl {
         return paymentRepository.findByStatus(PaymentStatus.PENDIENTE, pageable);
     }
 
-
     @Transactional
     public void updatePaymentStatus() {
         List<Payment> pendingPayments = paymentRepository.findByStatus(PaymentStatus.PENDIENTE);
@@ -105,7 +104,6 @@ public class PaymentServiceImpl {
             }
         }
     }
-
 
     public BigDecimal calculatePendingAmount(Long contractId) {
         Contract contract = contractRepository.findById(contractId)
@@ -136,18 +134,23 @@ public class PaymentServiceImpl {
         return totalDue.subtract(totalPaid);
     }
 
-
     private LocalDate calculateDueDate(Contract contract) {
         LocalDate today = LocalDate.now();
         return LocalDate.of(today.getYear(), today.getMonth(), 10);
     }
-
 
     public Payment getPaymentById(Long paymentId) {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId.toString()));
     }
 
+    public Page<Payment> getPaymentsByServiceType(ServiceType serviceType, Pageable pageable) {
+        return paymentRepository.findByServiceType(serviceType, pageable);
+    }
+
+    public Page<Payment> getNonRentalPayments(Pageable pageable) {
+        return paymentRepository.findByServiceTypeNot(ServiceType.ALQUILER, pageable);
+    }
 
     @Transactional
     public boolean cancelPayment(Long paymentId) {

@@ -2,6 +2,7 @@ package BackEnd.Rentary.Payments.Controller;
 
 import BackEnd.Rentary.Payments.DTOs.PaymentRequest;
 import BackEnd.Rentary.Payments.DTOs.PaymentResponse;
+import BackEnd.Rentary.Payments.DTOs.PaymentSummaryResponse;
 import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
@@ -136,6 +137,65 @@ public class PaymentController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "Estados de pagos actualizados correctamente");
+
+        return ResponseEntity.ok(response);
+    }
+    @Operation(summary = "Listar pagos de alquiler",
+            description = "Obtiene todos los pagos cuyo tipo de servicio es ALQUILER")
+    @GetMapping("/rental")
+    public ResponseEntity<Page<PaymentSummaryResponse>> getRentalPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        log.info("Obteniendo pagos de alquiler, página: {}, tamaño: {}", page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> rentalPayments = paymentService.getPaymentsByServiceType(ServiceType.ALQUILER, pageable);
+
+        Page<PaymentSummaryResponse> response = rentalPayments.map(payment ->
+                new PaymentSummaryResponse(
+                        payment.getId(),
+                        payment.getAmount(),
+                        payment.getDueDate(),
+                        payment.getPaymentDate(),
+                        payment.getStatus(),
+                        paymentMapper.getContractInfo(payment.getContract())
+                )
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Listar pagos por servicios",
+            description = "Obtiene todos los pagos que no son de tipo ALQUILER")
+    @GetMapping("/services")
+    public ResponseEntity<Page<PaymentSummaryResponse>> getServicePayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) ServiceType serviceType) {
+
+        log.info("Obteniendo pagos por servicios, página: {}, tamaño: {}, tipo: {}",
+                page, size, serviceType != null ? serviceType : "TODOS");
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> servicePayments;
+
+        if (serviceType != null && serviceType != ServiceType.ALQUILER) {
+            servicePayments = paymentService.getPaymentsByServiceType(serviceType, pageable);
+        } else {
+            servicePayments = paymentService.getNonRentalPayments(pageable);
+        }
+
+        Page<PaymentSummaryResponse> response = servicePayments.map(payment ->
+                new PaymentSummaryResponse(
+                        payment.getId(),
+                        payment.getAmount(),
+                        payment.getDueDate(),
+                        payment.getPaymentDate(),
+                        payment.getStatus(),
+                        paymentMapper.getContractInfo(payment.getContract())
+                )
+        );
 
         return ResponseEntity.ok(response);
     }

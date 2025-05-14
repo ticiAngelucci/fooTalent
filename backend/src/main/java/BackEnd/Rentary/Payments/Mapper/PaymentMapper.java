@@ -1,7 +1,9 @@
 package BackEnd.Rentary.Payments.Mapper;
 
 import BackEnd.Rentary.Contracts.Entity.Contract;
+import BackEnd.Rentary.Payments.DTOs.ContractSummary;
 import BackEnd.Rentary.Payments.DTOs.PaymentResponse;
+import BackEnd.Rentary.Payments.DTOs.PaymentSummaryResponse;
 import BackEnd.Rentary.Payments.Entities.Payment;
 import org.springframework.stereotype.Component;
 
@@ -32,5 +34,13 @@ public class PaymentMapper {
                 .propertyAddress(propertyAddress)
                 .tenantName(tenantName)
                 .build();
+    }
+
+    public ContractSummary getContractInfo(Contract contract) {
+        return new ContractSummary(
+                contract.getContractId(),
+                contract.getProperty().getAddress().toString(),
+                contract.getTenant().getFirstName() + " " + contract.getTenant().getLastName()
+        );
     }
 }
