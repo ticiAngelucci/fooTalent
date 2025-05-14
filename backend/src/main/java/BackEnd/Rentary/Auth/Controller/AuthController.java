@@ -5,6 +5,7 @@ import BackEnd.Rentary.Auth.Services.AuthService;
 import BackEnd.Rentary.Auth.Util.VerificationTokenRepository;
 import BackEnd.Rentary.Users.Entities.User;
 import BackEnd.Rentary.Users.Repositories.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,9 @@ public class AuthController {
     @Value("${URL_FRONT}")
     private String frontUrl;
 
+    @Operation(
+            summary = "Registrar un nuevo usuario",
+            description = "Registra un nuevo usuario que administra sus contratos, inquilinos, propiedades y pagos")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         System.out.println("Nombre completo recibido: '" + request.firstName() + " " + request.lastName() + "'");
@@ -41,6 +45,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Ingreso de usuario en la página de inicio")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
@@ -51,6 +56,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Realizar el cambio de contraseña de un usuario")
     @PutMapping("/change_password")
     public ResponseEntity<AuthResponse> changePassword(
             @Valid @RequestBody ChangePasswordRequest request,
@@ -69,6 +75,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Verificación de token")
     @GetMapping("/verifyToken")
     public void verifyAccount(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
         // Validar que el token no sea nulo o vacío
@@ -109,13 +116,13 @@ public class AuthController {
         response.sendRedirect(frontUrl + "/login?verified=success");
     }
 
-
     @PostMapping("/forgot_password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         String response = authService.forgotPassword(request.email());
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Restaurar contraseña de un usuario")
     @PutMapping("/reset_password")
     public ResponseEntity<AuthResponse> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         AuthResponse response = authService.resetPassword(request);

@@ -6,6 +6,7 @@ import BackEnd.Rentary.Users.Entities.User;
 import BackEnd.Rentary.Users.Services.CloudinaryService;
 import BackEnd.Rentary.Users.Services.UserService;
 import BackEnd.Rentary.Users.DTOs.UserDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +52,8 @@ public class UserController {
     public Page<User> getAllActiveUsers(@PageableDefault(size = 10, sort = "username") Pageable pageable) {
         return userService.getActiveUsers(pageable);
     }
-    // endpoint para obtener data del usuario desde el JWT
+
+    @Operation(summary = "Obtener data del usuario desde el JWT")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -69,6 +71,8 @@ public class UserController {
         UserDTO userDTO = userService.convertToDto(user);
         return ResponseEntity.ok(userDTO);
     }
+
+    @Operation(summary = "Actualizar datos de usuario")
     @PutMapping("/update")
     public ResponseEntity<?> updateUserProfile(
             @RequestHeader("Authorization") String authHeader,
@@ -93,6 +97,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno al actualizar el perfil.");
         }
     }
+
+    @Operation(summary = "Actualizar imagen de perfil de usuario de usuario")
     @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProfileImage(
             Authentication authentication,
@@ -116,4 +122,3 @@ public class UserController {
     }
 
 }
-
