@@ -1,80 +1,85 @@
-import { Button } from "@/shared/components/ui/button";
+import { Check, CircleAlert, ClipboardPen, Contact, House } from "lucide-react";
+import { Link } from "react-router-dom";
 interface Props {
     title: string;
-    subtitle:string;
-    type:string;
+    subtitle: string;
+    type: string;
     items: Array<{
-        image: string;
+        name: string;
         type: string;
         status: string;
         location: string;
-        name: string;
-      }>;      
+    }>;
 }
-const InfoCard = ({ title, subtitle, type, items }:Props) => {
+const InfoCard = ({ title, subtitle, type, items }: Props) => {
     return (
-        <div className="g-white flex flex-col justify-between rounded-lg shadow-none p-4 space-y-4 border border-zinc-200">
-            <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-            <h4 className="font-light text-zinc-500">{subtitle}</h4>
-            {items.map((item, index) => {
-                return (
-                    <div
-                        key={index}
-                        className="flex items-center gap-4 bg-white rounded-lg shadow-none border border-zinc-200 pt-4 first:border-t-0 first:pt-0"
-                    >
-                        {type === "property" && item.image && (
-                            <img
-                                src={item.image}
-                                alt={item.type}
-                                className="w-30 h-30 object-cover rounded-md mb-5 ml-5"
-                            />
-                        )}
+        <div className="bg-neutral-50 flex flex-col justify-between rounded-2xl gap-2.5 shadow-md p-6 space-y-4 border border-zinc-200 h-full">
+            <div className="flex flex-col gap-0.5">
+                <h4 className="text-2xl font-semibold text-neutral-950">{title}</h4>
+                <span className="text-sm font-normal text-zinc-500">{subtitle}</span>
+            </div>
 
-                        {type === "contact" && (
-                            <div className="w-12 h-12 rounded-full bg-[#201E50] flex items-center justify-center mb-5 ml-5 text-white font-bold">
-                                {item.name?.[0] || "?"}
+            <div className="flex-1 flex flex-col gap-4">
+                {items.map((item, index) => {
+                    return (
+                        <div
+                            key={index}
+                            className="flex items-start gap-4 h-[170px] bg-white rounded-lg shadow-none border border-neutral-200 pt-4 first:border-t-0 first:pt-0"
+                        >
+                            <div className="flex text-sm gap-4 p-6 rounded-[8px] text-gray-800 font-medium space-y-1">
+                                {type === "contact" && (
+                                    <>
+                                        <Contact className="size-10 text-brand-800" />
+                                        <div className="flex flex-col w-full h-full gap-2">
+                                            <p>Nombre: <span className="text-black font-semibold">{item.name}</span></p>
+                                            <p>Apellido: <span className="text-black font-semibold">Moya</span></p>
+                                            <p>Teléfono: <span className="text-black font-semibold">2612312355</span></p>
+                                            <p>Ubicación: <span className="text-black font-semibold">Caba</span></p>
+                                        </div>
+                                    </>
+                                )}
+                                {type === "contract" && (
+                                    <>
+                                        <ClipboardPen className="size-10 text-brand-800" />
+                                        <div className="flex flex-col w-full h-full gap-2">
+                                            <p>Tipo Inmueble: <span className="text-black font-semibold">Casa</span></p>
+                                            <p>Ubicación: <span className="text-black font-semibold">{item.location}</span></p>
+                                            <p>Inquilino: <span className="text-black font-semibold">{item.type}</span></p>
+                                        </div>
+                                    </>
+                                )}
+                                {type === "property" && (
+                                    <>
+                                        <House className="size-10 text-brand-800" />
+                                        <div className="flex flex-col w-full h-full gap-2">
+                                            <p>Tipo de inmueble: <span className="text-black font-semibold">{item.type}</span></p>
+                                            <p>Ubicación: <span className="text-black font-semibold">Sarmiento 1111, reti...</span></p>
+                                            <p>Propietario: <span className="text-black font-semibold">Juan Perez</span></p>
+                                            {
+                                                item.status && item.status == "Disponible" ? (
+                                                    <span className="flex gap-2.5  items-center mt-1 text-xs text-success-700 bg-green-50 border border-success-700 px-2 py-1 rounded-full w-fit">
+                                                        <Check className="size-5" />{item.status}
+                                                    </span>
+                                                )
+                                                    :
+                                                    (
+                                                        <span className="flex gap-2.5  items-center mt-1 text-xs text-error-700 bg-error-50 border border-error-700 px-2 py-1 rounded-full w-fit">
+                                                            <CircleAlert className="size-5" />{item.status}
+                                                        </span>
+                                                    )
+                                            }
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        )}
-
-                        <div className="flex flex-col text-sm text-gray-800 font-medium space-y-1 mb-4 ml-2.5">
-                            {type === "contract" && <p >
-                                <span className="text-black">Nombre de contrato:</span>
-                                <span className="text-gray-500">{item.name}</span>
-                            </p>}
-
-                            {type === "property" && (
-                                <p>
-                                    <span className="text-black">Tipo de inmueble: </span>
-                                    <span className="text-gray-500">{item.type}</span>
-                                </p>
-                            )}
-
-                            {type === "contact" && <p >
-                                <span className="text-black">Inquilino:</span>
-                                <span className="text-gray-500">{item.type}</span>
-                            </p>}
-
-                            <p>
-                                <span className="text-black">Ubicación: </span>
-                                <span className="text-gray-500">{item.location}</span>
-                            </p>
-
-                            {type === "property" && (
-                                <span className="mt-1 text-xs text-white bg-green-500 px-2 py-1 rounded-full w-fit">
-                                    {item.status}
-                                </span>
-                            )}
                         </div>
-                    </div>
+                    );
+                })}
+            </div>
 
-                );
-            })}
-            <Button
-                variant="ghost"
-                className="bg-black hover:bg-[#5c5b64] w-full text-white h-10 rounded-xl p-2 text-center mt-auto"
-            >
-                Ver {title}
-            </Button>
+            <Link className="self-end" to={"#"}>
+                Ver todos
+            </Link>
         </div>
     );
 };

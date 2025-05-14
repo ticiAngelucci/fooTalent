@@ -1,16 +1,21 @@
+import { JSX } from "react";
+
 interface Props {
     label: string;
     value:number;
-    icon:string;
+    icon: JSX.Element;
+    borderClass: string;
 }
-const SummaryCard = ({ label, value, icon }:Props) => {
+const SummaryCard = ({label, value, icon, borderClass}: Props) => {
     return (
-        <div className="bg-white rounded-lg shadow-none p-4 flex flex-col items-start text-center border border-zinc-200 w-full max-w-[70%]">
-            <div className="flex flex-row justify-between items-center w-full text-black text-sm  mb-2">
-                {label}
-                {icon && <span>{icon}</span>}
+        <div className={`bg-transparent rounded-md shadow-none p-4 flex flex-col items-start text-center border ${borderClass} w-full`}>
+            <div className="flex flex-row gap-2.5 items-center w-full text-black text-sm">
+                {icon}
+                <div className="flex flex-col justify-center items-start text-neutral-950">
+                    <span className="text-base">{label}</span>
+                    <p className="text-5xl font-semibold">{value}</p>
+                </div>
             </div>
-            <div className="text-2xl font-semibold">{value}</div>
         </div>
     );
 };

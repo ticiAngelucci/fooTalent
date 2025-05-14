@@ -24,7 +24,8 @@ const LoginForm = () => {
     "text-black placeholder:text-gray-400 bg-white border border-gray-400 rounded-[4px] focus-visible:ring-0 focus-visible:ring-transparent focus-visible:border-black autofill:!bg-white autofill:!text-black autofill:!shadow-[inset_0_0_0_1000px_white] [color-scheme:light]";
 
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser);
+  const storeLogin = useUserStore((state) => state.login);
+  const getUser = useUserStore((state)=> state.getCredentials)
   const [loginError, setLoginError] = useState("");
 
   const form = useForm<LoginFormValues>({
@@ -48,10 +49,8 @@ const LoginForm = () => {
       const login = await userLogin(data);
       const { token } = login;
       if (token) {
-        const base64Url = token.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const decodedPayload = JSON.parse(atob(base64));
-        setUser(token, decodedPayload.sub || "Usuario");
+        storeLogin(token);
+        await getUser();
         navigate(Route.Dashboard);
         setLoginError("");
       }

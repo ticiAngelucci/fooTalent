@@ -2,11 +2,13 @@ import { useUserStore } from "@/store/userStore";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
+import { AlertCircle, CircleCheck, Clock4 } from "lucide-react";
 
 const summary = [
-  { label: "Pagos vencidos", value: 4, icon: "\u26A0\uFE0F" },
-  { label: "Pagos pendientes", value: 6, icon: "\u2139\uFE0F" },
-  { label: "Pagos al día", value: 12, icon: "\u2714\uFE0F" },
+
+  { label: "Pagos vencidos", value: 4, icon: <AlertCircle className="size-20 text-error-600" />, borderClass: "border-error-600" },
+  { label: "Pagos pendientes", value: 6, icon: <Clock4 className="size-20 text-alert-600" />, borderClass: "border-alert-600" },
+  { label: "Pagos al día", value: 12, icon: <CircleCheck className="size-20 text-success-600" />, borderClass: "border-success-600" },
 ];
 
 const properties = [
@@ -55,16 +57,16 @@ const contacts = [
 
 const infoSections = [
   {
-    type: "property",
-    title: "Inmuebles",
-    subtitle: "Listado de inmuebles",
-    items: properties,
-  },
-  {
     type: "contract",
     title: "Contratos",
     subtitle: "Contratos vigentes",
     items: contracts,
+  },
+  {
+    type: "property",
+    title: "Inmuebles",
+    subtitle: "Listado de inmuebles",
+    items: properties,
   },
   {
     type: "contact",
@@ -74,35 +76,34 @@ const infoSections = [
   },
 ];
 const Dashboard = () => {
-  const username = useUserStore((state) => state.username);
+  const username = useUserStore((state) => state.firstName);
   if (!username) return null;
 
   return (
-    <DashboardLayout title={`¡Bienvenido,  ${username}`}>
-        <div className="flex flex-row justify-end items-center w-[95%] mx-auto p-4">
-          {/* <LogoutButton /> */}
+    <DashboardLayout subtitle={`Tablero`}>
+      <div className="flex flex-col items-start gap-1 p-3 w-full rounded-2xl bg-brand-400 text-white">
+        <h3 className="text-[40px]">¡Bienvenido, <span className="font-bold">{username}!</span></h3>
+        <p className="text-sm font-medium">Es hora de ponernos al día con tus propiedades. ¡Comencemos!</p>
+      </div>
+      <div className="flex flex-col w-full space-y-6 mb-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 justify-items-center">
+          {summary.map((item, idx) => (
+            <SummaryCard key={idx} {...item} />
+          ))}
         </div>
-        <div className="min-h-screen flex flex-col w-[90%] p-6 space-y-6">
-          <h1 className="text-2xl font-thin">Gestiona tus alquileres de forma fácil y eficiente</h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center mt-10">
-            {summary.map((item, idx) => (
-              <SummaryCard key={idx} {...item} />
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-            {infoSections.map((section, idx) => (
-              <InfoCard
-                key={idx}
-                type={section.type}
-                subtitle={section.subtitle}
-                title={section.title}
-                items={section.items}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {infoSections.map((section, idx) => (
+            <InfoCard
+              key={idx}
+              type={section.type}
+              subtitle={section.subtitle}
+              title={section.title}
+              items={section.items}
+            />
+          ))}
         </div>
+      </div>
     </DashboardLayout>
   );
 };

@@ -96,3 +96,24 @@ export const sendEmailConfirmation = async (email: string) => {
     throw new Error(errorMessage);
   }
 }
+
+export const getUserInfo = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/users/me`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data;
+  } catch (error: unknown) {
+    let errorMessage = "Ocurrió un error al obtener credenciales de usuario";
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.message || error.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    throw new Error(errorMessage);
+  }
+}
