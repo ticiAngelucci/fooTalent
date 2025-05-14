@@ -1,6 +1,7 @@
 package BackEnd.Rentary.Contracts.DTOs;
 
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
+import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Contracts.Validation.ValidContractDates;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
@@ -30,5 +31,7 @@ public record ContractRequest(
         @Min(value = 1, message = "El plazo debe ser al menos de 1 día.")
         int deadline,
         @NotNull(message = "Campo requerido.")
-        double adjustmentPercentage
+        double adjustmentPercentage,
+        @NotNull(message = "Campo requerido.")
+        AdjustmentType adjustmentType
 ) {}
