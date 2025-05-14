@@ -23,6 +23,9 @@ import { Toaster } from "@/shared/components/ui/sonner";
 import EditOwner from "./modules/owner/pages/EditOwner";
 import PropertyEdit from "./modules/properties/pages/PropertyEdit";
 import Profile from "./modules/user/pages/profile";
+import PaymentsView from "./modules/payments/pages/Payments";
+
+
 
 function App() {
   return (
@@ -61,6 +64,7 @@ function App() {
           <Route path={AppRoute.AddOwner} element={<AddOwner />} />
           <Route path={AppRoute.AddTenant} element={<AddTenant />} />
           <Route path={AppRoute.EditOwner} element={<EditOwner />} />
+          <Route path={AppRoute.Payments} element={<PaymentsView />} />
         </Route>
       </Routes>
       <Toaster richColors closeButton position="bottom-right" />

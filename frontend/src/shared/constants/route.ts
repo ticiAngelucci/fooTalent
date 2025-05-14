@@ -18,6 +18,7 @@ enum Route {
     AddTenant= '/add-tenant',
     EditOwner='/owner/edit/:id',
     Profile = '/profile',
+    Payments = '/payments',
 
 }
 
