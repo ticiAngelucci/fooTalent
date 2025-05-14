@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu"
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout"
 
-// Definir tipos para los datos
+
 type AjusteType = "Trimestral" | "Cuatrimestral" | "Semestral"
 type IndiceType = "ICL" | "% fijo"
 type EstadoType = "Pagado" | "Vencido" | "Pendiente"
@@ -27,7 +27,7 @@ interface Payment {
   estado: EstadoType
 }
 
-// Datos estáticos para la tabla
+
 const paymentsData: Payment[] = [
   {
     "id": 1,
@@ -190,7 +190,7 @@ export default function PaymentsView() {
   const itemsPerPage = 5
  
 
-  // Función para ordenar los datos
+  
   const sortData = (column: keyof Payment) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -200,7 +200,7 @@ export default function PaymentsView() {
     }
   }
 
-  // Filtrar datos según la búsqueda
+  
   const filteredData = paymentsData.filter((payment) => {
     if (!searchQuery) return true
 
@@ -216,7 +216,7 @@ export default function PaymentsView() {
     )
   })
 
-  // Ordenar datos
+  
   const sortedData = [...filteredData].sort((a, b) => {
     if (!sortColumn) return 0
 
@@ -234,11 +234,11 @@ export default function PaymentsView() {
     return 0
   })
 
-  // Paginación
+  
   const totalPages = Math.ceil(sortedData.length / itemsPerPage)
   const paginatedData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  // Función para renderizar el badge de estado con el color correcto
+  
   const renderEstadoBadge = (estado: EstadoType) => {
     switch (estado) {
       case "Pagado":
