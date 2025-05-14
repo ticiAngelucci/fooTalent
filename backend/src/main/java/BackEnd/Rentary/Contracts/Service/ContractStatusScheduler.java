@@ -8,6 +8,7 @@ import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,13 +20,14 @@ public class ContractStatusScheduler {
     private final IContractRepository contractRepository;
     private final PropertyRepository propertyRepository;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateContractStatus(){
         List<Contract> activeContracts = contractRepository.findByActiveTrue();
         LocalDate today = LocalDate.now();
 
         for (Contract contract : activeContracts) {
-            if (contract.getEndDate().isBefore(today)) {
+            if (!contract.getEndDate().isAfter(today)) {
                 contract.setActive(false);
                 contractRepository.save(contract);
 

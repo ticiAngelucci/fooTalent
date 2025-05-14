@@ -9,18 +9,13 @@ import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Contracts.Mapper.ContractMapper;
 import BackEnd.Rentary.Contracts.Respository.IContractRepository;
-import BackEnd.Rentary.Exceptions.ContractNorFoundException;
-import BackEnd.Rentary.Exceptions.FileUploadException;
-import BackEnd.Rentary.Exceptions.PropertyNotFoundException;
-import BackEnd.Rentary.Exceptions.PropertyUnavailableException;
-import BackEnd.Rentary.Exceptions.TenantNotFoundExceptions;
+import BackEnd.Rentary.Exceptions.*;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
 import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +26,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ContractServiceImpl implements IContractService {
 
     private final IContractRepository contractRepository;
@@ -90,7 +84,6 @@ public class ContractServiceImpl implements IContractService {
 
             } catch (
                     Exception e) {
-                log.error("Error al subir documentos del contrato: {}", e.getMessage());
                 throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
         }
@@ -151,12 +144,9 @@ public class ContractServiceImpl implements IContractService {
 
             } catch (
                     Exception e) {
-                log.error("Error al actualizar documentos: {}", e.getMessage());
                 throw new FileUploadException("Error al actualizar documentos: " + e.getMessage());
             }
         }
-
-        log.info("Contrato actualizado: ID {} con {} documentos", id, updated.getDocuments().size());
 
         return contractMapper.toResponse(contractRepository.save(updated));
     }
@@ -179,7 +169,7 @@ public class ContractServiceImpl implements IContractService {
                 fileUploadService.deleteMultipleFiles(publicIds);
             } catch (
                     Exception e) {
-                log.warn("Error al eliminar algunos documentos de Cloudinary: {}", e.getMessage());
+                throw new FileUploadException("Error al eliminar algunos documentos de Cloudinary: " + e.getMessage());
             }
         }
 
@@ -215,10 +205,10 @@ public class ContractServiceImpl implements IContractService {
             // Eliminar de Cloudinary
             try {
                 fileUploadService.deleteFile(publicId);
-                log.info("Documento eliminado del contrato ID: {}", contractId);
+                throw new RuntimeException("Documento eliminado del contrato ID" + contractId);
             } catch (
                     Exception e) {
-                log.warn("Error al eliminar documento de Cloudinary: {}", e.getMessage());
+                throw new RuntimeException("Error al eliminar documento de Cloudinary." + e.getMessage());
             }
         }
     }

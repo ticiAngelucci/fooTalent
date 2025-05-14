@@ -13,7 +13,7 @@ public record ContractResponse(
         String tenantFullName,
         LocalDate startDate,
         LocalDate endDate,
-        double value,
+        double deposit,
         double baseRent,
         AdjustmentFrequency adjustmentFrequency,
         int deadline,

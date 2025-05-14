@@ -27,7 +27,7 @@ public class ContractMapper {
         contract.setAdjustmentFrequency(request.adjustmentFrequency());
         contract.setDeadline(request.deadline());
         contract.setAdjustmentPercentage(request.adjustmentPercentage());
-        contract.setAdjustmentType(contract.getAdjustmentType());
+        contract.setAdjustmentType(request.adjustmentType());
         return contract;
     }
 
