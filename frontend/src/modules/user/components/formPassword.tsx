@@ -78,6 +78,7 @@ const FormPassword: React.FC<FormPasswordProps> = ({
   };
 
   const handleSubmit = (data: passwordFormValue) => {
+    console.log(data);
     onSubmit(data);
   };
 

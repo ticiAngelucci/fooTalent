@@ -2,39 +2,29 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 import { useUserStore } from "@/store/userStore";
-import axios from "axios";
-import { API_URL } from "@/shared/constants/api";
 
 export default function OauthRedirect() {
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser);
+  const setLogin = useUserStore((state) => state.login);
+  const getUser = useUserStore((state) => state.getCredentials);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+    const handleOauth = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
 
-    if (token) {
-      sessionStorage.setItem("token", token); 
+      if (token) {
+        sessionStorage.setItem("token", token);
+        setLogin(token);
+        await getUser();
+        navigate(Route.Dashboard); // <- no olvides redirigir tras login exitoso
+      } else {
+        navigate(Route.Login);
+      }
+    };
 
-      axios
-        .get(`${API_URL}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const user = res.data;
-          setUser(token, user.firstName); 
-          navigate(Route.Dashboard);
-        })
-        .catch((err) => {
-          console.error("Error al obtener usuario:", err);
-          navigate(Route.Login);
-        });
-    } else {
-      navigate(Route.Login);
-    }
-  }, [navigate, setUser]);
+    handleOauth();
+  }, [navigate, setLogin, getUser]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen text-gray-700">
