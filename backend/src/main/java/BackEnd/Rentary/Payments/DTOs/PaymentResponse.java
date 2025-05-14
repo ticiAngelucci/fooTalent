@@ -26,8 +26,5 @@ public class PaymentResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isOverdue;
-
-    // Detalles básicos del contrato
-    private String propertyAddress;
     private String tenantName;
 }

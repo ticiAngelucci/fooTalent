@@ -133,8 +133,7 @@ public class PaymentController {
         return ResponseEntity.ok(responsePage);
     }
 
-    @Operation(summary = "Listar pagos de alquiler",
-            description = "Obtiene todos los pagos cuyo tipo de servicio es ALQUILER para un contrato específico")
+    @Operation(summary = "Listar pagos de alquiler", description = "Obtiene todos los pagos cuyo tipo de servicio es ALQUILER para un contrato específico")
     @GetMapping("/rental/{contractId}")
     public ResponseEntity<PaymentRentalResponsePage> getRentalPaymentsByContract(
             @PathVariable Long contractId,
@@ -148,8 +147,7 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Listar pagos por servicios",
-            description = "Obtiene todos los pagos que no son de tipo ALQUILER para un contrato específico, opcionalmente filtrados por tipo de servicio")
+    @Operation(summary = "Listar pagos por servicios", description = "Obtiene todos los pagos que no son de tipo ALQUILER para un contrato específico, opcionalmente filtrados por tipo de servicio")
     @GetMapping("/services/{contractId}")
     public ResponseEntity<ServicePaymentResponsePage> getServicePaymentsByContract(
             @PathVariable Long contractId,

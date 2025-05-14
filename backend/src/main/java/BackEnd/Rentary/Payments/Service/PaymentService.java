@@ -4,7 +4,6 @@ import BackEnd.Rentary.Payments.DTOs.PaymentDetailedResponsePage;
 import BackEnd.Rentary.Payments.DTOs.PaymentRentalResponsePage;
 import BackEnd.Rentary.Payments.DTOs.PaymentResponsePage;
 import BackEnd.Rentary.Payments.DTOs.ServicePaymentResponsePage;
-import BackEnd.Rentary.Payments.DTOs.PaymentResponse;
 import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Payments.Enums.Currency;
 import BackEnd.Rentary.Payments.Enums.PaymentMethod;
@@ -50,9 +49,8 @@ public interface PaymentService {
     ServicePaymentResponsePage getServicePaymentsByType(ServiceType serviceType, int page, int size);
 
     PaymentRentalResponsePage getRentalPaymentsByContract(Long contractId, int page, int size);
-//    ServicePaymentResponsePage getAllServicePayments(int page, int size);
     ServicePaymentResponsePage getServicePaymentsByContractAndType(Long contractId, ServiceType serviceType, int page, int size);
     ServicePaymentResponsePage getAllServicePaymentsByContract(Long contractId, int page, int size);
-//    PaymentRentalResponsePage getRentalPayments(int page, int size);
+
 
 }

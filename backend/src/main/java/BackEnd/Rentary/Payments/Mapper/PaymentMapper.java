@@ -17,7 +17,6 @@ public class PaymentMapper {
 
     public PaymentResponse toResponse(Payment payment) {
         Contract contract = payment.getContract();
-        String propertyAddress = contract.getProperty().getAddress().toString();
         String tenantName = contract.getTenant().getFirstName() + " " + contract.getTenant().getLastName();
 
         return PaymentResponse.builder()
@@ -36,12 +35,11 @@ public class PaymentMapper {
                 .createdAt(payment.getCreatedAt())
                 .updatedAt(payment.getUpdatedAt())
                 .isOverdue(payment.isOverdue())
-                .propertyAddress(propertyAddress)
                 .tenantName(tenantName)
                 .build();
     }
 
- public ServicePaymentResponse toServiceResponse(Payment payment) {
+    public ServicePaymentResponse toServiceResponse(Payment payment) {
         return ServicePaymentResponse.builder()
                 .id(payment.getId())
                 .serviceType(payment.getServiceType())
@@ -50,7 +48,8 @@ public class PaymentMapper {
                 .status(payment.getStatus())
                 .build();
     }
-    public PaymentRentalResponseDto toRentalResponse(Payment payment){
+
+    public PaymentRentalResponseDto toRentalResponse(Payment payment) {
         return PaymentRentalResponseDto.builder()
                 .id(payment.getId())
                 .amount(payment.getAmount())
@@ -81,11 +80,4 @@ public class PaymentMapper {
                 .build();
     }
 
-
-    public ContractSummary getContractInfo(Contract contract) {
-        return new ContractSummary(
-                contract.getContractId(),
-                contract.getProperty().getAddress().toString(),
-                contract.getTenant().getFirstName() + " " + contract.getTenant().getLastName());
-    }
 }
