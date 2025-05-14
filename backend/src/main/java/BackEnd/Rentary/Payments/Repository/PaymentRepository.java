@@ -28,22 +28,20 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     BigDecimal sumAmountByContractAndServiceType(@Param("contractId") Long contractId,
             @Param("serviceType") ServiceType serviceType);
 
-    @Query("SELECT p FROM Payment p WHERE p.contract.contractId = :contractId AND p.period = :month AND p.year = :year AND p.serviceType = :serviceType")
-    Optional<Payment> findByContractAndPeriodAndServiceType(
-            @Param("contractId") Long contractId,
-            @Param("month") int month,
-            @Param("year") int year,
-            @Param("serviceType") ServiceType serviceType);
-
-    List<Payment> findByContractContractIdAndServiceType(Long contractId, ServiceType serviceType);
-
+//    @Query("SELECT p FROM Payment p WHERE p.contract.contractId = :contractId AND p.period = :month AND p.year = :year AND p.serviceType = :serviceType")
+//    Optional<Payment> findByContractAndPeriodAndServiceType(
+//            @Param("contractId") Long contractId,
+//            @Param("month") int month,
+//            @Param("year") int year,
+//            @Param("serviceType") ServiceType serviceType);
+//
+//    List<Payment> findByContractContractIdAndServiceType(Long contractId, ServiceType serviceType);
+Page<Payment> findByContractContractIdAndServiceTypeNot(Long contractId, ServiceType serviceType, Pageable pageable);
     Page<Payment> findByServiceType(ServiceType serviceType, Pageable pageable);
+    Page<Payment> findByContractContractIdAndServiceType(Long contractId, ServiceType serviceType, Pageable pageable);
 
-    /**
-     * Encuentra pagos que no son del tipo de servicio especificado
-     */
     Page<Payment> findByServiceTypeNot(ServiceType serviceType, Pageable pageable);
 
-    @Query("SELECT COUNT(p) FROM Payment p WHERE p.contract.contractId = :contractId AND p.status = :status")
-    long countByContractAndStatus(@Param("contractId") Long contractId, @Param("status") PaymentStatus status);
+//    @Query("SELECT COUNT(p) FROM Payment p WHERE p.contract.contractId = :contractId AND p.status = :status")
+//    long countByContractAndStatus(@Param("contractId") Long contractId, @Param("status") PaymentStatus status);
 }

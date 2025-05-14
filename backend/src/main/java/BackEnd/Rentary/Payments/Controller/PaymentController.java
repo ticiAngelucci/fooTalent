@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -123,8 +121,7 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Listar todos los pagos con detalles completos", 
-               description = "Obtiene todos los pagos con información detallada del contrato, inquilino, frecuencia de ajuste, valor del alquiler y fecha límite")
+    @Operation(summary = "Listar todos los pagos con detalles completos", description = "Obtiene todos los pagos con información detallada del contrato, inquilino, frecuencia de ajuste, valor del alquiler y fecha límite")
     @GetMapping("/all-details")
     public ResponseEntity<PaymentDetailedResponsePage> getAllPaymentsDetailed(
             @RequestParam(defaultValue = "0") int page,
@@ -136,32 +133,39 @@ public class PaymentController {
         return ResponseEntity.ok(responsePage);
     }
 
-    @Operation(summary = "Listar pagos de alquiler", description = "Obtiene todos los pagos cuyo tipo de servicio es ALQUILER")
-    @GetMapping("/rental")
-    public ResponseEntity<PaymentResponsePage> getRentalPayments(
+    @Operation(summary = "Listar pagos de alquiler",
+            description = "Obtiene todos los pagos cuyo tipo de servicio es ALQUILER para un contrato específico")
+    @GetMapping("/rental/{contractId}")
+    public ResponseEntity<PaymentRentalResponsePage> getRentalPaymentsByContract(
+            @PathVariable Long contractId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        log.info("Obteniendo pagos de alquiler, página: {}, tamaño: {}", page, size);
-        PaymentResponsePage response = paymentService.getPaymentsSummaryByServiceType(ServiceType.ALQUILER, page, size);
+        log.info("Obteniendo pagos de alquiler para contrato ID: {}, página: {}, tamaño: {}",
+                contractId, page, size);
+
+        PaymentRentalResponsePage response = paymentService.getRentalPaymentsByContract(contractId, page, size);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Listar pagos por servicios", description = "Obtiene todos los pagos que no son de tipo ALQUILER")
-    @GetMapping("/services")
-    public ResponseEntity<PaymentResponsePage> getServicePayments(
+    @Operation(summary = "Listar pagos por servicios",
+            description = "Obtiene todos los pagos que no son de tipo ALQUILER para un contrato específico, opcionalmente filtrados por tipo de servicio")
+    @GetMapping("/services/{contractId}")
+    public ResponseEntity<ServicePaymentResponsePage> getServicePaymentsByContract(
+            @PathVariable Long contractId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) ServiceType serviceType) {
 
-        log.info("Obteniendo pagos por servicios, página: {}, tamaño: {}, tipo: {}",
-                page, size, serviceType != null ? serviceType : "TODOS");
+        log.info("Obteniendo pagos por servicios para contrato ID: {}, página: {}, tamaño: {}, tipo: {}",
+                contractId, page, size, serviceType != null ? serviceType : "TODOS");
 
-        PaymentResponsePage response;
+        ServicePaymentResponsePage response;
+
         if (serviceType != null && serviceType != ServiceType.ALQUILER) {
-            response = paymentService.getPaymentsSummaryByServiceType(serviceType, page, size);
+            response = paymentService.getServicePaymentsByContractAndType(contractId, serviceType, page, size);
         } else {
-            response = paymentService.getNonRentalPaymentsSummary(page, size);
+            response = paymentService.getAllServicePaymentsByContract(contractId, page, size);
         }
 
         return ResponseEntity.ok(response);

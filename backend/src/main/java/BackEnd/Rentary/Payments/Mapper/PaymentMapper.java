@@ -3,7 +3,9 @@ package BackEnd.Rentary.Payments.Mapper;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Payments.DTOs.ContractSummary;
 import BackEnd.Rentary.Payments.DTOs.PaymentDetailedResponse;
+import BackEnd.Rentary.Payments.DTOs.PaymentRentalResponseDto;
 import BackEnd.Rentary.Payments.DTOs.PaymentResponse;
+import BackEnd.Rentary.Payments.DTOs.ServicePaymentResponse;
 import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
@@ -39,6 +41,23 @@ public class PaymentMapper {
                 .build();
     }
 
+ public ServicePaymentResponse toServiceResponse(Payment payment) {
+        return ServicePaymentResponse.builder()
+                .id(payment.getId())
+                .serviceType(payment.getServiceType())
+                .amount(payment.getAmount())
+                .paymentDate(payment.getPaymentDate())
+                .status(payment.getStatus())
+                .build();
+    }
+    public PaymentRentalResponseDto toRentalResponse(Payment payment){
+        return PaymentRentalResponseDto.builder()
+                .id(payment.getId())
+                .amount(payment.getAmount())
+                .paymentDate(payment.getPaymentDate())
+                .status(payment.getStatus())
+                .build();
+    }
 
     public PaymentDetailedResponse toDetailedResponse(Payment payment) {
         Contract contract = payment.getContract();

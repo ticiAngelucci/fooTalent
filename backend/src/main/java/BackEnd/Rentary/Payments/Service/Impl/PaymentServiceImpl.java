@@ -69,6 +69,75 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
+    public ServicePaymentResponsePage getServicePaymentsByContractAndType(
+            Long contractId, ServiceType serviceType, int page, int size) {
+
+        log.info("Obteniendo pagos de servicios tipo {} para contrato ID: {} (página: {}, tamaño: {})",
+                serviceType, contractId, page, size);
+
+        validateContractExists(contractId);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> paymentsPage = paymentRepository.findByContractContractIdAndServiceType(
+                contractId, serviceType, pageable);
+
+        List<ServicePaymentResponse> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toServiceResponse)
+                .collect(Collectors.toList());
+
+        return new ServicePaymentResponsePage(
+                paymentResponses,
+                page,
+                paymentsPage.getTotalElements());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ServicePaymentResponsePage getAllServicePaymentsByContract(Long contractId, int page, int size) {
+        log.info("Obteniendo todos los pagos de servicios (no alquiler) para contrato ID: {} (página: {}, tamaño: {})",
+                contractId, page, size);
+
+        validateContractExists(contractId);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Payment> paymentsPage = paymentRepository.findByContractContractIdAndServiceTypeNot(
+                contractId, ServiceType.ALQUILER, pageable);
+
+        List<ServicePaymentResponse> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toServiceResponse)
+                .collect(Collectors.toList());
+
+        return new ServicePaymentResponsePage(
+                paymentResponses,
+                page,
+                paymentsPage.getTotalElements());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaymentRentalResponsePage getRentalPaymentsByContract(Long contractId, int page, int size) {
+        log.info("Obteniendo pagos de alquiler para contrato ID: {} (página: {}, tamaño: {})",
+                contractId, page, size);
+
+        validateContractExists(contractId);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> paymentsPage = paymentRepository.findByContractContractIdAndServiceType(
+                contractId, ServiceType.ALQUILER, pageable);
+
+        List<PaymentRentalResponseDto> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toRentalResponse)
+                .collect(Collectors.toList());
+
+        return new PaymentRentalResponsePage(
+                paymentResponses,
+                page,
+                paymentsPage.getTotalElements());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public PaymentResponsePage getPaymentsByContract(Long contractId, int page, int size) {
         log.info("Obteniendo pagos para contrato ID: {} (página: {}, tamaño: {})", contractId, page, size);
         validateContractExists(contractId);
@@ -122,7 +191,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         log.info("Proceso de actualización de pagos completado. {} pagos actualizados a VENCIDO", updatedCount);
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public PaymentDetailedResponsePage getAllPaymentsDetailed(int page, int size) {
@@ -140,6 +209,44 @@ public class PaymentServiceImpl implements PaymentService {
                 page,
                 paymentsPage.getTotalElements());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ServicePaymentResponsePage getServicePaymentsByType(ServiceType serviceType, int page, int size) {
+        log.info("Obteniendo pagos de servicios por tipo: {} (página: {}, tamaño: {})",
+                serviceType, page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Payment> paymentsPage = paymentRepository.findByServiceType(serviceType, pageable);
+
+        List<ServicePaymentResponse> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toServiceResponse)
+                .collect(Collectors.toList());
+
+        return new ServicePaymentResponsePage(
+                paymentResponses,
+                page,
+                paymentsPage.getTotalElements());
+    }
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public ServicePaymentResponsePage getAllServicePayments(int page, int size) {
+//        log.info("Obteniendo todos los pagos de servicios (no alquiler) (página: {}, tamaño: {})",
+//                page, size);
+//
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Payment> paymentsPage = paymentRepository.findByServiceTypeNot(ServiceType.ALQUILER, pageable);
+//
+//        List<ServicePaymentResponse> paymentResponses = paymentsPage.getContent().stream()
+//                .map(paymentMapper::toServiceResponse)
+//                .collect(Collectors.toList());
+//
+//        return new ServicePaymentResponsePage(
+//                paymentResponses,
+//                page,
+//                paymentsPage.getTotalElements());
+//    }
 
     @Override
     public BigDecimal calculatePendingAmount(Long contractId) {
@@ -166,74 +273,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId.toString()));
     }
 
-    @Override
-    public PaymentResponsePage getPaymentsByServiceType(ServiceType serviceType, int page, int size) {
-        log.info("Obteniendo pagos por tipo de servicio: {} (página: {}, tamaño: {})", serviceType, page, size);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> paymentsPage = paymentRepository.findByServiceType(serviceType, pageable);
-
-        List<PaymentResponse> paymentResponses = paymentsPage.getContent().stream()
-                .map(paymentMapper::toResponse)
-                .collect(Collectors.toList());
-
-        return new PaymentResponsePage(
-                paymentResponses,
-                page,
-                paymentsPage.getTotalElements());
-    }
-
-    @Override
-    public PaymentResponsePage getPaymentsSummaryByServiceType(ServiceType serviceType, int page, int size) {
-        log.info("Obteniendo resumen de pagos por tipo de servicio: {} (página: {}, tamaño: {})", serviceType, page,
-                size);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> paymentsPage = paymentRepository.findByServiceType(serviceType, pageable);
-
-        List<PaymentResponse> paymentResponses = paymentsPage.getContent().stream()
-                .map(paymentMapper::toResponse)
-                .collect(Collectors.toList());
-
-        return new PaymentResponsePage(
-                paymentResponses,
-                page,
-                paymentsPage.getTotalElements());
-    }
-
-    @Override
-    public PaymentResponsePage getNonRentalPayments(int page, int size) {
-        log.info("Obteniendo pagos no relacionados con alquiler (página: {}, tamaño: {})", page, size);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> paymentsPage = paymentRepository.findByServiceTypeNot(ServiceType.ALQUILER, pageable);
-
-        List<PaymentResponse> paymentResponses = paymentsPage.getContent().stream()
-                .map(paymentMapper::toResponse)
-                .collect(Collectors.toList());
-
-        return new PaymentResponsePage(
-                paymentResponses,
-                page,
-                paymentsPage.getTotalElements());
-    }
-
-    @Override
-    public PaymentResponsePage getNonRentalPaymentsSummary(int page, int size) {
-        log.info("Obteniendo resumen de pagos no relacionados con alquiler (página: {}, tamaño: {})", page, size);
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Payment> paymentsPage = paymentRepository.findByServiceTypeNot(ServiceType.ALQUILER, pageable);
-
-        List<PaymentResponse> paymentResponses = paymentsPage.getContent().stream()
-                .map(paymentMapper::toResponse)
-                .collect(Collectors.toList());
-
-        return new PaymentResponsePage(
-                paymentResponses,
-                page,
-                paymentsPage.getTotalElements());
-    }
 
     @Override
     @Transactional
@@ -249,9 +288,19 @@ public class PaymentServiceImpl implements PaymentService {
         return true;
     }
 
-    /**
-     * Busca y valida que un contrato exista y esté activo
-     */
+//    @Override
+//    public PaymentRentalResponsePage getRentalPayments(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Payment> paymentsPage = paymentRepository.findByServiceType(ServiceType.ALQUILER, pageable);
+//
+//        List<PaymentRentalResponseDto> paymentRentalResponseDtos = paymentsPage.getContent().stream()
+//                .map(paymentMapper::toRentalResponse)
+//                .collect(Collectors.toList());
+//        return new PaymentRentalResponsePage(
+//                paymentRentalResponseDtos, page, paymentsPage.getTotalElements());
+//    }
+
+
     private Contract findAndValidateContract(Long contractId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ContractNorFoundException(contractId.toString()));
