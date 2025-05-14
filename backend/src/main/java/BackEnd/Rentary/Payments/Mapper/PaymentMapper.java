@@ -71,11 +71,13 @@ public class PaymentMapper {
 
         return PaymentDetailedResponse.builder()
                 .id(payment.getId())
+                .contractId(contract.getContractId()) 
                 .amount(payment.getAmount())
                 .status(payment.getStatus())
                 .propertyAddress(fullAddress)
                 .tenantName(tenantName)
                 .adjustmentFrequency(contract.getAdjustmentFrequency())
+                .adjustmentType(contract.getAdjustmentType())
                 .deadline(contract.getDeadline())
                 .build();
     }
