@@ -40,11 +40,5 @@ jobs:
           curl -sSL https://koyeb.com/install.sh | sh
           echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH
 
-      - name: Update service on Koyeb
-        run: |
-          koyeb service redeploy rentary/footalent-backend \
-            --image "${{ secrets.DOCKER_USERNAME }}/footalent-backend:latest" \
-            --token ${{ secrets.KOYEB_API_TOKEN }}
-
       - name: Redeploy service on Koyeb
         run: koyeb service redeploy rentary/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
