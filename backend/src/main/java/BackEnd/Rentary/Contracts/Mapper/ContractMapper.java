@@ -4,6 +4,7 @@ import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
+import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class ContractMapper {
         contract.setAdjustmentFrequency(request.adjustmentFrequency());
         contract.setDeadline(request.deadline());
         contract.setAdjustmentPercentage(request.adjustmentPercentage());
+        contract.setAdjustmentType(contract.getAdjustmentType());
         return contract;
     }
 
@@ -43,18 +45,29 @@ public class ContractMapper {
                         .collect(Collectors.toList()) :
                 new ArrayList<>();
 
+        Property p = contract.getProperty();
+        String propertyAddress = String.format("%s %s, %s, %s",
+                p.getAddress().getStreet(),
+                p.getAddress().getNumber(),
+                p.getAddress().getLocality(),
+                p.getAddress().getProvince());
+
+        Tenants t = contract.getTenant();
+        String tenantFullName = t.getFirstName() + " " + t.getLastName();
+
         return new ContractResponse(
                 contract.getContractId(),
-                contract.getProperty().getId_property(),
-                contract.getTenant().getId(),
+                propertyAddress,
+                tenantFullName,
                 contract.getStartDate(),
                 contract.getEndDate(),
                 contract.getBaseRent(),
-                contract.getBaseRent(),
+                contract.getDeposit(),
                 contract.getAdjustmentFrequency(),
                 contract.getDeadline(),
                 contract.isActive(),
                 contract.getAdjustmentPercentage(),
+                AdjustmentType.getLabel(contract.getAdjustmentType()),
                 documentDtos
         );
     }

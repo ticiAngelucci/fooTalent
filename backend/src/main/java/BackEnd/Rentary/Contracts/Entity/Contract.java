@@ -2,6 +2,7 @@ package BackEnd.Rentary.Contracts.Entity;
 
 import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
+import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Propertys.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -52,4 +53,7 @@ public class Contract {
             joinColumns = @JoinColumn(name = "contract_id")
     )
     private Set<AttachedDocument> documents = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AdjustmentType adjustmentType;
 }
