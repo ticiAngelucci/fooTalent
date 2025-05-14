@@ -6,7 +6,6 @@ import BackEnd.Rentary.Contracts.Service.IContractService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contracts")
-@Slf4j
 public class ContractController {
 
     private final IContractService contractService;
@@ -33,18 +31,12 @@ public class ContractController {
             @RequestPart("contract") @Valid ContractRequest contractRequest,
             @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        log.info("Creando nuevo contrato para propiedad ID: {} e inquilino ID: {} con {} documentos",
-                contractRequest.propertyId(),
-                contractRequest.tenantId(),
-                documents != null ? documents.length : 0);
-
         ContractResponse response = contractService.createContract(contractRequest, documents);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ContractResponse> getContractById(@PathVariable Long id) {
-        log.info("Obteniendo contrato con ID: {}", id);
         ContractResponse response = contractService.getContractById(id);
         return ResponseEntity.ok(response);
     }
@@ -53,7 +45,7 @@ public class ContractController {
     public ResponseEntity<Page<ContractResponse>> getAllContracts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        log.info("Obteniendo todos los contratos - Página: {}, Tamaño: {}", page, size);
+
         Pageable pageable = PageRequest.of(page, size);
         Page<ContractResponse> response = contractService.getAllContracts(pageable);
         return ResponseEntity.ok(response);
@@ -69,16 +61,12 @@ public class ContractController {
             @RequestPart("contract") @Valid ContractRequest contractRequest,
             @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        log.info("Actualizando contrato ID: {} con {} documentos nuevos",
-                id, documents != null ? documents.length : 0);
-
         ContractResponse response = contractService.updateContract(id, contractRequest, documents);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContract(@PathVariable Long id) {
-        log.info("Eliminando contrato con ID: {}", id);
         contractService.deleteContract(id);
         return ResponseEntity.noContent().build();
     }
@@ -87,7 +75,6 @@ public class ContractController {
     public ResponseEntity<Void> removeContractDocument(
             @PathVariable Long contractId,
             @PathVariable String documentId) {
-        log.info("Eliminando documento {} del contrato ID: {}", documentId, contractId);
         contractService.removeContractDocumentById(contractId, documentId);
         return ResponseEntity.noContent().build();
     }
