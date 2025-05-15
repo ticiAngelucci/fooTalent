@@ -1,10 +1,10 @@
-package BackEnd.Rentary.Propertys.Entities;
+package BackEnd.Rentary.Properties.Entities;
 
 import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Owners.Entities.Owner;
-import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Enums.PropertyStatus;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +38,6 @@ public class Property {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private Owner owner;
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "property")
     private List<Contract> contracts = new ArrayList<>();
 }

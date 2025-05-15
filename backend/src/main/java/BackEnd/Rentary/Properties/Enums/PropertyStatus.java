@@ -1,4 +1,4 @@
-package BackEnd.Rentary.Propertys.Enums;
+package BackEnd.Rentary.Properties.Enums;
 
 public enum PropertyStatus {
     OCUPADO,

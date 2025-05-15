@@ -1,4 +1,4 @@
-package BackEnd.Rentary.Propertys.DTOs;
+package BackEnd.Rentary.Properties.DTOs;
 
 import java.util.List;
 

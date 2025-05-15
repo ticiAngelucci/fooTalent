@@ -5,7 +5,8 @@ import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
-import BackEnd.Rentary.Propertys.Entities.Property;
+import BackEnd.Rentary.Owners.Entities.Owner;
+import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
 
@@ -54,9 +55,15 @@ public class ContractMapper {
 
         Tenants t = contract.getTenant();
         String tenantFullName = t.getFirstName() + " " + t.getLastName();
+        Owner o = contract.getProperty().getOwner();
+        String ownerFullName = o.getFirstName() + " " + o.getLastName();
 
         return new ContractResponse(
                 contract.getContractId(),
+                contract.getProperty().getId_property(),
+                contract.getTenant().getId(),
+                contract.getProperty().getOwner().getId(),
+                ownerFullName,
                 propertyAddress,
                 tenantFullName,
                 contract.getStartDate(),

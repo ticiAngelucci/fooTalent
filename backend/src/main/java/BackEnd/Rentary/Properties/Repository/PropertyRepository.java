@@ -1,8 +1,8 @@
-package BackEnd.Rentary.Propertys.Repository;
+package BackEnd.Rentary.Properties.Repository;
 
 import BackEnd.Rentary.Common.Address;
-import BackEnd.Rentary.Propertys.Entities.Property;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Entities.Property;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

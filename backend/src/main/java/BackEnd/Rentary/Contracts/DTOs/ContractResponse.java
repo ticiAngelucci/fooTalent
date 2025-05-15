@@ -2,13 +2,16 @@ package BackEnd.Rentary.Contracts.DTOs;
 
 import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
-import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public record ContractResponse(
         Long id,
+        Long propertyId,
+        Long tenantId,
+        Long ownerId,
+        String ownerFullName,
         String propertyAddress,
         String tenantFullName,
         LocalDate startDate,
