@@ -24,6 +24,7 @@ import Profile from "./modules/user/pages/profile";
 import EditTenantPage from "./modules/tenant/pages/EditTenant";
 import PaymentsView from "./modules/payments/pages/Payments";
 import PaymentRegister from "./modules/payments/pages/PaymentRegister";
+import EmailSentRegister from "./modules/auth/pages/EmailSendRegister";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
           <Route
             path={AppRoute.EmailSendConfirmation}
             element={<EmailSentConfirmation />}
+          />
+          <Route
+            path={AppRoute.EmailSentRegister}
+            element={<EmailSentRegister />}
           />
           <Route
             path={AppRoute.ErrorEmailNotFound}

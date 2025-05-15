@@ -48,7 +48,7 @@ const RegisterForm = () => {
     try {
       const register = await userRegister(data);
       if (register.success == true) {
-        navigate(Route.Login);
+        navigate(Route.EmailSentRegister, { state: { email: data.email } });
         setRegisterError("");
       }
     } catch {

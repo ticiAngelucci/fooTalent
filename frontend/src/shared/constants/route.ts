@@ -9,6 +9,7 @@ enum Route {
     Contact = '/contact',
     Immovables = '/immovables',
     ForgotPassword = '/forgot-password',
+    EmailSentRegister = '/email-sent-register',
     EmailSendConfirmation = '/email-send-confirmation',
     ResetPassword = '/reset_password',
     ErrorEmailNotFound = '/error-email-not-found',
