@@ -4,10 +4,18 @@ import { CustomPagination } from "../components/CustomPagination"
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout"
 import { usePaymentsTable } from "../hooks/usePaymentsTable"
 import { Route } from "@/shared/constants/route"
+import PaymentRegister from "./PaymentRegister"
+import { usePaymentModal } from "../hooks/usePaymentsModal"
+import DeletePaymentsModal from "../components/DeletePaymentsModal"
+import { useDeletePaymentModal } from "../hooks/useDeletePaymentModal"
 
 
 
 export default function PaymentsView() {
+
+  const {modalOpen, setModalOpen, userId, userName, userAddress, handleOpen} = usePaymentModal();
+    const {deleteOpen, setDeleteOpen, deleteId, handleDelete} = useDeletePaymentModal();
+
   const {
     sortData,
     searchQuery,
@@ -20,11 +28,6 @@ export default function PaymentsView() {
     sortedData,
     filteredData
   } = usePaymentsTable(10)
-
-  
-  
-
-
 
 
   return (
@@ -45,6 +48,8 @@ export default function PaymentsView() {
               payments={sortedData}
               loading={loading}
               sortData={sortData}
+              handleOpen={handleOpen}
+              handleDelete={handleDelete}
             />
             <div className="flex items-center justify-between p-4 border-t">
               <div className="text-sm text-muted-foreground">
@@ -59,7 +64,8 @@ export default function PaymentsView() {
           </div>
         </div>
       </div>
-      
+      <PaymentRegister open={modalOpen} setOpen={setModalOpen} id={userId} userName={userName} address={userAddress} />
+      <DeletePaymentsModal open={deleteOpen} setOpen={setDeleteOpen} id={deleteId} />
     </DashboardLayout>
   )
 }

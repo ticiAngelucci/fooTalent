@@ -10,14 +10,16 @@ interface PaymentTableProps {
   payments: Payment[]
   loading: boolean
   sortData: (column: keyof Payment) => void
-  
+  handleOpen: (id: string, name: string, address: string) => void;
+  handleDelete: (id: string) => void;
 }
 
 export const PaymentTable = ({
   payments,
   loading,
   sortData,
-  
+  handleOpen,
+  handleDelete
 }: PaymentTableProps) => {
   return (
     <Table>
@@ -118,7 +120,7 @@ export const PaymentTable = ({
               <TableCell>{formatDeadline(payment.deadline)}</TableCell>
               <TableCell><PaymentStatusBadge status={payment.status} /></TableCell>
               <TableCell>
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
                       <MoreHorizontal className="h-4 w-4" />
@@ -127,9 +129,15 @@ export const PaymentTable = ({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem ><MoveUpRight className="text-black inline" />Acceder</DropdownMenuItem>
                     <DropdownMenuItem >
-                      <DollarSign />Registrar pago
+                      <Button onClick={() => handleOpen(payment.id.toString(), payment.tenantName, payment.propertyAddress)}>
+                        <DollarSign />Registrar pago
+                      </Button>
                     </DropdownMenuItem>
-                    <DropdownMenuItem ><Trash2 /> Eliminar</DropdownMenuItem>
+                    <DropdownMenuItem >
+                      <Button onClick={()=>handleDelete(payment.id.toString())}>
+                        <Trash2 /> Eliminar
+                      </Button>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -137,6 +145,6 @@ export const PaymentTable = ({
           ))
         )}
       </TableBody>
-    </Table>
+    </Table >
   )
 }
