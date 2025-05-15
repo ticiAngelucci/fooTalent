@@ -18,28 +18,35 @@ export const createTenant = async (data: Tenant) => {
     files = [],
   } = data;
 
-  const token = useUserStore.getState().token;
-  const formData = new FormData();
-  console.log(token)
-   formData.append("firstName", firstName || "");
-  formData.append("lastName", lastName || "");   
-  formData.append("dni", dni || "");               
-  formData.append("phone", phone || "");         
-  formData.append("email", email || "");           
-  formData.append("street", street || "");        
-  formData.append("number", number?.toString() || ""); 
-  formData.append("city", city || "");             
-  formData.append("province", province || "");   
-  formData.append("postalCode", postalCode || ""); 
+  const dataEnviar = {
+    firstName: firstName,
+    lastName: lastName,
+    dni: dni,
+    phone: phone,
+    warranty: "0",
+    email: email,
+    address: {
+      country: "Argentina",
+      province: province,
+      locality: city,
+      street: street,
+      number: number?.toString(),
+      postalCode: postalCode,
+    },
+  };
 
-  files.forEach((file) => {
-    formData.append("documents[]", file);
-  });
-  console.log(formData)
+  const token = sessionStorage.getItem("token");
+  const formData = new FormData();
+  console.log(token);
+  // Convert the dataEnviar object to a JSON string
+  // formData.append("tenant", JSON.stringify(dataEnviar));
+  formData.append("tenant", new Blob([JSON.stringify(dataEnviar)], { type: "application/json" }));
+  console.log(formData);
   try {
     const response = await axios.post(`${API_URL}/tenants`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -48,6 +55,4 @@ export const createTenant = async (data: Tenant) => {
     console.error("Error al crear el inquilino:", error);
     throw error;
   }
-
-
 };
