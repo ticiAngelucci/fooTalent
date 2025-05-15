@@ -24,7 +24,7 @@ import LogoutButton from "../logoutButton/LogoutButton";
 
 const items = [
   { title: "Tablero", url: Route.Dashboard, icon: LayoutDashboard },
-  { title: "Contratos", url: "#", icon: ClipboardPenLine },
+  { title: "Contratos", url: Route.Contracts, icon: ClipboardPenLine },
   { title: "Inmuebles", url: Route.Immovables, icon: HousePlus },
   { title: "Contactos", url: Route.Contact, icon: Contact },
   { title: "Pagos", url: Route.Payments, icon: DollarSign },

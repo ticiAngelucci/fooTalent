@@ -19,7 +19,10 @@ enum Route {
     EditOwner='/owner/edit/:id',
     Profile = '/profile',
     Payments = '/payments',
-    NewPayment = '/payments/new'
+    NewPayment = '/payments/new',
+    Contracts = '/contracts', 
+    NewContract = '/new-contract', 
+    EditContract = '/edit-contract',
 
 }
 
