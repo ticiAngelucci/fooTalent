@@ -1,5 +1,7 @@
 package BackEnd.Rentary.Tenants.controller;
 
+import BackEnd.Rentary.Exceptions.TenantHasActiveContractException;
+import BackEnd.Rentary.Exceptions.TenantNotFoundExceptions;
 import BackEnd.Rentary.Tenants.DTOs.TenantsPageResponseDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
@@ -70,10 +72,15 @@ public class TenantsController {
 
         @Operation(summary = "Eliminar un inquilino")
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteTenantsById(@PathVariable Long id) {
-                log.info("Eliminando inquilino con ID: {}", id);
-                tenantsService.deleteTenant(id);
-                return ResponseEntity.noContent().build();
+        public ResponseEntity<String> deleteTenantsById(@PathVariable Long id) {
+                try {
+                        tenantsService.deleteTenant(id);
+                        return ResponseEntity.ok("Inquilino eliminado exitosamente.");
+                } catch (TenantHasActiveContractException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+                } catch (TenantNotFoundExceptions e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+                }
         }
 
         @Operation(summary = "Eliminar un documento específico de un inquilino", description = "Elimina un documento asociado a un inquilino por su ID")

@@ -7,6 +7,9 @@ import BackEnd.Rentary.Owners.DTOs.OwnerResponseDto;
 import BackEnd.Rentary.Owners.Entities.Owner;
 import BackEnd.Rentary.Owners.Mapper.OwnerMapper;
 import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
+import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Propertys.Entities.Property;
+import BackEnd.Rentary.Propertys.Mapper.PropertyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,6 +28,7 @@ public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
+    private final PropertyMapper propertyMapper;
 
     @Override
     public ResponseEntity<?> getOwnerId(Long id) {
@@ -81,5 +88,15 @@ public class OwnerServiceImpl implements OwnerService{
     public Page<OwnerResponseDto> getOwner(Pageable pageable) {
         return ownerRepository.findAll(pageable)
                 .map(ownerMapper::toDto);
+    }
+
+    @Override
+    public List<PropertyResponseDto> getPropertiesByOwnerId(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
+
+        return owner.getProperties().stream()
+                .map(propertyMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

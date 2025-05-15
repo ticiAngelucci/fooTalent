@@ -95,7 +95,7 @@ public class ContractServiceImpl implements IContractService {
     public ContractResponse getContractById(Long id) {
         return contractRepository.findById(id)
                 .map(contractMapper::toResponse)
-                .orElseThrow(() -> new ContractNorFoundException(id.toString()));
+                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ContractServiceImpl implements IContractService {
     @Transactional
     public ContractResponse updateContract(Long id, ContractRequest request, MultipartFile[] documents) {
         Contract existing = contractRepository.findById(id)
-                .orElseThrow(() -> new ContractNorFoundException(id.toString()));
+                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
 
         Property property = propertyRepository.findById(request.propertyId())
                 .orElseThrow(() -> new PropertyNotFoundException(request.propertyId().toString()));
@@ -155,7 +155,15 @@ public class ContractServiceImpl implements IContractService {
     @Transactional
     public void deleteContract(Long id) {
         Contract contract = contractRepository.findById(id)
-                .orElseThrow(() -> new ContractNorFoundException(id.toString()));
+                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
+
+        if (!contract.isActive()) {
+            contractRepository.delete(contract);
+        }
+
+        if (contract.isActive()) {
+            throw new ContractNotExpiredException("El contrato aún está activo y no puede eliminarse.");
+        }
 
         List<String> publicIds = new ArrayList<>();
         for (AttachedDocument doc : contract.getDocuments()) {
@@ -184,7 +192,7 @@ public class ContractServiceImpl implements IContractService {
     @Transactional
     public void removeContractDocumentById(Long contractId, String documentId) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new ContractNorFoundException(contractId.toString()));
+                .orElseThrow(() -> new ContractNotFoundException(contractId.toString()));
 
         AttachedDocument docToRemove = null;
         for (AttachedDocument doc : contract.getDocuments()) {

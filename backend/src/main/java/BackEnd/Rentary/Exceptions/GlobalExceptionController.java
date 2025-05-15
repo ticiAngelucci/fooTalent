@@ -133,8 +133,8 @@ public class GlobalExceptionController {
     }
 
     // Errores Personalizados
-    @ExceptionHandler(ContractNorFoundException.class)
-    public ResponseEntity<ErrorResponse> handleContractNotFoundException(ContractNorFoundException ex) {
+    @ExceptionHandler(ContractNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleContractNotFoundException(ContractNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 "CONTRACT_NOT_FOUND",
                 "El contrato solicitado no existe",

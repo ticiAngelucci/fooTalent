@@ -3,6 +3,7 @@ package BackEnd.Rentary.Contracts.Controller;
 import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Service.IContractService;
+import BackEnd.Rentary.Exceptions.ContractNotExpiredException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -68,9 +69,15 @@ public class ContractController {
 
     @Operation(summary = "Eliminar un contrato")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContract(@PathVariable Long id) {
-        contractService.deleteContract(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteContract(@PathVariable Long id) {
+        try {
+            contractService.deleteContract(id);
+            return ResponseEntity.ok("Contrato eliminado exitosamente.");
+        } catch (ContractNotExpiredException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @Operation(summary = "Eliminar documentos de contrato")

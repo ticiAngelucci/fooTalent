@@ -3,6 +3,8 @@ package BackEnd.Rentary.Owners.Controller;
 import BackEnd.Rentary.Owners.DTOs.OwnerRequestDto;
 import BackEnd.Rentary.Owners.DTOs.OwnerResponseDto;
 import BackEnd.Rentary.Owners.Services.OwnerServiceImpl;
+import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Propertys.Entities.Property;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/owner")
@@ -57,4 +61,10 @@ public class OwnerController {
         return ownerService.updateOwner(id, ownerDto );
     }
 
+    @Operation(summary = "Obtener todos los inmuebles de un propietario")
+    @GetMapping("/{id}/properties")
+    public ResponseEntity<List<PropertyResponseDto>> getPropertiesByOwner(@PathVariable Long id){
+        List<PropertyResponseDto> properties = ownerService.getPropertiesByOwnerId(id);
+        return ResponseEntity.ok(properties);
+    }
 }

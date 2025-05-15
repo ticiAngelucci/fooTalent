@@ -26,8 +26,8 @@ public class PropertyController {
 
     private final PropertyServiceImpl propertyService;
 
-    @Operation(summary = "Crear un contrato nuevo",
-            description = "Crear un contrato que vincula un inquilino con una propiedad")
+    @Operation(summary = "Crear un inmueble",
+            description = "Crear un inmueble que vincula a un propietario")
     @PostMapping("/create")
     public ResponseEntity<PropertyResponseDto> createProperty(@Valid @RequestBody PropertyRequestDto dto,
                                                               @AuthenticationPrincipal CustomUserDetails user){
@@ -35,14 +35,14 @@ public class PropertyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.createProperty(dto, userId));
     }
 
-    @Operation(summary = "Eliminar contrato", description = "Eliminar contrato pasando un ID")
+    @Operation(summary = "Eliminar un inmueble", description = "Eliminar inmueble pasando un ID")
     @DeleteMapping("/{propertyId}")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId){
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Listar contratos disponibles")
+    @Operation(summary = "Listar inmuebles disponibles")
     @GetMapping("/available")
     public ResponseEntity<CustomPageResponse<PropertyResponseDto>> getAvailableProperties(
             @RequestParam(required = false) String locality,
@@ -65,7 +65,7 @@ public class PropertyController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Editar una propiedad pasado por ID")
+    @Operation(summary = "Editar un inmueble pasado por ID")
     @PatchMapping("/update/{id}")
     public ResponseEntity<PropertyResponseDto> updateProperty(
             @PathVariable Long id,
@@ -75,13 +75,13 @@ public class PropertyController {
         return ResponseEntity.ok(updatedProperty);
     }
 
-    @Operation(summary = "Listar todas las propiedades", description = "Listar propiedades paginadas con 15 items por página")
+    @Operation(summary = "Listar todas los inmuebles", description = "Listar inmuebles paginadas con 15 items por página")
     @GetMapping("/all")
     public Page<PropertyResponseDto> getAllProperties(@PageableDefault(size = 15) Pageable pageable){
         return propertyService.getAllProperties(pageable);
     }
 
-    @Operation(summary = "Obtener propiedades por un ID")
+    @Operation(summary = "Obtener inmuebles por un ID")
     @GetMapping("/{id}")
     public ResponseEntity<PropertyResponseDto> getPropertyById(@PathVariable Long id){
         PropertyResponseDto property = propertyService.getPropertyById(id);

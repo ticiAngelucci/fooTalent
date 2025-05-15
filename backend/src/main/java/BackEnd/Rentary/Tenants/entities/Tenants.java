@@ -22,13 +22,11 @@ public class Tenants extends Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String warranty;
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contract> contracts = new ArrayList<>();
     @ElementCollection
     @CollectionTable(
             name = "tenant_documents",
-            joinColumns = @JoinColumn(name = "tenant_id")
-    )
+            joinColumns = @JoinColumn(name = "tenant_id"))
     private Set<AttachedDocument> documents = new HashSet<>();
-
 }
