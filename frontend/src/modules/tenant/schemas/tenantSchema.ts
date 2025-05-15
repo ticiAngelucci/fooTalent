@@ -20,6 +20,8 @@ export const tenantSchema = z.object({
   street: z.string().trim().optional(),
   number: z.string().trim().optional(),
   city: z.string().trim().optional(),
+  country: z.string().trim().optional(),
+  warranty:z.string().trim().optional(),
   province: z.string().trim().optional(),
   postalCode: z
     .string()

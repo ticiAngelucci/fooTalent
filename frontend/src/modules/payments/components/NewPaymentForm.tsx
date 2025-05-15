@@ -10,20 +10,25 @@ import { Button } from "@/shared/components/ui/button"
 import { CalendarIcon, Save } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale";
-import { Calendar } from "@/shared/components/ui/calendar"
+
 import { createPayment } from "../service/paymentService"
 import { toast } from "sonner"
 import SuccessToast from "@/shared/components/Toasts/SuccessToast"
 import ErrorToast from "@/shared/components/Toasts/ErrorToast"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover"
+import { Calendar } from "@/shared/components/ui/calendar"
 
 //If Rent value is the one to go, amount cannot exceed that value
 
-const NewPaymentForm = () => {
+interface Props{
+  id: string;
+}
+
+const NewPaymentForm = ({id}: Props) => {
   const form = useForm<PaymentFormData>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
-      contractId: 1,
+      contractId: parseInt(id),
       amount: 0.0,
       paymentDate: "",
       serviceType: undefined,
@@ -100,14 +105,9 @@ const NewPaymentForm = () => {
               <FormItem className="relative">
                 <FormLabel className="form-label-custom">Fecha de pago</FormLabel>
                 <Popover modal>
-                  <PopoverTrigger>
-                    <Button
-                      type="button"
-                      className="w-full btn-secondary justify-start !font-normal"
-                    >
+                  <PopoverTrigger className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal">
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {field.value ? field.value : <span>Selecciona una fecha</span>}
-                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="z-[100]">
                     <Calendar

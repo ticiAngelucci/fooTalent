@@ -21,16 +21,17 @@ const SoftwareSection = () => {
         Software utilizado por alguna de las inmobiliarias más importantes del país
       </h2>
 
-      <div className="flex flex-wrap justify-center items-center gap-8">
-        {logos.map((src, index) => (
-          <img
-            key={index}
-            src={src}
-            alt={`Logo ${index + 1}`}
-            className="h-16 md:h-20 object-contain"
-          />
-        ))}
-      </div>
+     <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+  {logos.map((src, index) => (
+    <img
+      key={index}
+      src={src}
+      alt={`Logo ${index + 1}`}
+      className="h-16 md:h-20 object-contain"
+    />
+  ))}
+</div>
+  
     </section>
   );
 };
