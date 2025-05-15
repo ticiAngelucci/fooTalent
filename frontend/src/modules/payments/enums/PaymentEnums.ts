@@ -1,0 +1,23 @@
+export enum ServiceType {
+  ALQUILER = "ALQUILER",
+  DEPOSITO = "DEPOSITO",
+  EXPENSAS = "EXPENSAS",
+  LUZ = "LUZ",
+  AGUA = "AGUA",
+  MUNICIPALIDAD = "MUNICIPALIDAD",
+  NO_APLICA = "NO_APLICA"
+}
+
+export enum PaymentMethod {
+  EFECTIVO = "EFECTIVO",
+  TRANSFERENCIA = "TRANSFERENCIA",
+  CHEQUE = "CHEQUE",
+  TARJETA = "TARJETA",
+  OTROS = "OTROS"
+}
+
+export enum Currency {
+  PESOS = "PESOS",
+  DOLARES = "DOLARES",
+  CRYPTO = "CRYPTO"
+}

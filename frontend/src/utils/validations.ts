@@ -26,3 +26,11 @@ export const onlyNumber = z
   .int({ message: "Debe ser un número entero" })
   .nonnegative({ message: "No se admiten valores negativos" });
 
+export const floatValues = z
+  .number({ message: "Solo se admiten números" })
+  .nonnegative({ message: "No se admiten valores negativos" });
+
+export const dates = z
+ .string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida (YYYY-MM-DD)")
+
+
