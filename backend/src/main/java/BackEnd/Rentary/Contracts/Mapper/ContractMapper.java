@@ -78,4 +78,17 @@ public class ContractMapper {
                 documentDtos
         );
     }
+
+    public void updateEntity(Contract existing, ContractRequest request, Property property, Tenants tenants) {
+        existing.setProperty(property);
+        existing.setTenant(tenants);
+        existing.setStartDate(request.startDate());
+        existing.setEndDate(request.endDate());
+        existing.setBaseRent(request.baseRent());
+        existing.setDeposit(request.deposit());
+        existing.setAdjustmentFrequency(request.adjustmentFrequency());
+        existing.setDeadline(request.deadline());
+        existing.setAdjustmentPercentage(request.adjustmentPercentage());
+        existing.setAdjustmentType(request.adjustmentType());
+    }
 }
