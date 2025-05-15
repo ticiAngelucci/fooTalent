@@ -63,7 +63,7 @@ function App() {
           <Route path={AppRoute.AddOwner} element={<AddOwner />} />
           <Route path={AppRoute.AddTenant} element={<AddTenant />} />
           <Route path={AppRoute.EditOwner} element={<EditOwner />} />
-          <Route path={AppRoute.EditTenant} element={<EditTenantPage />} 
+          <Route path={AppRoute.EditTenant} element={<EditTenantPage />} />
           <Route path={AppRoute.Payments} element={<PaymentsView />} />
           <Route path={AppRoute.NewPayment} element={<PaymentRegister />} />
         </Route>
