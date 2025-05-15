@@ -13,6 +13,8 @@ export const createTenant = async (data: Tenant) => {
     street,
     number,
     city,
+    warranty,
+    country,
     province,
     postalCode,
     files = [],
@@ -23,10 +25,10 @@ export const createTenant = async (data: Tenant) => {
     lastName: lastName,
     dni: dni,
     phone: phone,
-    warranty: "0",
+    warranty: warranty,
     email: email,
     address: {
-      country: "Argentina",
+      country: country,
       province: province,
       locality: city,
       street: street,
@@ -38,9 +40,10 @@ export const createTenant = async (data: Tenant) => {
   const token = sessionStorage.getItem("token");
   const formData = new FormData();
   console.log(token);
-  // Convert the dataEnviar object to a JSON string
-  // formData.append("tenant", JSON.stringify(dataEnviar));
   formData.append("tenant", new Blob([JSON.stringify(dataEnviar)], { type: "application/json" }));
+  files.forEach((file: File) => {
+    formData.append("documents", file);
+  });
   console.log(formData);
   try {
     const response = await axios.post(`${API_URL}/tenants`, formData, {

@@ -18,7 +18,7 @@ export default function EditTenantPage() {
   useEffect(() => {
     const fetchTenant = async () => {
       try {
-        const response = await axios.get(`${API_URL}/tenant/${id}`, {
+        const response = await axios.get(`${API_URL}/tenants/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,7 +41,7 @@ export default function EditTenantPage() {
   }, [id, token]);
 
   return (
-    <DashboardLayout subtitle="Perfil de propietario" redirect={Route.Contact}>
+    <DashboardLayout subtitle="Perfil de inquilino" redirect={Route.Contact}>
       <div className="p-6">
         {loading ? (
           <p>Cargando inquilino...</p>

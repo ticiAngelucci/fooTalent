@@ -7,6 +7,8 @@ export interface Tenant {
     street?: string;
     number?: string;
     city?: string;
+    warranty?: string;
+    country?: string;
     province?: string;
     postalCode?: string;
     files?: File[];

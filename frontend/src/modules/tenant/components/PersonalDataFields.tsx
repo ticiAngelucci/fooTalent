@@ -10,12 +10,12 @@ import { Input } from "@/shared/components/ui/input";
 
 
 interface PersonalDataFieldsProps {
-    disabled: boolean;
-    disableDni?: boolean;
-  }
+  disabled: boolean;
+  disableDni?: boolean;
+}
 
-const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => {
-    const { control } = useFormContext();
+const PersonalDataFields = ({ disabled, disableDni }: PersonalDataFieldsProps) => {
+  const { control } = useFormContext();
 
 
   return (
@@ -27,7 +27,7 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
           <FormItem>
             <FormLabel>Nombre<span className="text-gray-500">(requerido)</span></FormLabel>
             <FormControl>
-              <Input placeholder="Ingrese su nombre aquí" {...field} disabled={disabled}/>
+              <Input placeholder="Ingrese su nombre aquí" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -41,7 +41,7 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
           <FormItem>
             <FormLabel>Apellido<span className="text-gray-500">(requerido)</span></FormLabel>
             <FormControl>
-              <Input placeholder="Ingrese su apellido aquí" {...field}  disabled={disabled}/>
+              <Input placeholder="Ingrese su apellido aquí" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -55,7 +55,7 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
           <FormItem>
             <FormLabel>DNI<span className="text-gray-500">(requerido)</span></FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 98999999" {...field}  disabled={disableDni}/>
+              <Input placeholder="Ej: 98999999" {...field} disabled={disableDni} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -69,7 +69,7 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
           <FormItem>
             <FormLabel>Teléfono</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 1112345678" {...field}  disabled={disabled}/>
+              <Input placeholder="Ej: 1112345678" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -83,7 +83,28 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: correo@ejemplo.com" type="email" {...field}  disabled={disabled}/>
+              <Input placeholder="Ej: correo@ejemplo.com" type="email" {...field} disabled={disabled} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="warranty"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Garantía</FormLabel>
+            <FormControl>
+              <select
+                {...field}
+                disabled={disabled}
+                className="border border-gray-500 rounded-md px-3 py-2 text-sm w-full"
+              >
+                <option value="0">Sin garantía</option>
+                <option value="1">Garantía básica</option>
+                <option value="2">Garantía extendida</option>
+              </select>
             </FormControl>
             <FormMessage />
           </FormItem>
