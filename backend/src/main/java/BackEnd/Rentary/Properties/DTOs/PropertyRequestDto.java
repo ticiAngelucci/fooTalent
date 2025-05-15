@@ -1,7 +1,7 @@
-package BackEnd.Rentary.Propertys.DTOs;
+package BackEnd.Rentary.Properties.DTOs;
 
 import BackEnd.Rentary.Common.Address;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 import jakarta.validation.constraints.NotNull;
 
 public record PropertyRequestDto(

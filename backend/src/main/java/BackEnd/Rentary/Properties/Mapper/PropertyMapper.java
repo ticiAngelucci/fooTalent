@@ -1,11 +1,11 @@
-package BackEnd.Rentary.Propertys.Mapper;
+package BackEnd.Rentary.Properties.Mapper;
 
 import BackEnd.Rentary.Common.Address;
 import BackEnd.Rentary.Owners.Entities.Owner;
-import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Entities.Property;
-import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
+import BackEnd.Rentary.Properties.DTOs.PropertyRequestDto;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Properties.Entities.Property;
+import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import org.springframework.stereotype.Component;
 
 @Component

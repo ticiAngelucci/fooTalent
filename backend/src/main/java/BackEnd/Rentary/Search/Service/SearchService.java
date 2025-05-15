@@ -2,9 +2,9 @@ package BackEnd.Rentary.Search.Service;
 
 import BackEnd.Rentary.Owners.Entities.Owner;
 import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
-import BackEnd.Rentary.Propertys.Entities.Property;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
-import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
+import BackEnd.Rentary.Properties.Entities.Property;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Repository.PropertyRepository;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,17 +1,17 @@
 package BackEnd.Rentary.Owners.Services;
 
 import BackEnd.Rentary.Exceptions.DuplicateDniException;
+import BackEnd.Rentary.Exceptions.OwnerHasActivePropertyException;
 import BackEnd.Rentary.Exceptions.OwnerNotFoundException;
 import BackEnd.Rentary.Owners.DTOs.OwnerRequestDto;
 import BackEnd.Rentary.Owners.DTOs.OwnerResponseDto;
 import BackEnd.Rentary.Owners.Entities.Owner;
 import BackEnd.Rentary.Owners.Mapper.OwnerMapper;
 import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Entities.Property;
-import BackEnd.Rentary.Propertys.Mapper.PropertyMapper;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Properties.Enums.PropertyStatus;
+import BackEnd.Rentary.Properties.Mapper.PropertyMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
@@ -52,13 +51,16 @@ public class OwnerServiceImpl implements OwnerService{
     }
 
     @Override
-    public ResponseEntity<?> deleteOwner(Long id) {
-        if (!ownerRepository.existsById(id)) {
-            throw new OwnerNotFoundException("No se encontró propietario con ID: " + id);
-        }
+    public void deleteOwner(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerHasActivePropertyException(id.toString()));
 
-        ownerRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        boolean hasActiveProperty = owner.getProperties().stream()
+                .anyMatch(property -> property.getStatus() == PropertyStatus.OCUPADO);
+
+        if (hasActiveProperty) {
+            throw new OwnerHasActivePropertyException("El propietario tiene propiedades activas y no puede ser eliminado.");
+        }
     }
 
     @Override

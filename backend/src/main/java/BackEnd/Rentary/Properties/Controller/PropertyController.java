@@ -1,11 +1,13 @@
-package BackEnd.Rentary.Propertys.Controller;
+package BackEnd.Rentary.Properties.Controller;
 
 import BackEnd.Rentary.Auth.DTOs.CustomUserDetails;
-import BackEnd.Rentary.Propertys.DTOs.CustomPageResponse;
-import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
-import BackEnd.Rentary.Propertys.Service.PropertyServiceImpl;
+import BackEnd.Rentary.Exceptions.PropertyHasActiveContractException;
+import BackEnd.Rentary.Exceptions.PropertyNotFoundException;
+import BackEnd.Rentary.Properties.DTOs.CustomPageResponse;
+import BackEnd.Rentary.Properties.DTOs.PropertyRequestDto;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Service.PropertyServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +39,15 @@ public class PropertyController {
 
     @Operation(summary = "Eliminar un inmueble", description = "Eliminar inmueble pasando un ID")
     @DeleteMapping("/{propertyId}")
-    public ResponseEntity<Void> deleteProperty(@PathVariable Long propertyId){
-        propertyService.deleteProperty(propertyId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteProperty(@PathVariable Long propertyId){
+        try {
+            propertyService.deleteProperty(propertyId);
+            return ResponseEntity.ok("Propiedad eliminada con éxito.");
+        } catch (PropertyHasActiveContractException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        } catch (PropertyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @Operation(summary = "Listar inmuebles disponibles")

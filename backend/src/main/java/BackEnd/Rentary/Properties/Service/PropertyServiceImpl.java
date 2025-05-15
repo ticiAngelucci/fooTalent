@@ -1,16 +1,17 @@
-package BackEnd.Rentary.Propertys.Service;
+package BackEnd.Rentary.Properties.Service;
 
 import BackEnd.Rentary.Common.Address;
+import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Exceptions.*;
 import BackEnd.Rentary.Owners.Entities.Owner;
 import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
-import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Entities.Property;
-import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
-import BackEnd.Rentary.Propertys.Mapper.PropertyMapper;
-import BackEnd.Rentary.Propertys.Repository.PropertyRepository;
+import BackEnd.Rentary.Properties.DTOs.PropertyRequestDto;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Properties.Entities.Property;
+import BackEnd.Rentary.Properties.Enums.PropertyStatus;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Mapper.PropertyMapper;
+import BackEnd.Rentary.Properties.Repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,14 @@ public class PropertyServiceImpl implements IPropertyService {
     @Override
     public void deleteProperty(Long id) {
         Property property = propertyRepository.findById(id)
-                .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + id + " no encontrado."));
+                .orElseThrow(() -> new PropertyNotFoundException(id.toString()));
+
+        boolean hasActiveContract = property.getContracts().stream()
+                .anyMatch(Contract::isActive);
+
+        if (hasActiveContract) {
+            throw new PropertyHasActiveContractException("La propiedad está asociada a un contrato activo y no puede ser eliminada.");
+        }
 
         propertyRepository.delete(property);
     }

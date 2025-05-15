@@ -1,7 +1,7 @@
-package BackEnd.Rentary.Propertys.DTOs;
+package BackEnd.Rentary.Properties.DTOs;
 
-import BackEnd.Rentary.Propertys.Enums.PropertyStatus;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.Enums.PropertyStatus;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 
 public record PropertyResponseDto(
         Long id_property,

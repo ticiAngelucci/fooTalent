@@ -4,7 +4,7 @@ import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Payments.Entities.Payment;
-import BackEnd.Rentary.Propertys.Entities.Property;
+import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

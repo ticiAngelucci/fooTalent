@@ -1,8 +1,8 @@
-package BackEnd.Rentary.Propertys.Service;
+package BackEnd.Rentary.Properties.Service;
 
-import BackEnd.Rentary.Propertys.DTOs.PropertyRequestDto;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Enums.TypeOfProperty;
+import BackEnd.Rentary.Properties.DTOs.PropertyRequestDto;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
+import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

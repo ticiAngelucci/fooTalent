@@ -1,16 +1,18 @@
 package BackEnd.Rentary.Owners.Controller;
 
+import BackEnd.Rentary.Exceptions.OwnerHasActivePropertyException;
+import BackEnd.Rentary.Exceptions.OwnerNotFoundException;
 import BackEnd.Rentary.Owners.DTOs.OwnerRequestDto;
 import BackEnd.Rentary.Owners.DTOs.OwnerResponseDto;
 import BackEnd.Rentary.Owners.Services.OwnerServiceImpl;
-import BackEnd.Rentary.Propertys.DTOs.PropertyResponseDto;
-import BackEnd.Rentary.Propertys.Entities.Property;
+import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,9 +51,15 @@ public class OwnerController {
 
     @Operation(summary = "Eliminar un propietario")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteOwner(@PathVariable Long id){
-
-        return ownerService.deleteOwner(id);
+    public ResponseEntity<String> deleteOwner(@PathVariable Long id){
+        try {
+            ownerService.deleteOwner(id);
+            return ResponseEntity.ok("Propietario eliminado con éxito.");
+        } catch (OwnerHasActivePropertyException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        } catch (OwnerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @Operation(summary = "Actualizar datos de un propietario")
