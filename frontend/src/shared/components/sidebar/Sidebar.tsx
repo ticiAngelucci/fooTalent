@@ -4,6 +4,7 @@ import {
   HousePlus,
   LayoutDashboard,
   Mailbox,
+  DollarSign,
 } from "lucide-react";
 
 import {
@@ -26,6 +27,7 @@ const items = [
   { title: "Contratos", url: "#", icon: ClipboardPenLine },
   { title: "Inmuebles", url: Route.Immovables, icon: HousePlus },
   { title: "Contactos", url: Route.Contact, icon: Contact },
+  { title: "Pagos", url: Route.Payments, icon: DollarSign },
 ];
 
 export function AppSidebar() {

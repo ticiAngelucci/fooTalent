@@ -10,7 +10,7 @@ import { getUser, uploadImage } from "../services/userService";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
 
 const Profile = () => {
-  const { username } = useUserStore();
+  const { email } = useUserStore();
   const [info, setInfo] = useState("");
   const [imageUpdated, setImageUpdated] = useState(false);
 

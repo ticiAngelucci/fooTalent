@@ -9,7 +9,7 @@ interface UserProps {
 
 export const changePassword = async (userData: UserProps) => {
   try {
-    const username = useUserStore.getState().username;
+    const username = useUserStore.getState().email;
     if (!username) {
       throw new Error("El usuario no está autenticado.");
     }
@@ -48,7 +48,7 @@ export const getUser = async (token: string | null) => {
     throw new Error(errorMessage);
   }
 };
-export const setUser = async (data: string | null) => {
+export const setUser = async (data:  Record<string, any> | null) => {
   const token = useUserStore.getState().token;
   try {
     const response = await axios.put(`${API_URL}/users/update`, data, {
@@ -68,6 +68,7 @@ export const setUser = async (data: string | null) => {
     throw new Error(errorMessage);
   }
 };
+
 export const uploadImage = async (file: File) => {
   const token = useUserStore.getState().token;
   const formData = new FormData();

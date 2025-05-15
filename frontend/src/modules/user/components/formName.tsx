@@ -8,41 +8,66 @@ type FormNameProps = {
   onEditPassword: () => void;
 };
 
-const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
-  const { username } = useUserStore();
-  const [lastName, setLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [firstIsEditable, setFirstIsEditable] = useState(false);
-  const [lastIsEditable, setLastIsEditable] = useState(false);
-  const [info, setInfo] = useState("");
-  const token = useUserStore((state) => state.token);
+type UserProps = {
+  firstName: string;
+  lastName: string;
+};
 
+const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
+  const { email } = useUserStore();
+  const [lastName, setLastName] = useState<string>(""); // Cambiado a 'string'
+  const [firstName, setFirstName] = useState<string>(""); // Cambiado a 'string'
+  const [firstIsEditable, setFirstIsEditable] = useState<boolean>(false);
+  const [lastIsEditable, setLastIsEditable] = useState<boolean>(false);
+  const [info, setInfo] = useState<UserProps | null>(null); // Inicializado como null
+  const token = useUserStore((state) => state.token);
+  const setNewData = useUserStore((state) => state.getCredentials);
+
+  // Usar useEffect correctamente
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUser(token); // Usa await para obtener el resultado
-        setInfo(data);
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-      } catch {
-        console.error("Error al obtener el usuario:");
+        if (token) {
+          const data = await getUser(token); // Usa await para obtener el resultado
+          if (data) {
+            setInfo(data); // Asegúrate de que la respuesta no sea null o undefined
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+          }
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
       }
     };
 
     fetchUser(); // Llamada a la función asíncrona
-  }, [token]); //
+  }, [token]); // Dependencias de useEffect para que se ejecute cuando 'token' cambie.
+
   const changeName = () => {
     setLastIsEditable(!lastIsEditable);
   };
+
   const changeFirstName = () => {
     setFirstIsEditable(!firstIsEditable);
   };
-  const saveInfo = () => {
-    info.lastName = lastName;
-    info.firstName = firstName;
-    setLastIsEditable(false);
-    setFirstIsEditable(false);
-    setUser(info);
+
+  const saveInfo = async () => {
+    if (!info) return;
+
+    try {
+      const updatedInfo = { ...info, lastName, firstName };
+
+      const editedUser = await setUser(updatedInfo);
+      if (editedUser) {
+        await setNewData();
+        setLastIsEditable(false);
+        setFirstIsEditable(false);
+      } else {
+        console.error("No se pudo actualizar el usuario.");
+      }
+    } catch (error) {
+      console.error("Error al guardar los datos del usuario:", error);
+    }
   };
 
   return (
@@ -56,35 +81,31 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
             <div className="flex flex-col w-full md:w-1/2 relative">
               <span className="font-raleway font-semibold text-sm">Nombre</span>
               <input
-                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center  justify-between ${
-                  !lastIsEditable ? ` bg-neutral-100` : `bg-white `
-                }`}
-                value={lastName}
-                disabled={!lastIsEditable}
-                onChange={(e) => setLastName(e.target.value)}
-                maxLength={25}
-              ></input>
-              <PencilLine
-                className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 text-gray-500 "
-                onClick={changeName}
-              />
-            </div>
-            <div className="flex flex-col w-full md:w-1/2 relative">
-              <span className="font-raleway font-semibold text-sm">
-                Apellido
-              </span>
-              <input
-                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center font-raleway font-normal text-base leading-6 tracking-normal [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] justify-between ${
-                  !firstIsEditable ? ` bg-neutral-100` : `bg-white `
-                }`}
+                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center font-raleway font-normal text-base leading-6 tracking-normal [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] justify-between ${!firstIsEditable ? ` bg-neutral-100` : `bg-white `
+                  }`}
                 value={firstName}
                 disabled={!firstIsEditable}
                 onChange={(e) => setFirstName(e.target.value)}
                 maxLength={25}
-              ></input>
+              />
               <PencilLine
-                className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 text-gray-500 "
+                className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 "
                 onClick={changeFirstName}
+              />
+            </div>
+            <div className="flex flex-col w-full md:w-1/2 relative">
+              <span className="font-raleway font-semibold text-sm">Apellido</span>
+              <input
+                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center justify-between ${!lastIsEditable ? ` bg-neutral-100` : `bg-white `
+                  }`}
+                value={lastName}
+                disabled={!lastIsEditable}
+                onChange={(e) => setLastName(e.target.value)}
+                maxLength={25}
+              />
+              <PencilLine
+                className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 "
+                onClick={changeName}
               />
             </div>
           </div>
@@ -94,7 +115,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
                 Correo electrónico
               </span>
               <span className="h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 bg-neutral-100 flex items-center font-raleway font-normal text-base leading-6 tracking-normal [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums]">
-                {username}
+                {email}
               </span>
             </div>
           </div>
@@ -114,10 +135,12 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
               <Button
                 onClick={onEditPassword}
                 className="w-full h-[40px] bg-white text-black mt-6 hover:bg-neutral-50"
-                style={{borderColor:'#d1d5db'}}
+                style={{ borderColor: '#d1d5db' }}
               >
-                <Shield width={16} height={20}/>
-                <p className="font-raleway font-semibold text-[16px] leading-[24px] tracking-[0] [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums]">Editar contraseña</p>
+                <Shield width={16} height={20} />
+                <p className="font-raleway font-semibold text-[16px] leading-[24px] tracking-[0] [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums]">
+                  Editar contraseña
+                </p>
               </Button>
             </div>
           </div>
