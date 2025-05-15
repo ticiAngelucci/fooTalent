@@ -10,12 +10,13 @@ import { Button } from "@/shared/components/ui/button"
 import { CalendarIcon, Save } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale";
-import { Calendar } from "@/shared/components/ui/calendar"
+
 import { createPayment } from "../service/paymentService"
 import { toast } from "sonner"
 import SuccessToast from "@/shared/components/Toasts/SuccessToast"
 import ErrorToast from "@/shared/components/Toasts/ErrorToast"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover"
+import { Calendar } from "@/shared/components/ui/calendar"
 
 //If Rent value is the one to go, amount cannot exceed that value
 
