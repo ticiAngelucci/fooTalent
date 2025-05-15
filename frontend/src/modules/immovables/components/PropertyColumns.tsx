@@ -89,7 +89,7 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
             "px-3 py-1 rounded-full text-xs font-semibold border",
             {
               "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
-              "text-black bg-gray-700 border-black": estado === "OCUPADO"
+              "text-neutral-700 bg-neutral-50 border-neutral-700": estado === "OCUPADO"
             }
           )}
         >

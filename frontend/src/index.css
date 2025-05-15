@@ -1,7 +1,5 @@
 @import "tailwindcss";
-@import "@fontsource/raleway/index.css" 
-
-@custom-variant dark (&:is(.dark *));
+@import "@fontsource/raleway/index.css" @custom-variant dark (&: is(.dark *));
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -72,23 +70,6 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -267,30 +248,39 @@ button:focus-visible {
   }
 }
 
-@layer utilities{
+@layer utilities {
   /* dashboard form inputs */
   .form-input-custom {
-    @apply bg-white border !border-neutral-300 !rounded-[4px] text-base text-neutral-950;
+    @apply bg-white border !border-neutral-300 !rounded-[4px] text-base text-neutral-950 hover:cursor-pointer;
   }
-  .form-label-custom{
-    @apply gap-0.5 text-sm font-semibold text-neutral-950
+  .form-label-custom {
+    @apply gap-0.5 text-sm font-semibold text-neutral-950;
   }
 
   /* Buttons */
-  .btn-primary{
-    @apply bg-brand-800 !outline-none hover:bg-brand-700 focus:bg-brand-800 focus:border-2 focus:border-brand-200
+  .btn-primary {
+    @apply bg-brand-800 !outline-none hover:bg-brand-700 hover:cursor-pointer focus:bg-brand-800 focus:border-2 focus:border-brand-200;
   }
-  .btn-secondary{
-    @apply bg-white !outline-none border border-neutral-300 text-neutral-950 font-semibold hover:!bg-neutral-50 hover:!border-neutral-300 focus:border-neutral-200 
+  .btn-secondary {
+    @apply bg-white border !border-neutral-300 text-neutral-950 font-semibold hover:!bg-neutral-50 hover:!border-neutral-300 hover:!outline-none hover:cursor-pointer focus:border-neutral-200;
   }
-  .btn-tertiary{
-    @apply bg-white !outline-none !border-none text-neutral-950 font-semibold hover:bg-neutral-100 hover:!border-none focus:border-2 border-neutral-200 
+  .btn-tertiary {
+    @apply bg-white !outline-none !border-none text-neutral-950 font-semibold hover:bg-neutral-100 hover:!border-none hover:cursor-pointer focus:border-2 border-neutral-200;
   }
-  .btn-destructive{
-    @apply bg-error-600 !outline-none !border-none text-white hover:bg-error-500 hover:!border-none focus:bg-error-600 focus:border-2 focus:border-error-200
+  .btn-destructive {
+    @apply bg-error-600 !outline-none !border-none text-white hover:bg-error-500 hover:!border-none hover:cursor-pointer focus:bg-error-600 focus:border-2 focus:border-error-200;
   }
 
   /* Link */
 
+  /* No spinner on input type num */
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
+  .no-spinner {
+    -moz-appearance: textfield; /* Firefox */
+  }
 }

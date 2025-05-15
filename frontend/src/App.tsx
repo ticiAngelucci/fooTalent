@@ -22,6 +22,7 @@ import EditOwner from "./modules/owner/pages/EditOwner";
 import PropertyEdit from "./modules/properties/pages/PropertyEdit";
 import Profile from "./modules/user/pages/profile";
 import PaymentsView from "./modules/payments/pages/Payments";
+import PaymentRegister from "./modules/payments/pages/PaymentRegister";
 
 
 
@@ -64,6 +65,7 @@ function App() {
           <Route path={AppRoute.AddTenant} element={<AddTenant />} />
           <Route path={AppRoute.EditOwner} element={<EditOwner />} />
           <Route path={AppRoute.Payments} element={<PaymentsView />} />
+          <Route path={AppRoute.NewPayment} element={<PaymentRegister />} />
         </Route>
       </Routes>
       <Toaster richColors closeButton position="bottom-right" />

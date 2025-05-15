@@ -68,6 +68,7 @@ export const setUser = async (data:  Record<string, any> | null) => {
     throw new Error(errorMessage);
   }
 };
+
 export const uploadImage = async (file: File) => {
   const token = useUserStore.getState().token;
   const formData = new FormData();
