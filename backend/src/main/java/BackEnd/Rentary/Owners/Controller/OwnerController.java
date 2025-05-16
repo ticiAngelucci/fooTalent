@@ -25,7 +25,8 @@ public class OwnerController {
 
     private final OwnerServiceImpl ownerService;
 
-    @Operation(summary = "Obtener todos los propietarios", description = "Lista paginada de 15 valores por página de los propietarios registrados")
+    @Operation(summary = "Obtener todos los propietarios",
+            description = "Lista paginada de 15 valores por página de los propietarios registrados")
     @GetMapping
     public ResponseEntity<Page<OwnerResponseDto>> getOwners(
             @RequestParam(defaultValue = "0") int page,

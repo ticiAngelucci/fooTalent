@@ -6,7 +6,10 @@ import BackEnd.Rentary.Exceptions.InvalidPaymentException;
 import BackEnd.Rentary.Exceptions.PaymentNotFoundException;
 import BackEnd.Rentary.Payments.DTOs.*;
 import BackEnd.Rentary.Payments.Entities.Payment;
-import BackEnd.Rentary.Payments.Enums.*;
+import BackEnd.Rentary.Payments.Enums.Currency;
+import BackEnd.Rentary.Payments.Enums.PaymentMethod;
+import BackEnd.Rentary.Payments.Enums.PaymentStatus;
+import BackEnd.Rentary.Payments.Enums.ServiceType;
 import BackEnd.Rentary.Payments.Factory.PaymentFactory;
 import BackEnd.Rentary.Payments.Mapper.PaymentMapper;
 import BackEnd.Rentary.Payments.Repository.PaymentRepository;
@@ -14,7 +17,6 @@ import BackEnd.Rentary.Payments.Service.PaymentService;
 import BackEnd.Rentary.Payments.Utils.PaymentCalculationUtil;
 import BackEnd.Rentary.Payments.Utils.PaymentValidationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +29,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
@@ -62,9 +63,6 @@ public class PaymentServiceImpl implements PaymentService {
                 currency,
                 description);
 
-        log.info("Registrando pago de {} para contrato ID {} por un monto de {}",
-                serviceType, contractId, amount);
-
         return paymentRepository.save(payment);
     }
 
@@ -72,9 +70,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional(readOnly = true)
     public ServicePaymentResponsePage getServicePaymentsByContractAndType(
             Long contractId, ServiceType serviceType, int page, int size) {
-
-        log.info("Obteniendo pagos de servicios tipo {} para contrato ID: {} (página: {}, tamaño: {})",
-                serviceType, contractId, page, size);
 
         PaymentValidationUtil.validateContractExists(contractRepository, contractId);
 
@@ -95,8 +90,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public ServicePaymentResponsePage getAllServicePaymentsByContract(Long contractId, int page, int size) {
-        log.info("Obteniendo todos los pagos de servicios (no alquiler) para contrato ID: {} (página: {}, tamaño: {})",
-                contractId, page, size);
 
         PaymentValidationUtil.validateContractExists(contractRepository, contractId);
 
@@ -118,8 +111,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public PaymentRentalResponsePage getRentalPaymentsByContract(Long contractId, int page, int size) {
-        log.info("Obteniendo pagos de alquiler para contrato ID: {} (página: {}, tamaño: {})",
-                contractId, page, size);
 
         PaymentValidationUtil.validateContractExists(contractRepository, contractId);
 
@@ -140,7 +131,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public PaymentResponsePage getPaymentsByContract(Long contractId, int page, int size) {
-        log.info("Obteniendo pagos para contrato ID: {} (página: {}, tamaño: {})", contractId, page, size);
+
         PaymentValidationUtil.validateContractExists(contractRepository, contractId);
 
         Pageable pageable = PageRequest.of(page, size);
@@ -159,7 +150,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public PaymentResponsePage getPendingPayments(int page, int size) {
-        log.info("Obteniendo pagos pendientes (página: {}, tamaño: {})", page, size);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Payment> pendingPayments = paymentRepository.findByStatus(PaymentStatus.PENDIENTE, pageable);
@@ -186,17 +176,13 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.setStatus(PaymentStatus.VENCIDO);
                 paymentRepository.save(payment);
                 updatedCount++;
-                log.info("Pago ID {} actualizado a estado VENCIDO", payment.getId());
             }
         }
-
-        log.info("Proceso de actualización de pagos completado. {} pagos actualizados a VENCIDO", updatedCount);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PaymentDetailedResponsePage getAllPaymentsDetailed(int page, int size) {
-        log.info("Obteniendo todos los pagos con detalles completos (página: {}, tamaño: {})", page, size);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Payment> paymentsPage = paymentRepository.findAll(pageable);
@@ -214,8 +200,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public ServicePaymentResponsePage getServicePaymentsByType(ServiceType serviceType, int page, int size) {
-        log.info("Obteniendo pagos de servicios por tipo: {} (página: {}, tamaño: {})",
-                serviceType, page, size);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Payment> paymentsPage = paymentRepository.findByServiceType(serviceType, pageable);
@@ -250,7 +234,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment getPaymentById(Long paymentId) {
-        log.info("Buscando pago con ID: {}", paymentId);
+
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId.toString()));
     }
@@ -265,7 +249,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         paymentRepository.delete(payment);
-        log.info("Pago ID {} cancelado", paymentId);
+
         return true;
     }
 
