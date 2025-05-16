@@ -13,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,10 +46,13 @@ public class OwnerController {
     }
 
     @Operation(summary = "Registrar un nuevo propietario")
-    @PostMapping("/create")
-    public ResponseEntity<?> createOwner(@RequestBody @Valid OwnerRequestDto ownerDto){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createOwner(
+            @RequestPart("owner") @Valid OwnerRequestDto ownerDto,
+            @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        return ownerService.createOwner(ownerDto);
+        ownerService.createOwner(ownerDto, documents);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Propietario creado exitosamente");
     }
 
     @Operation(summary = "Eliminar un propietario")
@@ -64,16 +69,28 @@ public class OwnerController {
     }
 
     @Operation(summary = "Actualizar datos de un propietario")
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateOwner(@PathVariable Long id, @RequestBody @Valid OwnerRequestDto ownerDto){
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<OwnerResponseDto> updateOwner(
+            @PathVariable Long id,
+            @RequestPart("owner") @Valid OwnerRequestDto dto,
+            @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-        return ownerService.updateOwner(id, ownerDto );
+        OwnerResponseDto updated = ownerService.updateOwner(id, dto, documents);
+        return ResponseEntity.ok(updated);
     }
+
 
     @Operation(summary = "Obtener todos los inmuebles de un propietario")
     @GetMapping("/{id}/properties")
     public ResponseEntity<List<PropertyResponseDto>> getPropertiesByOwner(@PathVariable Long id){
         List<PropertyResponseDto> properties = ownerService.getPropertiesByOwnerId(id);
+        return ResponseEntity.ok(properties);
+    }
+
+    @Operation(summary = "Obtener todos los inmuebles DISPONIBLES de un propietario")
+    @GetMapping("/{id}/available-properties")
+    public ResponseEntity<List<PropertyResponseDto>> getAvailablePropertiesByOwner(@PathVariable Long id) {
+        List<PropertyResponseDto> properties = ownerService.getAvailablePropertiesByOwnerId(id);
         return ResponseEntity.ok(properties);
     }
 }

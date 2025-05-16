@@ -1,6 +1,11 @@
 package BackEnd.Rentary.Owners.Services;
 
+import BackEnd.Rentary.Common.AttachedDocument;
+import BackEnd.Rentary.Common.DocumentUploadResult;
+import BackEnd.Rentary.Common.Enums.EntityType;
+import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Exceptions.DuplicateDniException;
+import BackEnd.Rentary.Exceptions.FileUploadException;
 import BackEnd.Rentary.Exceptions.OwnerHasActivePropertyException;
 import BackEnd.Rentary.Exceptions.OwnerNotFoundException;
 import BackEnd.Rentary.Owners.DTOs.OwnerRequestDto;
@@ -12,13 +17,18 @@ import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
 import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import BackEnd.Rentary.Properties.Mapper.PropertyMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +38,7 @@ public class OwnerServiceImpl implements OwnerService{
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
     private final PropertyMapper propertyMapper;
+    private final FileUploadService fileUploadService;
 
     @Override
     public ResponseEntity<?> getOwnerId(Long id) {
@@ -39,16 +50,49 @@ public class OwnerServiceImpl implements OwnerService{
     }
 
     @Override
-    public ResponseEntity<?> createOwner(OwnerRequestDto ownerDto) {
+    @Transactional
+    public void createOwner(OwnerRequestDto ownerDto, MultipartFile[] documents) {
         if (ownerRepository.existsByDni(ownerDto.dni())) {
             throw new DuplicateDniException("Ya existe un propietario con DNI: " + ownerDto.dni());
         }
 
         Owner owner = ownerMapper.toEntity(ownerDto);
-        ownerRepository.save(owner);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Propietario creado exitosamente");
+        owner = ownerRepository.save(owner);
+
+        if (documents != null && documents.length > 0) {
+            try {
+                String ownerCode = "OWN-" + owner.getId();
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
+                        documents,
+                        EntityType.OWNER,
+                        owner.getId().toString(),
+                        ownerCode
+                );
+
+                Set<AttachedDocument> attachedDocs = new HashSet<>();
+                for (DocumentUploadResult result : results) {
+                    AttachedDocument doc = AttachedDocument.builder()
+                            .id(UUID.randomUUID().toString())
+                            .url(result.getUrl())
+                            .publicId(result.getPublicId())
+                            .originalName(result.getOriginalName())
+                            .fileType(result.getFileType())
+                            .extension(result.getExtension())
+                            .build();
+
+                    attachedDocs.add(doc);
+                }
+
+                owner.setDocuments(attachedDocs);
+                ownerRepository.save(owner);
+
+            } catch (Exception e) {
+                throw new FileUploadException("Error al subir documentos del propietario: " + e.getMessage());
+            }
+        }
     }
+
 
     @Override
     public void deleteOwner(Long id) {
@@ -64,27 +108,61 @@ public class OwnerServiceImpl implements OwnerService{
     }
 
     @Override
-    public ResponseEntity<?> updateOwner(Long id, OwnerRequestDto ownerDto) {
+    @Transactional
+    @CacheEvict(value = "owner", key = "#id")
+    public OwnerResponseDto updateOwner(Long id, OwnerRequestDto dto, MultipartFile[] documents) {
         Owner existingOwner = ownerRepository.findById(id)
-                .orElseThrow(() -> new OwnerNotFoundException("No se encontró propietario con ID: " + id));
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
-        String newDni = ownerDto.dni();
-        if (!newDni.equals(existingOwner.getDni()) && ownerRepository.existsByDni(newDni)) {
-            throw new DuplicateDniException("El DNI " + newDni + " ya está registrado por otro propietario");
+        if (!existingOwner.getDni().equals(dto.dni()) &&
+                ownerRepository.existsByDni(dto.dni())) {
+            throw new DuplicateDniException("Ya existe otro propietario con DNI: " + dto.dni());
         }
 
-        existingOwner.setDni(ownerDto.dni());
-        existingOwner.setFirstName(ownerDto.firstName());
-        existingOwner.setLastName(ownerDto.lastName());
-        existingOwner.setEmail(ownerDto.email());
-        existingOwner.setPhone(ownerDto.phone());
-        existingOwner.setAddress(ownerDto.address());
-        existingOwner.setAttachedDocument(ownerDto.attachedDocument());
+        existingOwner.setFirstName(dto.firstName());
+        existingOwner.setLastName(dto.lastName());
+        existingOwner.setEmail(dto.email());
+        existingOwner.setPhone(dto.phone());
+        existingOwner.setDni(dto.dni());
 
-        ownerRepository.save(existingOwner);
+        if (existingOwner.getAddress() != null) {
+            existingOwner.getAddress().setCountry(dto.address().getCountry());
+            existingOwner.getAddress().setProvince(dto.address().getProvince());
+            existingOwner.getAddress().setLocality(dto.address().getLocality());
+            existingOwner.getAddress().setStreet(dto.address().getStreet());
+            existingOwner.getAddress().setNumber(dto.address().getNumber());
+            existingOwner.getAddress().setPostalCode(dto.address().getPostalCode());
+        }
 
-        return ResponseEntity.ok().body(ownerMapper.toDto(existingOwner));
+        if (documents != null && documents.length > 0) {
+            try {
+                List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
+                        documents,
+                        EntityType.OWNER,
+                        existingOwner.getId().toString(),
+                        existingOwner.getDni());
+
+                for (DocumentUploadResult result : results) {
+                    AttachedDocument doc = AttachedDocument.builder()
+                            .url(result.getUrl())
+                            .publicId(result.getPublicId())
+                            .originalName(result.getOriginalName())
+                            .fileType(result.getFileType())
+                            .extension(result.getExtension())
+                            .build();
+
+                    existingOwner.getDocuments().add(doc);
+                }
+
+            } catch (Exception e) {
+                throw new FileUploadException("Error al actualizar documentos del propietario: " + e.getMessage());
+            }
+        }
+
+        Owner updatedOwner = ownerRepository.save(existingOwner);
+        return ownerMapper.toDto(updatedOwner);
     }
+
 
     @Override
     public Page<OwnerResponseDto> getOwner(Pageable pageable) {
@@ -98,6 +176,17 @@ public class OwnerServiceImpl implements OwnerService{
                 .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         return owner.getProperties().stream()
+                .map(propertyMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PropertyResponseDto> getAvailablePropertiesByOwnerId(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
+
+        return owner.getProperties().stream()
+                .filter(property -> property.getStatus() == PropertyStatus.DISPONIBLE)
                 .map(propertyMapper::toDto)
                 .collect(Collectors.toList());
     }
