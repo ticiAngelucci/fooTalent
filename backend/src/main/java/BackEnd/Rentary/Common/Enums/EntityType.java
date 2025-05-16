@@ -3,7 +3,8 @@ package BackEnd.Rentary.Common.Enums;
 public enum EntityType {
     TENANT("rentary/tenants"),
     CONTRACT("rentary/contracts"),
-    PROPERTY("rentary/properties");
+    PROPERTY("rentary/properties"),
+    OWNER("rentart/owners"),;
 
     private final String folder;
 

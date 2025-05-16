@@ -1,6 +1,9 @@
 package BackEnd.Rentary.Owners.DTOs;
 
 import BackEnd.Rentary.Common.Address;
+import BackEnd.Rentary.Common.DTOs.DocumentDto;
+
+import java.util.Set;
 
 public record OwnerResponseDto(
         Long idOwner,
@@ -10,5 +13,5 @@ public record OwnerResponseDto(
         String email,
         String phone,
         Address address,
-        String attachedDocument
+        Set<DocumentDto> documents
 ) {}

@@ -89,7 +89,7 @@ public class ContractController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Cancelación de contrato contrato")
+    @Operation(summary = "Cancelación de un contrato")
     @PutMapping("/{id}/finalize")
     public ResponseEntity<String> finalizeContract(@PathVariable Long id) {
         try {
