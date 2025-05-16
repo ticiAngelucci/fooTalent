@@ -47,9 +47,9 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-white/80 gap-4">
                 <p>© 2025 Rentary. Todos los derechos reservados.</p>
                 <div className="flex gap-4">
-                    <a href="#" className="hover:underline">Política de Privacidad</a>
-                    <a href="#" className="hover:underline">Términos de Servicio</a>
-                    <a href="#" className="hover:underline">Configuración de Cookies</a>
+                    <a href="#" style={{ textDecoration: 'underline', color: 'white' }}>Política de Privacidad</a>
+                    <a href="#" style={{ textDecoration: 'underline', color: 'white' }}>Términos de Servicio</a>
+                    <a href="#" style={{ textDecoration: 'underline', color: 'white' }}>Configuración de Cookies</a>
                 </div>
             </div>
         </footer>

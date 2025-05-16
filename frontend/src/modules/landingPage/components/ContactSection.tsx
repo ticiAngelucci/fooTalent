@@ -12,15 +12,63 @@ export default function ContactSection() {
       </h1>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-        <form className="space-y-4">
-          <Input type="text" placeholder="Nombre y Apellido" />
-          <Input type="email" placeholder="Correo Electrónico" />
-          <Input type="tel" placeholder="Teléfono" />
-          <Textarea placeholder="Mensaje" className="resize-none" rows={4} />
-          <Button type="submit" className="flex items-center gap-2 bg-[#1E40AF]">
-             <Send className="w-4 h-4" />
+        <form className="space-y-6 w-full max-w-md mx-auto">
+          <div>
+            <label htmlFor="name" className="block mb-1 text-sm font-medium text-black">
+              Nombre y apellido
+            </label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Introduce tu nombre y apellido"
+              className="w-full px-4 py-2 border border-gray-300 rounded !bg-white placeholder-gray-400 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block mb-1 text-sm font-medium text-black">
+              Correo electrónico
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Introduce tu correo electrónico"
+              className="w-full px-4 py-2 border border-gray-300 rounded !bg-white placeholder-gray-400 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block mb-1 text-sm font-medium text-black">
+              Teléfono
+            </label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="Introduce tu número de teléfono"
+              className="w-full px-4 py-2 border border-gray-300 rounded !bg-white placeholder-gray-400 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="message" className="block mb-1 text-sm font-medium text-black">
+              Mensaje
+            </label>
+            <Textarea
+              id="message"
+              placeholder="Déjanos aquí tu consulta..."
+              rows={4}
+              className="w-full px-4 py-2 border border-gray-300 rounded !bg-white placeholder-gray-400 text-gray-900 resize-none"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="flex items-center justify-center gap-2 w-50 px-6 py-2 bg-[#1E40AF] text-white rounded hover:bg-[#1E3A8A] transition-colors"
+          >
+            <Send className="w-4 h-4" />
             Enviar
           </Button>
+
         </form>
 
         <div className="flex justify-center">

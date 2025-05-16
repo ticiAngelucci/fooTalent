@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
 import IndexImg from "../assets/indexImg.png"
+import { Route } from "@/shared/constants/route";
+import { Button } from "@/shared/components/ui/button";
 const Index = () => {
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-12">
@@ -12,7 +15,11 @@ const Index = () => {
         Nuestra aplicación te permite gestionar contratos, inmuebles y propietarios con total comodidad.
         Simplifica la carga de documentos y mantén actualizados los valores de alquiler automáticamente.
       </p>
-
+      <Link to={Route.Register}>
+        <Button className="bg-[#1E40AF] !rounded-[4px] text-white text-sm px-4 py-2">
+          Probar demo
+        </Button>
+      </Link>
       <img
         src={IndexImg}
         alt="Demostración"
