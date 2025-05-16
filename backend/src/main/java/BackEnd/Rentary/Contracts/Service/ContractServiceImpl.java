@@ -116,18 +116,15 @@ public class ContractServiceImpl implements IContractService {
         Tenants tenant = tenantsRepository.findById(request.tenantId())
                 .orElseThrow(() -> new TenantNotFoundExceptions(request.tenantId().toString()));
 
-        Contract updated = contractMapper.toEntity(request, property, tenant);
-        updated.setContractId(id);
-
-        updated.setDocuments(existing.getDocuments());
+        contractMapper.updateEntity(existing, request, property, tenant);
 
         if (documents != null && documents.length > 0) {
             try {
-                String contractNumber = "CONT-" + updated.getContractId();
+                String contractNumber = "CONT-" + existing.getContractId();
                 List<DocumentUploadResult> results = fileUploadService.uploadMultipleFiles(
                         documents,
                         EntityType.CONTRACT,
-                        updated.getContractId().toString(),
+                        existing.getContractId().toString(),
                         contractNumber);
 
                 for (DocumentUploadResult result : results) {
@@ -139,16 +136,15 @@ public class ContractServiceImpl implements IContractService {
                             .extension(result.getExtension())
                             .build();
 
-                    updated.getDocuments().add(doc);
+                    existing.getDocuments().add(doc);
                 }
 
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 throw new FileUploadException("Error al actualizar documentos: " + e.getMessage());
             }
         }
 
-        return contractMapper.toResponse(contractRepository.save(updated));
+        return contractMapper.toResponse(contractRepository.save(existing));
     }
 
     @Override
