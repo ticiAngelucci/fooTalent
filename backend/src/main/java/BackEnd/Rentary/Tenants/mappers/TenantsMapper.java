@@ -6,6 +6,7 @@ import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.entities.Tenants;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 public class TenantsMapper {
 
     public Tenants toEntity(TenantsRequestDto dto) {
+        if (dto.address() == null) {
+            throw new IllegalArgumentException("La dirección es obligatoria.");
+        }
         Tenants tenant = new Tenants();
         tenant.setFirstName(dto.firstName());
         tenant.setLastName(dto.lastName());
