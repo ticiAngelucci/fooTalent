@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Pagos", description = "API para la gestión de pagos de contratos")
 public class PaymentController {
 
@@ -31,9 +29,6 @@ public class PaymentController {
     @Operation(summary = "Registrar un nuevo pago", description = "Registra un nuevo pago de renta o servicio para un contrato activo")
     @PostMapping
     public ResponseEntity<PaymentResponse> registerPayment(@RequestBody @Valid PaymentRequest request) {
-        log.info("Registrando pago de tipo {} para contrato ID: {}, monto: {}",
-                request.serviceType(), request.contractId(), request.amount());
-
         Payment payment = paymentService.registerPayment(
                 request.contractId(),
                 request.amount(),
@@ -54,7 +49,6 @@ public class PaymentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        log.info("Obteniendo pagos para el contrato ID: {}", contractId);
         PaymentResponsePage responsePage = paymentService.getPaymentsByContract(contractId, page, size);
         return ResponseEntity.ok(responsePage);
     }
@@ -65,7 +59,6 @@ public class PaymentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        log.info("Obteniendo pagos pendientes");
         PaymentResponsePage responsePage = paymentService.getPendingPayments(page, size);
         return ResponseEntity.ok(responsePage);
     }
@@ -73,7 +66,6 @@ public class PaymentController {
     @Operation(summary = "Obtener detalles de un pago", description = "Obtiene los detalles completos de un pago específico")
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponse> getPaymentById(@PathVariable Long id) {
-        log.info("Obteniendo detalles del pago ID: {}", id);
 
         Payment payment = paymentService.getPaymentById(id);
         return ResponseEntity.ok(paymentMapper.toResponse(payment));
@@ -82,7 +74,6 @@ public class PaymentController {
     @Operation(summary = "Cancelar un pago pendiente", description = "Cancela un pago que aún no ha sido realizado")
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> cancelPayment(@PathVariable Long id) {
-        log.info("Cancelando pago ID: {}", id);
 
         boolean cancelled = paymentService.cancelPayment(id);
 
@@ -96,7 +87,6 @@ public class PaymentController {
     @Operation(summary = "Calcular saldo pendiente", description = "Calcula el saldo pendiente de pago para un contrato específico")
     @GetMapping("/pending-amount/{contractId}")
     public ResponseEntity<Map<String, Object>> getPendingAmount(@PathVariable Long contractId) {
-        log.info("Calculando monto pendiente para contrato ID: {}", contractId);
 
         BigDecimal pendingAmount = paymentService.calculatePendingAmount(contractId);
 
@@ -110,7 +100,6 @@ public class PaymentController {
     @Operation(summary = "Actualizar estados de pagos", description = "Actualiza el estado de todos los pagos pendientes según la fecha actual")
     @PutMapping("/update-status")
     public ResponseEntity<Map<String, Object>> updatePaymentStatus() {
-        log.info("Actualizando estado de todos los pagos pendientes");
 
         paymentService.updatePaymentStatus();
 
@@ -127,8 +116,6 @@ public class PaymentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        log.info("Obteniendo todos los pagos con detalles completos, página: {}, tamaño: {}", page, size);
-
         PaymentDetailedResponsePage responsePage = paymentService.getAllPaymentsDetailed(page, size);
         return ResponseEntity.ok(responsePage);
     }
@@ -139,9 +126,6 @@ public class PaymentController {
             @PathVariable Long contractId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
-        log.info("Obteniendo pagos de alquiler para contrato ID: {}, página: {}, tamaño: {}",
-                contractId, page, size);
 
         PaymentRentalResponsePage response = paymentService.getRentalPaymentsByContract(contractId, page, size);
         return ResponseEntity.ok(response);
@@ -154,9 +138,6 @@ public class PaymentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) ServiceType serviceType) {
-
-        log.info("Obteniendo pagos por servicios para contrato ID: {}, página: {}, tamaño: {}, tipo: {}",
-                contractId, page, size, serviceType != null ? serviceType : "TODOS");
 
         ServicePaymentResponsePage response;
 

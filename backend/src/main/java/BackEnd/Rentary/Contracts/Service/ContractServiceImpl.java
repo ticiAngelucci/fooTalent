@@ -10,6 +10,11 @@ import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Contracts.Mapper.ContractMapper;
 import BackEnd.Rentary.Contracts.Respository.IContractRepository;
 import BackEnd.Rentary.Exceptions.*;
+import BackEnd.Rentary.Payments.Entities.Payment;
+import BackEnd.Rentary.Payments.Enums.Currency;
+import BackEnd.Rentary.Payments.Enums.PaymentMethod;
+import BackEnd.Rentary.Payments.Enums.PaymentStatus;
+import BackEnd.Rentary.Payments.Enums.ServiceType;
 import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import BackEnd.Rentary.Properties.Repository.PropertyRepository;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -54,6 +60,17 @@ public class ContractServiceImpl implements IContractService {
         property.setStatus(PropertyStatus.OCUPADO);
         propertyRepository.save(property);
 
+        Payment firstPayment = new Payment();
+        firstPayment.setContract(contract);
+        firstPayment.setAmount(BigDecimal.valueOf(contract.getBaseRent()));
+        firstPayment.setDueDate(contract.getStartDate().plusDays(contract.getDeadline()));
+        firstPayment.setStatus(PaymentStatus.PENDIENTE);
+        firstPayment.setCurrency(Currency.PESOS);
+        firstPayment.setPaymentDate(contract.getStartDate().plusDays(contract.getDeadline()));
+        firstPayment.setPaymentMethod(PaymentMethod.EFECTIVO);
+        firstPayment.setServiceType(ServiceType.ALQUILER);
+        
+        contract.getPayments().add(firstPayment);
         contract = contractRepository.save(contract);
 
         if (documents != null && documents.length > 0) {
@@ -215,5 +232,23 @@ public class ContractServiceImpl implements IContractService {
                 throw new RuntimeException("Error al eliminar documento de Cloudinary." + e.getMessage());
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void finalizeContract(Long id) {
+        Contract contract = contractRepository.findById(id)
+                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
+
+        if (!contract.isActive()) {
+            throw new IllegalStateException("El contrato ya está finalizado.");
+        }
+
+        Property property = contract.getProperty();
+        property.setStatus(PropertyStatus.DISPONIBLE);
+        propertyRepository.save(property);
+
+        contract.setActive(false);
+        contractRepository.save(contract);
     }
 }

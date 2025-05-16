@@ -4,6 +4,7 @@ import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Service.IContractService;
 import BackEnd.Rentary.Exceptions.ContractNotExpiredException;
+import BackEnd.Rentary.Exceptions.ContractNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +56,7 @@ public class ContractController {
 
     @Operation(
             summary = "Actualizar un contrato existente",
-            description = "Actualiza los datos de un contrato existente, incluyendo la posibilidad de añadir nuevos documentos"
-    )
+            description = "Actualiza los datos de un contrato existente, incluyendo la posibilidad de añadir nuevos documentos")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ContractResponse> updateContract(
             @PathVariable Long id,
@@ -87,5 +87,18 @@ public class ContractController {
             @PathVariable String documentId) {
         contractService.removeContractDocumentById(contractId, documentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Cancelación de contrato contrato")
+    @PutMapping("/{id}/finalize")
+    public ResponseEntity<String> finalizeContract(@PathVariable Long id) {
+        try {
+            contractService.finalizeContract(id);
+            return ResponseEntity.ok("Contrato finalizado exitosamente.");
+        } catch (ContractNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
     }
 }

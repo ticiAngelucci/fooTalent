@@ -85,7 +85,6 @@ public class PropertyServiceImpl implements IPropertyService {
 
         existingProperty.setAddress(newAddress);
         existingProperty.setTypeOfProperty(dto.typeOfProperty());
-        existingProperty.setStatus(PropertyStatus.DISPONIBLE);
         existingProperty.setObservations(dto.observations());
 
         Property updated = propertyRepository.save(existingProperty);

@@ -13,4 +13,5 @@ public interface IContractService {
     ContractResponse updateContract(Long id, ContractRequest request, MultipartFile[] documents);
     void deleteContract(Long id);
     void removeContractDocumentById(Long contractId, String documentId);
+    void finalizeContract(Long id);
 }
