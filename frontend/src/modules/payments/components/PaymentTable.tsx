@@ -134,7 +134,7 @@ export const PaymentTable = ({
                       </Button>
                     </DropdownMenuItem>
                     <DropdownMenuItem >
-                      <Button onClick={()=>handleDelete(payment.id.toString())}>
+                      <Button onClick={()=>handleDelete(payment.toString())}>
                         <Trash2 /> Eliminar
                       </Button>
                     </DropdownMenuItem>
