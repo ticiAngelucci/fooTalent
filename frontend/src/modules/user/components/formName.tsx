@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { PencilLine, Save, Shield } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { getUser, setUser } from "../services/userService";
+import SuccessToast from "@/shared/components/Toasts/SuccessToast";
+import { toast } from "sonner";
+import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 
 type FormNameProps = {
   onEditPassword: () => void;
@@ -62,11 +65,29 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
         await setNewData();
         setLastIsEditable(false);
         setFirstIsEditable(false);
+        toast.custom(
+          () => (
+            <SuccessToast title="Datos modificados con éxito!"
+              description="Tus datos fueron mofificados exitosamente." />
+          ),
+          {
+            duration: 5000,
+          }
+        )
+
       } else {
         console.error("No se pudo actualizar el usuario.");
       }
     } catch (error) {
-      console.error("Error al guardar los datos del usuario:", error);
+      toast.custom(
+        () => (
+          <ErrorToast title="¡Error al Modificar tus datos!"
+            description="Tus datos no han sido modificados, por favor inténtelo nuevamente." />
+        ),
+        {
+          duration: 5000,
+        }
+      )
     }
   };
 
@@ -86,8 +107,11 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
                 value={firstName}
                 disabled={!firstIsEditable}
                 onChange={(e) => setFirstName(e.target.value)}
+                pattern="/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/"
+                minLength={3}
                 maxLength={25}
               />
+              {/* Rehacer con Zod */}
               <PencilLine
                 className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 "
                 onClick={changeFirstName}
@@ -101,6 +125,8 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
                 value={lastName}
                 disabled={!lastIsEditable}
                 onChange={(e) => setLastName(e.target.value)}
+                pattern="/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/"
+                minLength={3}
                 maxLength={25}
               />
               <PencilLine
@@ -147,6 +173,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
           <Button
             className="w-[452px] h-[40px] font-raleway font-semibold text-[16px] leading-[24px] tracking-[0%] [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] text-white rounded-[6px] bg-brand-800 border border-neutral-300 mt-5 hover:bg-brand-700"
             onClick={saveInfo}
+            disabled={(firstIsEditable || lastIsEditable) ? false : true}
           >
             <Save />
             Guardar

@@ -9,7 +9,7 @@ import {
 import { Input } from "@/shared/components/ui/input";
 
 interface AddressFieldsProps {
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const AddressFields = ({ disabled }: AddressFieldsProps) => {

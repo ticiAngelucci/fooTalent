@@ -48,11 +48,18 @@ const RegisterForm = () => {
     try {
       const register = await userRegister(data);
       if (register.success == true) {
-        navigate(Route.Login);
+        navigate(Route.EmailSendConfirmation, { state: { email: data.email, from: 'register' } });
         setRegisterError("");
       }
-    } catch {
-      setRegisterError("El correo está registrado o está mal escrito.");
+    } catch (error: any) {
+      if (error?.response?.status === 400 && error?.response?.data?.message === "El email ya está registrado") {
+        form.setError("email", {
+          type: "server",
+          message: "El correo ya está registrado",
+        });
+      } else {
+        setRegisterError("Ocurrió un error al registrarse. Intenta de nuevo.");
+      }
     }
   };
 
@@ -138,32 +145,31 @@ const RegisterForm = () => {
                     <Input
                       type={
                         fieldName === "password" ||
-                        fieldName === "confirmPassword"
+                          fieldName === "confirmPassword"
                           ? "password"
                           : fieldName === "email"
-                          ? "email"
-                          : "text"
+                            ? "email"
+                            : "text"
                       }
                       placeholder={
                         fieldName === "email"
                           ? "Ej: rentary@tudominio.ar"
                           : fieldName === "password" ||
                             fieldName === "confirmPassword"
-                          ? "***********"
-                          : ""
+                            ? "***********"
+                            : ""
                       }
                       {...field}
-                      className={`${inputClass} ${
-                        hasError
+                      className={`${inputClass} ${hasError
                           ? "border-red-500 text-red-700"
                           : isValid
-                          ? "border-green-500 text-green-700"
-                          : "border-gray-400 text-black"
-                      }`}
+                            ? "border-green-500 text-green-700"
+                            : "border-gray-400 text-black"
+                        }`}
                     />
                   </FormControl>
                   {hasError
-                    ? renderError(fieldError?.message)
+                    ? renderError(fieldError?.message || registerError)
                     : renderSuccess(fieldName)}
                 </FormItem>
               )}

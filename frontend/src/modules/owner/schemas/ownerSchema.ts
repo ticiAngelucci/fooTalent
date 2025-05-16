@@ -1,3 +1,4 @@
+import { noSpecialChar, onlyLetters, onlyNumberString, zipCode } from "@/utils/validations";
 import { z } from "zod";
 
 export const ownerSchema = z.object({
@@ -15,17 +16,13 @@ export const ownerSchema = z.object({
     .string()
     .trim()
     .regex(/^\d{8}$/, "El DNI debe tener 8 dígitos, sin puntos ni guiones"),
-  phone: z.string().trim().optional(),
-  email: z.string().trim().email("Debes ingresar un email válido").optional(),
-  street: z.string().trim().optional(),
-  number: z.string().trim().optional(),
-  locality: z.string().trim().optional(),
-  province: z.string().trim().optional(),
-  postalCode: z
-    .string()
-    .trim()
-    .regex(/^\d{4}$/, "El código postal debe tener exactamente 4 dígitos")
-    .optional(),
+  phone: onlyNumberString,
+  email: z.string().trim().email("Debes ingresar un email válido"),
+  street: noSpecialChar,
+  number: onlyNumberString,
+  locality: onlyLetters,
+  province: onlyLetters,
+  postalCode: zipCode,
   files: z
     .array(z.instanceof(File))
     .max(7, "Solo se permiten hasta 7 archivos")

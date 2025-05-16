@@ -4,6 +4,7 @@ import {
   noSpecialChar,
   onlyLetters,
   onlyNumber,
+  zipCode,
 } from "@/utils/validations";
 import { TypeOfProperty } from "../enums/TypeOfProperty";
 
@@ -14,7 +15,7 @@ export const PropertySchema = z.object({
     locality: onlyLetters,
     street: noSpecialChar,
     number: noSpecialChar,
-    postalCode: noSpecialChar,
+    postalCode: zipCode,
   }),
    typeOfProperty: z.nativeEnum(TypeOfProperty),
   observations: longText,

@@ -129,7 +129,7 @@ const PropertyRegister = () => {
                         {/* Agregar nuevo propietario */}
                         <div className="col-span-2 flex flex-col justify-end">
                             <label className="text-sm font-semibold">Agregar Nuevo Propietario</label>
-                            <Link className="flex gap-2 text-base text-brand-800" to="#">
+                            <Link className="flex gap-2 text-base text-brand-800" to={Route.AddOwner}>
                                 <UserPlus />
                                 <span>Agregar propietario</span>
                             </Link>
