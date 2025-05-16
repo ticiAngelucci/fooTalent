@@ -13,7 +13,7 @@ const EmailSentConfirmation = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const userEmail = location.state?.email || "correo@ejemplo.com";
-
+    const from = location.state?.from;
     
 
     return (
@@ -35,7 +35,7 @@ const EmailSentConfirmation = () => {
                                 Hemos enviado un enlace a <span className="font-bold">{userEmail}</span>
                             </p>
                             <p className="text-gray-600">
-                                Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseñas.
+                                Revisa tu bandeja de entrada y sigue las instrucciones para {from == "register" ? "iniciar sesión" : "restablecer tu contraseña"}.
                             </p>
                         </div>
 

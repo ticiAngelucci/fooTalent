@@ -8,16 +8,19 @@ import { Link } from "react-router-dom";
 import { useContractStore } from "../store/contractStore";
 import { getContractColumns } from "../components/ContractCollumns";
 import { ContractTable } from "../components/ContractTable";
+import DeleteContractModal from "../components/deleteContract/DeleteContractModal";
+import { useDeleteContractModal } from "../hooks/useDeleteContractModal";
 
 
 const ListContracts = () => {
     const { contracts, isLoading, error, fetchContracts, totalElements } = useContractStore();
+    const { deleteOpen, setDeleteOpen, deleteId, handleDelete } = useDeleteContractModal();
 
     useEffect(() => {
         fetchContracts();
     }, [fetchContracts]);
 
-    const columns = getContractColumns();
+    const columns = getContractColumns({handleDelete});
 
     return (
         <DashboardLayout subtitle="Contratos"
@@ -36,11 +39,11 @@ const ListContracts = () => {
                             error={error}
                             columns={columns}
                             totalElements={totalElements}
-                            
                         />
                     </TabsContent>
                 </Tabs>
             </div>
+            <DeleteContractModal open={deleteOpen} setOpen={setDeleteOpen} id={deleteId ?? 0} />
         </DashboardLayout>
     );
 }

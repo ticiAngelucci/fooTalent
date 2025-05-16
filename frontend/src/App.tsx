@@ -30,7 +30,7 @@ import EditContract from "./modules/contract/pages/EditContract";
 
 function App() {
   return (
-    <main>
+    <>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
@@ -75,7 +75,7 @@ function App() {
         </Route>
       </Routes>
       <Toaster richColors closeButton position="bottom-right" />
-    </main>
+    </>
   );
 }
 

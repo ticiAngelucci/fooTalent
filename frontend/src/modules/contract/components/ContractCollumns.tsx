@@ -16,13 +16,12 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
-import { deleteContract } from "../services/deleteContract";
-import { useContractStore } from "../store/contractStore";
-import SuccessToast from "@/shared/components/Toasts/SuccessToast";
-import ErrorToast from "@/shared/components/Toasts/ErrorToast";
-import { toast } from "sonner";
 
-export const getContractColumns = (): ColumnDef<Contract>[] => [
+interface DeleteProps{
+  handleDelete: (id:number) => void;
+}
+
+export const getContractColumns = ({ handleDelete }: DeleteProps): ColumnDef<Contract>[] => [
   {
     accessorKey: "propertyAddress",
     header: ({ column }) => (
@@ -191,28 +190,7 @@ export const getContractColumns = (): ColumnDef<Contract>[] => [
                 <MoveUpRight className="text-neutral-950 inline" /> Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                const confirmDelete = window.confirm(
-                  "¿Estás seguro que querés eliminar este contrato?"
-                );
-                if (confirmDelete) {
-                  deleteContract(row.original.id!)
-                    .then(() => {
-                      toast.custom(() => <SuccessToast title="¡Contrato eliminado!" description="El contrato se eliminó de la tabla" />);
-                      useContractStore.getState().fetchContracts(); 
-                    })
-                    .catch((err) => {
-                      if(err.response?.data?.details?.[0]?.includes("foreign key constraint fails")){
-                        toast.custom(() => <ErrorToast title="¡Ocurrió un error!" description="El contrato no se puede eliminar porque tiene pagos asociados." />);
-                      }else {
-                        toast.custom(() => <ErrorToast title="¡Ocurrió un error!" description="El contrato no se pudo eliminar, intenta nuevamente." />)
-                        
-                      }
-                    });
-                }
-              }}
-            >
+            <DropdownMenuItem onClick={()=> handleDelete(Number(row.original.id))} >
               <Trash2 className="text-neutral-950" /> Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>

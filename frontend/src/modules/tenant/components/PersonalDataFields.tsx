@@ -7,10 +7,11 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
+import { WarrantyType } from "../enum/TenantEnum";
 
 
 interface PersonalDataFieldsProps {
-  disabled: boolean;
+  disabled?: boolean;
   disableDni?: boolean;
 }
 
@@ -83,7 +84,7 @@ const PersonalDataFields = ({ disabled, disableDni }: PersonalDataFieldsProps) =
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: correo@ejemplo.com" type="email" {...field} disabled={disabled} />
+              <Input placeholder="Ej: correo@ejemplo.com" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -101,9 +102,11 @@ const PersonalDataFields = ({ disabled, disableDni }: PersonalDataFieldsProps) =
                 disabled={disabled}
                 className="border border-gray-500 rounded-md px-3 py-2 text-sm w-full"
               >
-                <option value="0">Sin garantía</option>
-                <option value="1">Garantía básica</option>
-                <option value="2">Garantía extendida</option>
+                {Object.values(WarrantyType).map((warranty) => (
+                  <option key={warranty} value={warranty}>
+                    {warranty}
+                  </option>
+                ))}
               </select>
             </FormControl>
             <FormMessage />

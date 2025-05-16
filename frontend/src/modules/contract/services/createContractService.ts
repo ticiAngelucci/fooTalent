@@ -11,9 +11,18 @@ const headers = {
 
 
 export const createContract = async (formData: FormData) => {
-  return axios.post(`${API_URL}/contracts`, formData, {headers} );
+  try {
+    const response = await axios.post(`${API_URL}/contracts`, formData, { headers });
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data; 
+    }
+    throw error; 
+  }
 };
 
+//Functions for edit conctract features
 
 export async function fetchTenants() {
   const response = await axios.get(`${API_URL}/tenants`, { headers });
@@ -27,8 +36,8 @@ export async function fetchOwners() {
   return response.data;
 }
 
-export async function fetchProperties() {
-  const response = await axios.get(`${API_URL}/properties/all`, { headers });
+export async function fetchProperties(id: string) {
+  const response = await axios.get(`${API_URL}/owner/${id}/properties`, { headers });
   return response.data;
 }
 

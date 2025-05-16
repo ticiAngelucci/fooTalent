@@ -9,7 +9,13 @@ export const onlyLetters = z
 export const noSpecialChar = z
   .string()
   .min(3, { message: "Debe tener al menos 3 caracteres" })
-  .max(15, { message: "Debe tener como máximo 15 caracteres" })
+  .max(30, { message: "Debe tener como máximo 30 caracteres" })
+  .regex(/^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9 ]+$/, { message: "No puede contener caracteres especiales" });
+
+export const zipCode = z
+.string()
+  .min(3, { message: "Debe tener al menos 3 caracteres" })
+  .max(8, { message: "Debe tener como máximo 8 caracteres" })
   .regex(/^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9 ]+$/, { message: "No puede contener caracteres especiales" });
 
 export const shortText = z
@@ -25,6 +31,10 @@ export const onlyNumber = z
   .number({ message: "Solo se admiten números" })
   .int({ message: "Debe ser un número entero" })
   .nonnegative({ message: "No se admiten valores negativos" });
+
+  export const onlyNumberString = z
+  .string()
+  .regex(/^\d+$/, { message: "Solo se admiten números" });
 
 export const floatValues = z
   .number({ message: "Solo se admiten números" })
