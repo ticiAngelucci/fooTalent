@@ -22,7 +22,7 @@ export const tenantSchema = z.object({
     .trim()
     .regex(/^\d{8}$/, "El DNI debe tener 8 dígitos, sin puntos ni guiones"),
   phone: onlyNumberString,
-  email: z.string().trim().email("Debes ingresar un email válido"),
+  email: z.string().trim().email("Debes ingresar un correo electrónico válido"),
   street: noSpecialChar,
   number: onlyNumberString,
   city: onlyLetters,

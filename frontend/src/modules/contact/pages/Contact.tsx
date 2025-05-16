@@ -229,7 +229,7 @@ function TablaContactos({
                     <TableHead>Apellido</TableHead>
                     <TableHead>DNI</TableHead>
                     <TableHead>Teléfono</TableHead>
-                    <TableHead>Email</TableHead>
+                    <TableHead>Correo electrónico</TableHead>
                     <TableHead>Dirección</TableHead>
                     <TableHead>Provincia</TableHead>
                     <TableHead></TableHead>
