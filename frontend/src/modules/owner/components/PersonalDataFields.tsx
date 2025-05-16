@@ -81,7 +81,7 @@ const PersonalDataFields = ({disabled, disableDni}: PersonalDataFieldsProps) => 
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>Correo electrónico</FormLabel>
             <FormControl>
               <Input placeholder="Ej: correo@ejemplo.com" type="email" {...field}  disabled={disabled}/>
             </FormControl>
