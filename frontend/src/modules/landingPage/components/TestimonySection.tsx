@@ -67,12 +67,12 @@ const TestimonySection = () => {
             <p className="text-gray-600 text-sm italic">"{testimonials[activeIndex].text}"</p>
           </motion.div>
         </div>
-        <button onClick={next} className="absolute right-2 z-10 text-2xl px-2 py-1">
+        <button onClick={next} className="!border-2 border-gray-300 rounded absolute right-2 z-10 text-2xl px-2 py-1">
           ›
         </button>
       </div>
       <div className="relative items-center justify-center overflow-hidden max-w-6xl mx-auto hidden md:flex">
-        <button onClick={prev} className="absolute left-0 z-10 text-3xl px-4 py-2">
+        <button onClick={prev} className="absolute left-0 z-10 text-3xl px-4 py-2 border-2 border-gray-300 rounded">
           ‹
         </button>
         <div className="flex gap-6 overflow-hidden w-full justify-center">
@@ -101,7 +101,7 @@ const TestimonySection = () => {
             );
           })}
         </div>
-        <button onClick={next} className="absolute right-0 z-10 text-3xl px-4 py-2">
+        <button onClick={next} className="absolute right-0 z-10 text-3xl px-4 py-2 !border-2 border-gray-300 rounded">
           ›
         </button>
       </div>
