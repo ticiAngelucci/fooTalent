@@ -50,6 +50,9 @@ public class Contract {
     private boolean active;
     @Column(nullable = false)
     private double adjustmentPercentage;
+    private Double initialIcl;
+    @Column(nullable = false)
+    private double currentRent;
     @ElementCollection
     @CollectionTable(
             name = "contract_documents",

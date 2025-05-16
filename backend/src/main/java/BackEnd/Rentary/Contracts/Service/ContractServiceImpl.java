@@ -69,7 +69,7 @@ public class ContractServiceImpl implements IContractService {
         firstPayment.setPaymentDate(contract.getStartDate().plusDays(contract.getDeadline()));
         firstPayment.setPaymentMethod(PaymentMethod.EFECTIVO);
         firstPayment.setServiceType(ServiceType.ALQUILER);
-        
+
         contract.getPayments().add(firstPayment);
         contract = contractRepository.save(contract);
 
