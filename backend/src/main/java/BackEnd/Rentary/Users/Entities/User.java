@@ -34,6 +34,8 @@ public class User {
     private Date verificationTokenExpiration;
     @Column
     private String profileImageUrl;
+    @Column(nullable = false)
+    String createdBy;
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;

@@ -20,4 +20,5 @@ public abstract class Person {
     private String phone;
     @Embedded
     private Address address;
+    private String createdBy;
 }

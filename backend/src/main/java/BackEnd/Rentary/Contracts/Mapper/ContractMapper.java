@@ -60,7 +60,7 @@ public class ContractMapper {
 
         return new ContractResponse(
                 contract.getContractId(),
-                contract.getProperty().getId_property(),
+                contract.getProperty().getIdProperty(),
                 contract.getTenant().getId(),
                 contract.getProperty().getOwner().getId(),
                 ownerFullName,

@@ -14,23 +14,26 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    Page<Payment> findByContractContractId(Long contractId, Pageable pageable);
+    Page<Payment> findByContractContractIdAndCreatedBy(Long contractId, String createdBy, Pageable pageable);
 
-    Page<Payment> findByStatus(PaymentStatus status, Pageable pageable);
+    Page<Payment> findByContractContractIdAndServiceTypeAndCreatedBy(Long contractId, ServiceType serviceType, String createdBy, Pageable pageable);
 
-    List<Payment> findByStatus(PaymentStatus status);
+    Page<Payment> findByContractContractIdAndServiceTypeNotAndCreatedBy(Long contractId, ServiceType serviceType, String createdBy, Pageable pageable);
 
-    @Query("SELECT SUM(p.amount) FROM Payment p WHERE p.contract.contractId = :contractId AND p.serviceType = :serviceType")
-    BigDecimal sumAmountByContractAndServiceType(@Param("contractId") Long contractId,
-                                                 @Param("serviceType") ServiceType serviceType);
+    Page<Payment> findByStatusAndCreatedBy(PaymentStatus status, String createdBy, Pageable pageable);
 
-    Page<Payment> findByContractContractIdAndServiceTypeNot(Long contractId, ServiceType serviceType, Pageable pageable);
+    List<Payment> findByStatusAndCreatedBy(PaymentStatus status, String createdBy);
 
-    Page<Payment> findByServiceType(ServiceType serviceType, Pageable pageable);
+    Page<Payment> findByServiceTypeAndCreatedBy(ServiceType serviceType, String createdBy, Pageable pageable);
 
-    Page<Payment> findByContractContractIdAndServiceType(Long contractId, ServiceType serviceType, Pageable pageable);
+    Page<Payment> findByCreatedBy(String createdBy, Pageable pageable);
 
+    @Query("SELECT SUM(p.amount) FROM Payment p WHERE p.contract.contractId = :contractId AND p.serviceType = :serviceType AND p.createdBy = :createdBy")
+    BigDecimal sumAmountByContractAndServiceTypeAndCreatedBy(@Param("contractId") Long contractId,
+                                                             @Param("serviceType") ServiceType serviceType,
+                                                             @Param("createdBy") String createdBy);
 }

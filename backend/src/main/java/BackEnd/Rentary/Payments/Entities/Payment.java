@@ -72,6 +72,9 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    String createdBy;
+
     @Transient
     public boolean isOverdue() {
         if (this.status == PaymentStatus.PAGADO) {

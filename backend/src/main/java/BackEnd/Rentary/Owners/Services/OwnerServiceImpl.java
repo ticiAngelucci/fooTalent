@@ -21,6 +21,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,16 +34,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OwnerServiceImpl implements OwnerService{
+public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
     private final PropertyMapper propertyMapper;
     private final FileUploadService fileUploadService;
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @Override
     public ResponseEntity<?> getOwnerId(Long id) {
-        Owner owner = ownerRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new OwnerNotFoundException("No se encontró propietario con ID: " + id));
 
         OwnerResponseDto ownerDto = ownerMapper.toDto(owner);
@@ -57,6 +64,7 @@ public class OwnerServiceImpl implements OwnerService{
         }
 
         Owner owner = ownerMapper.toEntity(ownerDto);
+        owner.setCreatedBy(getCurrentUserEmail());  // <--- Se setea el createdBy al crear
 
         owner = ownerRepository.save(owner);
 
@@ -93,11 +101,12 @@ public class OwnerServiceImpl implements OwnerService{
         }
     }
 
-
     @Override
     public void deleteOwner(Long id) {
-        Owner owner = ownerRepository.findById(id)
-                .orElseThrow(() -> new OwnerHasActivePropertyException(id.toString()));
+        String email = getCurrentUserEmail();
+
+        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         boolean hasActiveProperty = owner.getProperties().stream()
                 .anyMatch(property -> property.getStatus() == PropertyStatus.OCUPADO);
@@ -105,13 +114,17 @@ public class OwnerServiceImpl implements OwnerService{
         if (hasActiveProperty) {
             throw new OwnerHasActivePropertyException("El propietario tiene propiedades activas y no puede ser eliminado.");
         }
+
+        ownerRepository.delete(owner);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "owner", key = "#id")
     public OwnerResponseDto updateOwner(Long id, OwnerRequestDto dto, MultipartFile[] documents) {
-        Owner existingOwner = ownerRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Owner existingOwner = ownerRepository.findByIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         if (!existingOwner.getDni().equals(dto.dni()) &&
@@ -163,16 +176,21 @@ public class OwnerServiceImpl implements OwnerService{
         return ownerMapper.toDto(updatedOwner);
     }
 
-
     @Override
     public Page<OwnerResponseDto> getOwner(Pageable pageable) {
+        String email = getCurrentUserEmail();
+
+        // Aquí también filtrar por createdBy si quieres que el usuario solo vea sus owners
+        // Si quieres dejar todos, omite este filtro
         return ownerRepository.findAll(pageable)
                 .map(ownerMapper::toDto);
     }
 
     @Override
     public List<PropertyResponseDto> getPropertiesByOwnerId(Long id) {
-        Owner owner = ownerRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         return owner.getProperties().stream()
@@ -182,7 +200,9 @@ public class OwnerServiceImpl implements OwnerService{
 
     @Override
     public List<PropertyResponseDto> getAvailablePropertiesByOwnerId(Long id) {
-        Owner owner = ownerRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         return owner.getProperties().stream()

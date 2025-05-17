@@ -131,6 +131,4 @@ public class UserService {
         user.setProfileImageUrl(imageUrl);
         userRepository.save(user);
     }
-    }
-
-
+}

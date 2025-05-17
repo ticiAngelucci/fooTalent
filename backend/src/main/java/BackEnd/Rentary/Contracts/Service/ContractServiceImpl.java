@@ -1,5 +1,6 @@
 package BackEnd.Rentary.Contracts.Service;
 
+import BackEnd.Rentary.BCRA.Service.BcraApiService;
 import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Common.DocumentUploadResult;
 import BackEnd.Rentary.Common.Enums.EntityType;
@@ -15,6 +16,7 @@ import BackEnd.Rentary.Payments.Enums.Currency;
 import BackEnd.Rentary.Payments.Enums.PaymentMethod;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
+import BackEnd.Rentary.Payments.Service.PaymentService;
 import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import BackEnd.Rentary.Properties.Repository.PropertyRepository;
@@ -23,6 +25,7 @@ import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +42,11 @@ public class ContractServiceImpl implements IContractService {
     private final TenantsRepository tenantsRepository;
     private final ContractMapper contractMapper;
     private final FileUploadService fileUploadService;
+    private final PaymentService paymentService;
+    private final BcraApiService bcraApiService;
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     @Override
     @Transactional
@@ -56,7 +64,7 @@ public class ContractServiceImpl implements IContractService {
         Contract contract = contractMapper.toEntity(request, property, tenant);
         contract.setTenant(tenant);
         contract.setActive(true);
-
+        contract.setCreatedBy(getCurrentUserEmail());
         property.setStatus(PropertyStatus.OCUPADO);
         propertyRepository.save(property);
 
@@ -110,21 +118,25 @@ public class ContractServiceImpl implements IContractService {
 
     @Override
     public ContractResponse getContractById(Long id) {
-        return contractRepository.findById(id)
-                .map(contractMapper::toResponse)
+        String email = getCurrentUserEmail();
+        Contract contract = contractRepository.findByContractIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new ContractNotFoundException(id.toString()));
+        return contractMapper.toResponse(contract);
     }
 
     @Override
     public Page<ContractResponse> getAllContracts(Pageable pageable) {
-        return contractRepository.findAll(pageable)
+        String email = getCurrentUserEmail();
+        return contractRepository.findByCreatedBy(email, pageable)
                 .map(contractMapper::toResponse);
     }
 
     @Override
     @Transactional
     public ContractResponse updateContract(Long id, ContractRequest request, MultipartFile[] documents) {
-        Contract existing = contractRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Contract existing = contractRepository.findByContractIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new ContractNotFoundException(id.toString()));
 
         Property property = propertyRepository.findById(request.propertyId())
@@ -167,12 +179,10 @@ public class ContractServiceImpl implements IContractService {
     @Override
     @Transactional
     public void deleteContract(Long id) {
-        Contract contract = contractRepository.findById(id)
-                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
+        String email = getCurrentUserEmail();
 
-        if (!contract.isActive()) {
-            contractRepository.delete(contract);
-        }
+        Contract contract = contractRepository.findByContractIdAndCreatedBy(id, email)
+                .orElseThrow(() -> new ContractNotFoundException(id.toString()));
 
         if (contract.isActive()) {
             throw new ContractNotExpiredException("El contrato aún está activo y no puede eliminarse.");
@@ -188,8 +198,7 @@ public class ContractServiceImpl implements IContractService {
         if (!publicIds.isEmpty()) {
             try {
                 fileUploadService.deleteMultipleFiles(publicIds);
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 throw new FileUploadException("Error al eliminar algunos documentos de Cloudinary: " + e.getMessage());
             }
         }
@@ -201,10 +210,13 @@ public class ContractServiceImpl implements IContractService {
         contractRepository.deleteById(id);
     }
 
+
     @Override
     @Transactional
     public void removeContractDocumentById(Long contractId, String documentId) {
-        Contract contract = contractRepository.findById(contractId)
+        String email = getCurrentUserEmail();
+
+        Contract contract = contractRepository.findByContractIdAndCreatedBy(contractId, email)
                 .orElseThrow(() -> new ContractNotFoundException(contractId.toString()));
 
         AttachedDocument docToRemove = null;
@@ -216,19 +228,14 @@ public class ContractServiceImpl implements IContractService {
         }
 
         if (docToRemove != null) {
-            // Guardar el publicId para eliminarlo de Cloudinary
             String publicId = docToRemove.getPublicId();
-
-            // Eliminar el documento de la colección
             contract.getDocuments().remove(docToRemove);
             contractRepository.save(contract);
 
-            // Eliminar de Cloudinary
             try {
                 fileUploadService.deleteFile(publicId);
                 throw new RuntimeException("Documento eliminado del contrato ID" + contractId);
-            } catch (
-                    Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Error al eliminar documento de Cloudinary." + e.getMessage());
             }
         }
@@ -237,7 +244,9 @@ public class ContractServiceImpl implements IContractService {
     @Override
     @Transactional
     public void finalizeContract(Long id) {
-        Contract contract = contractRepository.findById(id)
+        String email = getCurrentUserEmail();
+
+        Contract contract = contractRepository.findByContractIdAndCreatedBy(id, email)
                 .orElseThrow(() -> new ContractNotFoundException(id.toString()));
 
         if (!contract.isActive()) {
@@ -251,4 +260,5 @@ public class ContractServiceImpl implements IContractService {
         contract.setActive(false);
         contractRepository.save(contract);
     }
+
 }

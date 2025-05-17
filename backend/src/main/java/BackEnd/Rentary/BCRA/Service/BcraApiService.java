@@ -21,4 +21,11 @@ public class BcraApiService {
                 .retrieve()
                 .bodyToMono(BcraResponse.class);
     }
+
+    public Double getCurrentIclValueBlocking() {
+        return fetchData()
+                .map(response -> response.results().isEmpty() ? null : response.results().get(0).value())
+                .block(); //
+    }
+
 }

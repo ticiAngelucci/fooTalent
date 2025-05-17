@@ -14,7 +14,7 @@ public class PropertyMapper {
     public PropertyResponseDto toDto(Property property) {
         Address address = property.getAddress();
         return new PropertyResponseDto(
-                property.getId_property(),
+                property.getIdProperty(),
                 address.getCountry(),
                 address.getProvince(),
                 address.getLocality(),

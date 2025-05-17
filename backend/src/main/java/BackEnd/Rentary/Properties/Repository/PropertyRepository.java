@@ -11,21 +11,30 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
+
+    boolean existsByAddress(Address address);
+
+    Optional<Property> findByidPropertyAndCreatedBy(Long idProperty, String createdBy);
+
+    Page<Property> findByCreatedBy(String createdBy, Pageable pageable);
+
     @Query("""
-    SELECT p FROM Property p
-    WHERE p.status = 'DISPONIBLE'
-    AND (:locality IS NULL OR p.address.locality = :locality)
-    AND (:type IS NULL OR p.typeOfProperty = :type)
+        SELECT p FROM Property p
+        WHERE p.status = 'DISPONIBLE'
+        AND p.createdBy = :createdBy
+        AND (:locality IS NULL OR p.address.locality = :locality)
+        AND (:type IS NULL OR p.typeOfProperty = :type)
     """)
-    Page<Property> findAvailablePropertiesWithFilters(
+    Page<Property> findAvailablePropertiesWithFiltersAndCreatedBy(
             @Param("locality") String locality,
             @Param("type") TypeOfProperty type,
+            @Param("createdBy") String createdBy,
             Pageable pageable
     );
-    boolean existsByAddress(Address address);
 
     List<Property> findByAddress_StreetContainingIgnoreCaseOrTypeOfPropertyOrObservationsContainingIgnoreCase(String street, TypeOfProperty typeOfProperty, String observations);
 

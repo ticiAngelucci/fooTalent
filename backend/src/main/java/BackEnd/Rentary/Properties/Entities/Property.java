@@ -23,7 +23,7 @@ import java.util.List;
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_property;
+    private Long idProperty;
     @Column(nullable = false)
     @Embedded
     private Address address;
@@ -40,4 +40,6 @@ public class Property {
     private Owner owner;
     @OneToMany(mappedBy = "property")
     private List<Contract> contracts = new ArrayList<>();
+    @Column(nullable = false)
+    private String createdBy;
 }
