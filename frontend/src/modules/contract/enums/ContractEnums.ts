@@ -6,5 +6,5 @@ export enum AdjustmentFrequency{
 
 export enum AdjustmentType{
     ICL = "ICL",
-    FIJO = "% Fijo"
+    FIJO = "FIJO"
 }

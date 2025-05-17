@@ -12,7 +12,7 @@ interface AddressFieldsProps {
   disabled: boolean;
 }
 
-const AddressFields = ({disabled}: AddressFieldsProps) => {
+const AddressFields = ({ disabled }: AddressFieldsProps) => {
   const { control } = useFormContext();
 
   return (
@@ -21,10 +21,10 @@ const AddressFields = ({disabled}: AddressFieldsProps) => {
         control={control}
         name="street"
         render={({ field }) => (
-          <FormItem className="md:col-span-2">
+          <FormItem className="">
             <FormLabel>Calle</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: Av. Rivadavia" {...field}  disabled={disabled}/>
+              <Input placeholder="Ej: Av. Rivadavia" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -38,35 +38,7 @@ const AddressFields = ({disabled}: AddressFieldsProps) => {
           <FormItem>
             <FormLabel>Número</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 1234" {...field}  disabled={disabled}/>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
-        name="locality"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Localidad</FormLabel>
-            <FormControl>
-              <Input placeholder="Ej: Belgrano" {...field}  disabled={disabled}/>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
-        name="province"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Provincia</FormLabel>
-            <FormControl>
-              <Input placeholder="Ej: Buenos Aires" {...field}  disabled={disabled}/>
+              <Input placeholder="Ej: 1234" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -80,7 +52,48 @@ const AddressFields = ({disabled}: AddressFieldsProps) => {
           <FormItem>
             <FormLabel>Código postal</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 1234" {...field}  disabled={disabled}/>
+              <Input placeholder="Ej: 1234" {...field} disabled={disabled} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="locality"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Localidad</FormLabel>
+            <FormControl>
+              <Input placeholder="Ej: Belgrano" {...field} disabled={disabled} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={control}
+        name="province"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Provincia</FormLabel>
+            <FormControl>
+              <Input placeholder="Ej: Buenos Aires" {...field} disabled={disabled} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name="country"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Pais</FormLabel>
+            <FormControl>
+              <Input placeholder="Ej: Argentina" {...field} disabled={disabled} />
             </FormControl>
             <FormMessage />
           </FormItem>

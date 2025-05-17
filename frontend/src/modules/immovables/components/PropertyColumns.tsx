@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 
-export const getPropertyColumns = (): ColumnDef<Property>[] => [
+export const getPropertyColumns = (handleDelete: (propertyId: string) => void): ColumnDef<Property>[] => [
   {
     id: "direccion",
     header: ({ column }) => (
@@ -127,12 +127,12 @@ export const getPropertyColumns = (): ColumnDef<Property>[] => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
-              <Link className="text-black" to={Route.EditProperty} state={{ property: row.original }}>
-                <MoveUpRight className="text-black inline" />Acceder
+              <Link className="!text-black" to={Route.EditProperty} state={{ property: row.original }}>
+                <MoveUpRight className="text-black inline" /> Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-                <Trash2 className="text-black" />Eliminar
+            <DropdownMenuItem onClick={() => handleDelete(row.original.id_property.toString())}>
+              <Trash2 className="text-black" />Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu >

@@ -37,7 +37,7 @@ export async function fetchOwners() {
 }
 
 export async function fetchProperties(id: string) {
-  const response = await axios.get(`${API_URL}/owner/${id}/properties`, { headers });
+  const response = await axios.get(`${API_URL}/owner/${id}/available-properties`, { headers });
   return response.data;
 }
 

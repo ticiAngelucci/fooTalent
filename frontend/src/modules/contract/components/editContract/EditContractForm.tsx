@@ -56,7 +56,7 @@ type CreateContractFormProps = {
 const CreateContractForm = ({ contract, handleDelete }: CreateContractFormProps) => {
   if (!contract) return null
 
-  console.log(contract);
+  console.log("contrato a editar",contract);
   const [owners, setOwners] = useState<Owner[]>([]);
   const [ownerId, setOwnerId] = useState<string>();
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -72,8 +72,13 @@ const CreateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
   });
 
   const handleDisable = () => {
-    setDisabled(!isDisabled);
-  }
+    const nextState = !isDisabled;
+    setDisabled(nextState);
+
+    if (nextState) {
+      form.reset(); 
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -99,6 +104,14 @@ const CreateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
     };
     getOwnerProperties();
   }, [ownerId]);
+
+  const adjustmentType = form.watch("adjustmentType");
+
+  useEffect(() => {
+    if (adjustmentType !== AdjustmentType.FIJO) {
+      form.setValue("adjustmentPercentage", 0);
+    }
+  }, [adjustmentType, form]);
 
 
   const handleSubmit = async (data: ContractFormData) => {
@@ -293,7 +306,7 @@ const CreateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
                     <Popover modal>
                       <PopoverTrigger
                         className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"
-                         disabled={isDisabled ? true : false}>
+                        disabled={isDisabled ? true : false}>
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? field.value : <span>Selecciona una fecha</span>}
                       </PopoverTrigger>
@@ -512,12 +525,13 @@ const CreateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
                       <Input
                         type="number"
                         className="no-spinner w-[22rem]"
-                        placeholder={`${field.value}`}
+                        placeholder='%'
+                        value={field.value ?? ""}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
-                          field.onChange(isNaN(value) ? undefined : value);
+                          field.onChange(isNaN(value) ? 0 : value);
                         }}
-                        disabled={isDisabled ? true : false}
+                        disabled={form.watch("adjustmentType") !== AdjustmentType.FIJO || isDisabled}
                       />
                     </FormControl>
                     <FormMessage />

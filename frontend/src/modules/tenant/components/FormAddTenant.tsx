@@ -26,8 +26,8 @@ const FormAddTenant = () => {
       phone: "",
       email: "",
       street: "",
+      locality:"",
       number: "",
-      city: "",
       province: "",
       postalCode: "",
       files: [],
@@ -36,6 +36,7 @@ const FormAddTenant = () => {
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
+      console.log(data);
       await createTenant({ ...data });
       toast.custom(
         () => (

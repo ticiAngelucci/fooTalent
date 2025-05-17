@@ -21,6 +21,7 @@ import {
 import { useSidebar } from "@/shared/components/ui/sidebar";
 import { Route } from "@/shared/constants/route";
 import LogoutButton from "../logoutButton/LogoutButton";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   { title: "Tablero", url: Route.Dashboard, icon: LayoutDashboard },
@@ -34,6 +35,8 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
 
+  const navigate = useNavigate();
+
   return (
     <Sidebar
       collapsible="icon"
@@ -42,7 +45,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenuButton className="flex items-center justify-center w-full h-full rounded-md p-0">
+            <SidebarMenuButton className="flex items-center justify-center w-full h-full rounded-md p-0" onClick={()=>navigate(Route.Dashboard)}>
               <img
                 src={collapsed ? "/Frame.svg" : "/Logo.svg"}
                 alt=""

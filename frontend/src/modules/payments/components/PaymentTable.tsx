@@ -5,6 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu"
 import { formatDeadline } from "../servises/paymentService"
 import { Payment } from "../types/pyments"
+import { Route } from "@/shared/constants/route"
+import { Link } from "react-router-dom"
 
 interface PaymentTableProps {
   payments: Payment[]
@@ -129,7 +131,15 @@ export const PaymentTable = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem ><MoveUpRight className="text-black inline" />Acceder</DropdownMenuItem>
+                      <DropdownMenuItem >
+                        <Link
+                          className="text-neutral-950"
+                          to={Route.EditContract}
+                          state={{ contract: payment }}
+                        >
+                          <MoveUpRight className="text-neutral-950 inline" /> Acceder
+                        </Link>
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleOpen(payment.contractId.toString(), payment.tenantName, payment.propertyAddress)}>
                         <DollarSign />Registrar pago
                       </DropdownMenuItem>

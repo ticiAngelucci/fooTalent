@@ -32,7 +32,7 @@ const AddressFields = ({ disabled }: AddressFieldsProps) => {
       />
       <FormField
         control={control}
-        name="city"
+        name="locality"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Localidad</FormLabel>

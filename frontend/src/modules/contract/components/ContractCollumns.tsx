@@ -17,11 +17,12 @@ import {
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 
-interface DeleteProps{
+interface ContractProps{
   handleDelete: (id:number) => void;
+  handleCancel: (id:number) => void;
 }
 
-export const getContractColumns = ({ handleDelete }: DeleteProps): ColumnDef<Contract>[] => [
+export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps): ColumnDef<Contract>[] => [
   {
     accessorKey: "propertyAddress",
     header: ({ column }) => (
@@ -189,6 +190,9 @@ export const getContractColumns = ({ handleDelete }: DeleteProps): ColumnDef<Con
               >
                 <MoveUpRight className="text-neutral-950 inline" /> Acceder
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={()=> handleCancel(Number(row.original.id))} >
+              <Trash2 className="text-neutral-950" /> Cancelar
             </DropdownMenuItem>
             <DropdownMenuItem onClick={()=> handleDelete(Number(row.original.id))} >
               <Trash2 className="text-neutral-950" /> Eliminar

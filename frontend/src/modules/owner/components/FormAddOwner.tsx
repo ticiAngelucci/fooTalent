@@ -12,10 +12,11 @@ import { toast } from "sonner";
 
 import { CircleAlert } from 'lucide-react';
 import { Check } from 'lucide-react';
+import { adaptOwnerToPayload } from "../adapter/ownerAdapter";
 
 const FormAddOwner = () => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const methods = useForm<Owner>({
     resolver: zodResolver(ownerSchema),
@@ -28,15 +29,17 @@ const FormAddOwner = () => {
       street: "",
       number: "",
       locality: "",
+      country: "",
       province: "",
       postalCode: "",
-      files: [],
+      attachedDocument: [],
     },
   });
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      await createOwner({ ...data, attachedDocument: "" });
+      const finalData = adaptOwnerToPayload({...data});
+      await createOwner(finalData);
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">

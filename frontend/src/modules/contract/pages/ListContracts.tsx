@@ -10,17 +10,20 @@ import { getContractColumns } from "../components/ContractCollumns";
 import { ContractTable } from "../components/ContractTable";
 import DeleteContractModal from "../components/deleteContract/DeleteContractModal";
 import { useDeleteContractModal } from "../hooks/useDeleteContractModal";
+import CancelContractModal from "../components/cancelContract/CancelContractModal";
+import { useCancelContractModal } from "../hooks/useCancelContractModal";
 
 
 const ListContracts = () => {
     const { contracts, isLoading, error, fetchContracts, totalElements } = useContractStore();
     const { deleteOpen, setDeleteOpen, deleteId, handleDelete } = useDeleteContractModal();
+    const { cancelOpen, setCancelOpen, cancelId, handleCancel } =useCancelContractModal();
 
     useEffect(() => {
         fetchContracts();
     }, [fetchContracts]);
 
-    const columns = getContractColumns({handleDelete});
+    const columns = getContractColumns({handleDelete, handleCancel});
 
     return (
         <DashboardLayout subtitle="Contratos"
@@ -43,6 +46,7 @@ const ListContracts = () => {
                     </TabsContent>
                 </Tabs>
             </div>
+            <CancelContractModal open={cancelOpen} setOpen={setCancelOpen} id={cancelId ?? 0}/>
             <DeleteContractModal open={deleteOpen} setOpen={setDeleteOpen} id={deleteId ?? 0} />
         </DashboardLayout>
     );

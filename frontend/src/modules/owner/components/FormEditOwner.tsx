@@ -1,41 +1,38 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ownerSchema } from "../schemas/ownerSchema";
-import { Owner } from "../types/owner";
 import { FormProvider } from "react-hook-form";
 import PersonalDataFields from "./PersonalDataFields";
 import AddressFields from "./AddressFields";
 import DocumentUpload from "./DocumentUpload";
 import FormEditFooter from "./FormEditFooter";
-import { API_URL } from "@/shared/constants/api";
-import axios from "axios";
-import { useUserStore } from "@/store/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Check, CircleAlert } from "lucide-react";
+import { OwnerFromAPI } from "../types/ownerFromApi";
+import { deleteOwner, EditOwner } from "../services/ownerService";
+import SuccessToast from "@/shared/components/Toasts/SuccessToast";
+import ErrorToast from "@/shared/components/Toasts/ErrorToast";
+import { Owner, ownerSchema } from "../schemas/ownerSchema";
+import { adaptOwnerToPayload } from "../adapter/ownerAdapter";
 
-const FormEditOwner = ({ initialData }: { initialData: Owner }) => {
+interface Props {
+  initialData: OwnerFromAPI
+}
+
+const FormEditOwner = ({ initialData }:  Props ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const {documents} = initialData;
+
 
   const { id } = useParams();
   const ownerId = Number(id);
-  const { token } = useUserStore();
   const navigate = useNavigate();
 
   const handleDelete = async (ownerId: number) => {
     try {
       setIsDeleting(true);
-      const response = await axios.delete(
-        `${API_URL}/owner/delete/${ownerId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("response", response.data);
+      await deleteOwner(ownerId);
       navigate("/contact");
     } catch (err) {
       console.error(err);
@@ -46,74 +43,49 @@ const FormEditOwner = ({ initialData }: { initialData: Owner }) => {
 
   const methods = useForm<Owner>({
     resolver: zodResolver(ownerSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      firstName: initialData.firstName,
+      lastName: initialData.lastName,
+      dni: initialData.dni,
+      phone: initialData.phone,
+      email: initialData.email,
+      street: initialData.address.street,
+      number: initialData.address.number,
+      locality: initialData.address.locality,
+      country: initialData.address.country,
+      province: initialData.address.province,
+      postalCode: initialData.address.postalCode,
+      attachedDocument: [],
+    }
   });
 
   const { reset } = methods;
 
   const onSubmit = async (data: Owner) => {
     if (!id) return;
-  
+
     try {
-      const response = await axios.put(
-        `${API_URL}/owner/update/${id}`,
-        {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          dni: data.dni,
-          email: data.email,
-          phone: data.phone,
-          address: {
-            country: "", 
-            province: data.province || "",
-            locality: data.locality || "",
-            street: data.street || "",
-            number: data.number || "",
-            postalCode: data.postalCode || "",
-          },
-          attachedDocument: "", 
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const finalData = adaptOwnerToPayload({...data});
+      await EditOwner(finalData, Number(id));
       toast.custom(
         () => (
-          <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
-            <p className="text-green-700 font-semibold text-sm flex gap-2 items-center">
-               <Check/>¡Cambios realizados con éxito!
-            </p>
-            <p className="text-gray-700 text-sm mt-1">
-              Los datos del propietario se han actualizado correctamente.
-            </p>
-          </div>
+          <SuccessToast title="¡Cambios realizados con éxito!" description="Los datos del propietario se han actualizado correctamente." />   
         ),
         {
           duration: 5000,
         },
       );
-      console.log("Actualizado:", response.data);
       setIsEditing(false);
       navigate("/contact");
-  
     } catch {
-        toast.custom(
-            () => (
-              <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
-                <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-                    <CircleAlert/>¡Ha ocurrido un error!
-                </p>
-                <p className="text-gray-700 text-sm mt-1">
-                  Los datos no se han podido actualizar, intente nuevamente.
-                </p>
-              </div>
-            ),
-            {
-              duration: 5000,
-            }
-          );
+      toast.custom(
+        () => (
+          <ErrorToast title="¡Ha ocurrido un error!" description="Los datos no se han podido actualizar, intente nuevamente." />
+        ),
+        {
+          duration: 5000,
+        }
+      );
     }
   };
 
@@ -122,7 +94,7 @@ const FormEditOwner = ({ initialData }: { initialData: Owner }) => {
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PersonalDataFields disabled={!isEditing} disableDni={true} />
-          <DocumentUpload />
+          <DocumentUpload documents={documents} />
         </div>
 
         <AddressFields disabled={!isEditing} />

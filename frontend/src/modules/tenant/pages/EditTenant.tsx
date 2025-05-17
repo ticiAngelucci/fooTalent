@@ -3,16 +3,17 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
 import EditTenantForm from "../components/FormEditTenant"; 
-import { Tenant } from "../types/tenant";
 import { API_URL } from "@/shared/constants/api";
 import { useUserStore } from "@/store/userStore";
 import { Route } from "@/shared/constants/route";
+import { Tenant } from "../schemas/tenantSchema";
+import { DocumentFromAPI } from "@/shared/interfaces/documentInterface";
 
 export default function EditTenantPage() { 
   const { id } = useParams();
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [documents, setDocuments] = useState<DocumentFromAPI[]>([]);
   const { token } = useUserStore();
 
   useEffect(() => {
@@ -27,7 +28,9 @@ export default function EditTenantPage() {
           ...response.data,
           ...response.data.address,
         };
+        setDocuments(response.data.documents);
         setTenant(transformedTenant);
+        console.log("transformed", transformedTenant);
       } catch (error) {
         console.error("Error fetching tenant:", error);
       } finally {
@@ -46,7 +49,7 @@ export default function EditTenantPage() {
         {loading ? (
           <p>Cargando inquilino...</p>
         ) : tenant ? (
-          <EditTenantForm initialData={tenant} /> 
+          <EditTenantForm initialData={tenant} documents={documents} /> 
         ) : (
           <p>No se encontró el inquilino.</p>
         )}
