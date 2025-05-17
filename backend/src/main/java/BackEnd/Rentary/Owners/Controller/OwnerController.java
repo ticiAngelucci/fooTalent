@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,34 +35,31 @@ public class OwnerController {
             @RequestParam(defaultValue = "15") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(ownerService.getOwner(email, pageable));
+        return ResponseEntity.ok(ownerService.getOwner(pageable));
     }
 
     @Operation(summary = "Obtener un propietario por su ID")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOwnerIdAndCreatedBy(@PathVariable Long id){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ownerService.getOwnerIdAndCreatedBy(id, email);
-    }
+    public ResponseEntity<?> getOwnerId(@PathVariable Long id){
 
+        return ownerService.getOwnerId(id);
+    }
 
     @Operation(summary = "Registrar un nuevo propietario")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createOwner(
             @RequestPart("owner") @Valid OwnerRequestDto ownerDto,
             @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        ownerService.createOwnerAndCreatedBy(ownerDto, documents, email);
+
+        ownerService.createOwner(ownerDto, documents);
         return ResponseEntity.status(HttpStatus.CREATED).body("Propietario creado exitosamente");
     }
 
     @Operation(summary = "Eliminar un propietario")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteOwner(@PathVariable Long id){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            ownerService.deleteOwnerAndCreatedBy(id, email);
+            ownerService.deleteOwner(id);
             return ResponseEntity.ok("Propietario eliminado con éxito.");
         } catch (OwnerHasActivePropertyException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
@@ -78,23 +74,23 @@ public class OwnerController {
             @PathVariable Long id,
             @RequestPart("owner") @Valid OwnerRequestDto dto,
             @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        OwnerResponseDto updated = ownerService.updateOwnerAndCreatedBy(id, dto, documents, email);
+
+        OwnerResponseDto updated = ownerService.updateOwner(id, dto, documents);
         return ResponseEntity.ok(updated);
     }
 
 
     @Operation(summary = "Obtener todos los inmuebles de un propietario")
     @GetMapping("/{id}/properties")
-    public ResponseEntity<List<PropertyResponseDto>> getPropertiesByOwner(@PathVariable Long id, String email){
-        List<PropertyResponseDto> properties = ownerService.getPropertiesByOwnerIdAndCreatedBy(id, email);
+    public ResponseEntity<List<PropertyResponseDto>> getPropertiesByOwner(@PathVariable Long id){
+        List<PropertyResponseDto> properties = ownerService.getPropertiesByOwnerId(id);
         return ResponseEntity.ok(properties);
     }
 
     @Operation(summary = "Obtener todos los inmuebles DISPONIBLES de un propietario")
     @GetMapping("/{id}/available-properties")
-    public ResponseEntity<List<PropertyResponseDto>> getAvailablePropertiesByOwner(@PathVariable Long id, String email) {
-        List<PropertyResponseDto> properties = ownerService.getAvailablePropertiesByOwnerIdAndCreatedBy(id, email);
+    public ResponseEntity<List<PropertyResponseDto>> getAvailablePropertiesByOwner(@PathVariable Long id) {
+        List<PropertyResponseDto> properties = ownerService.getAvailablePropertiesByOwnerId(id);
         return ResponseEntity.ok(properties);
     }
 }

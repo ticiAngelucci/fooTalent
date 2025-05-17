@@ -12,10 +12,10 @@ import java.util.List;
 
 public interface OwnerService {
     ResponseEntity<?> getOwnerId(Long id);
-    void createOwnerAndCreatedBy(OwnerRequestDto ownerDto, MultipartFile[] documents);
-    void deleteOwnerAndCreatedBy(Long id);
-    OwnerResponseDto updateOwnerAndCreatedBy(Long id, OwnerRequestDto dto, MultipartFile[] documents);
+    void createOwner(OwnerRequestDto ownerDto, MultipartFile[] documents);
+    void deleteOwner(Long id);
+    OwnerResponseDto updateOwner(Long id, OwnerRequestDto dto, MultipartFile[] documents);
     Page<OwnerResponseDto> getOwner(Pageable pageable);
-    List<PropertyResponseDto> getPropertiesByOwnerIdAndCreatedBy(Long id);
-    List<PropertyResponseDto> getAvailablePropertiesByOwnerIdAndCreatedBy(Long id);
+    List<PropertyResponseDto> getPropertiesByOwnerId(Long id);
+    List<PropertyResponseDto> getAvailablePropertiesByOwnerId(Long id);
 }

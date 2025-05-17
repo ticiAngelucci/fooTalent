@@ -33,30 +33,30 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OwnerServiceImpl{
+public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
     private final OwnerMapper ownerMapper;
     private final PropertyMapper propertyMapper;
     private final FileUploadService fileUploadService;
 
-
-    public ResponseEntity<?> getOwnerIdAndCreatedBy(Long id, String email) {
-        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
+    @Override
+    public ResponseEntity<?> getOwnerId(Long id) {
+        Owner owner = ownerRepository.findById(id)
                 .orElseThrow(() -> new OwnerNotFoundException("No se encontró propietario con ID: " + id));
 
         OwnerResponseDto ownerDto = ownerMapper.toDto(owner);
         return ResponseEntity.ok().body(ownerDto);
     }
 
+    @Override
     @Transactional
-    public void createOwnerAndCreatedBy(OwnerRequestDto ownerDto, MultipartFile[] documents, String email) {
-        if (ownerRepository.existsByDniAndCreatedBy(ownerDto.dni(), email)) {
+    public void createOwner(OwnerRequestDto ownerDto, MultipartFile[] documents) {
+        if (ownerRepository.existsByDni(ownerDto.dni())) {
             throw new DuplicateDniException("Ya existe un propietario con DNI: " + ownerDto.dni());
         }
 
         Owner owner = ownerMapper.toEntity(ownerDto);
-        owner.setCreatedBy(email);
 
         owner = ownerRepository.save(owner);
 
@@ -94,10 +94,10 @@ public class OwnerServiceImpl{
     }
 
 
-
-    public void deleteOwnerAndCreatedBy(Long id, String email) {
-        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
-                .orElseThrow(() -> new OwnerNotFoundException("No se encontró el propietario con ID: " + id + " para el usuario: " + email));
+    @Override
+    public void deleteOwner(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerHasActivePropertyException(id.toString()));
 
         boolean hasActiveProperty = owner.getProperties().stream()
                 .anyMatch(property -> property.getStatus() == PropertyStatus.OCUPADO);
@@ -105,19 +105,17 @@ public class OwnerServiceImpl{
         if (hasActiveProperty) {
             throw new OwnerHasActivePropertyException("El propietario tiene propiedades activas y no puede ser eliminado.");
         }
-
-        ownerRepository.delete(owner);
     }
 
-
+    @Override
     @Transactional
     @CacheEvict(value = "owner", key = "#id")
-    public OwnerResponseDto updateOwnerAndCreatedBy(Long id, OwnerRequestDto dto, MultipartFile[] documents, String email) {
-        Owner existingOwner = ownerRepository.findByIdAndCreatedBy(id, email)
-                .orElseThrow(() -> new OwnerNotFoundException("No se encontró el propietario con ID: " + id + " para el usuario: " + email));
+    public OwnerResponseDto updateOwner(Long id, OwnerRequestDto dto, MultipartFile[] documents) {
+        Owner existingOwner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         if (!existingOwner.getDni().equals(dto.dni()) &&
-                ownerRepository.existsByDniAndCreatedBy(dto.dni(), email)) {
+                ownerRepository.existsByDni(dto.dni())) {
             throw new DuplicateDniException("Ya existe otro propietario con DNI: " + dto.dni());
         }
 
@@ -127,7 +125,7 @@ public class OwnerServiceImpl{
         existingOwner.setPhone(dto.phone());
         existingOwner.setDni(dto.dni());
 
-        if (existingOwner.getAddress() != null && dto.address() != null) {
+        if (existingOwner.getAddress() != null) {
             existingOwner.getAddress().setCountry(dto.address().getCountry());
             existingOwner.getAddress().setProvince(dto.address().getProvince());
             existingOwner.getAddress().setLocality(dto.address().getLocality());
@@ -165,25 +163,27 @@ public class OwnerServiceImpl{
         return ownerMapper.toDto(updatedOwner);
     }
 
-    public Page<OwnerResponseDto> getOwner(String email, Pageable pageable) {
-        return ownerRepository.findByCreatedBy(email, pageable)
+
+    @Override
+    public Page<OwnerResponseDto> getOwner(Pageable pageable) {
+        return ownerRepository.findAll(pageable)
                 .map(ownerMapper::toDto);
     }
 
-
-    public List<PropertyResponseDto> getPropertiesByOwnerIdAndCreatedBy(Long id, String email) {
-        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
-                .orElseThrow(() -> new OwnerNotFoundException("No se encontró el propietario con ID: " + id + " para el usuario: " + email));
+    @Override
+    public List<PropertyResponseDto> getPropertiesByOwnerId(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         return owner.getProperties().stream()
                 .map(propertyMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-
-    public List<PropertyResponseDto> getAvailablePropertiesByOwnerIdAndCreatedBy(Long id, String email) {
-        Owner owner = ownerRepository.findByIdAndCreatedBy(id, email)
-                .orElseThrow(() -> new OwnerNotFoundException("No se encontró el propietario con ID: " + id + " para el usuario: " + email));
+    @Override
+    public List<PropertyResponseDto> getAvailablePropertiesByOwnerId(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id.toString()));
 
         return owner.getProperties().stream()
                 .filter(property -> property.getStatus() == PropertyStatus.DISPONIBLE)

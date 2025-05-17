@@ -22,5 +22,6 @@ public record OwnerRequestDto(
         String phone,
         @Valid
         @NotNull(message = "Este campo es necesario.")
-        Address address
+        Address address,
+        String attachedDocument
 ) {}
