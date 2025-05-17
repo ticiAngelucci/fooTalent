@@ -34,7 +34,7 @@ public class User {
     private Date verificationTokenExpiration;
     @Column
     private String profileImageUrl;
-    @Column(nullable = false)
+    @Column(name = "created_by", nullable = true)
     String createdBy;
 
     public void setIsActive(boolean isActive) {
