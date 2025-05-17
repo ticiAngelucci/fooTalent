@@ -184,17 +184,17 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <Link
-                className="text-neutral-950"
+                className="!text-neutral-950"
                 to={Route.EditContract}
                 state={{ contract: row.original }}
               >
-                <MoveUpRight className="text-neutral-950 inline" /> Acceder
+                <MoveUpRight className="!text-neutral-950 inline" /> Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={()=> handleCancel(Number(row.original.id))} >
+            <DropdownMenuItem className="cursor-pointer" onClick={()=> handleCancel(Number(row.original.id))} >
               <Trash2 className="text-neutral-950" /> Cancelar
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={()=> handleDelete(Number(row.original.id))} >
+            <DropdownMenuItem className="cursor-pointer" onClick={()=> handleDelete(Number(row.original.id))} >
               <Trash2 className="text-neutral-950" /> Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>

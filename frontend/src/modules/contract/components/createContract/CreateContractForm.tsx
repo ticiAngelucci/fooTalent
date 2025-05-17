@@ -25,6 +25,7 @@ import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { Route } from '@/shared/constants/route'
 import ErrorToast from '@/shared/components/Toasts/ErrorToast'
+import DocumentUpload from '../DocumentUpload'
 
 const CreateContractForm = () => {
     const [owners, setOwners] = useState<Owner[]>([]);
@@ -91,6 +92,10 @@ const CreateContractForm = () => {
             });
             formDataToSend.append("contract", contractBlob);
 
+            data.documents?.forEach((file) => {
+                formDataToSend.append("documents", file);
+            });
+
             await createContract(formDataToSend);
 
             toast.custom(() => (
@@ -125,12 +130,12 @@ const CreateContractForm = () => {
                 <form
                     className="grid grid-cols-[4fr_3fr] gap-8 p-6 rounded-md shadow-inner bg-white"
                     onSubmit={form.handleSubmit(handleSubmit, (errors) => console.error("Errores de validación", errors))}>
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         <h3 className="font-semibold text-xl">Datos del contrato</h3>
                         <div className="grid grid-cols-2 gap-4">
 
                             <FormItem>
-                                <FormLabel className="mb-2 text-sm font-semibold">
+                                <FormLabel className="text-sm font-semibold">
                                     Propietario
                                     <span className="text-neutral-600 font-normal">(requerido)</span>
                                 </FormLabel>
@@ -139,14 +144,14 @@ const CreateContractForm = () => {
                                         value={ownerId || ""}
                                         onValueChange={(val) => setOwnerId(val)}
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full !h-10 text-base !bg-white">
                                             <SelectValue placeholder="Seleccionar propietario" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {owners.map((owner) => (
                                                 <SelectItem
                                                     key={owner.idOwner}
-                                                    value={owner.idOwner.toString()} // 👈 el value siempre debe ser string
+                                                    value={owner.idOwner.toString()}
                                                 >
                                                     {owner.firstName} {owner.lastName}
                                                 </SelectItem>
@@ -161,7 +166,7 @@ const CreateContractForm = () => {
                                 name="tenantId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="mb-2 text-sm font-semibold">
+                                        <FormLabel className="text-sm font-semibold">
                                             Inquilino
                                             <span className="text-neutral-600 font-normal">(requerido)</span>
                                         </FormLabel>
@@ -169,7 +174,7 @@ const CreateContractForm = () => {
                                             <Select
                                                 value={field.value?.toString() || ""}
                                                 onValueChange={(val) => field.onChange(Number(val))}>
-                                                <SelectTrigger>
+                                                <SelectTrigger className="w-full !h-10 text-base !bg-white">
                                                     <SelectValue placeholder="Seleccionar inquilino" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -189,13 +194,13 @@ const CreateContractForm = () => {
                             name="propertyId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="mb-2 text-sm font-semibold">
+                                    <FormLabel className="text-sm font-semibold">
                                         Inmueble
                                         <span className="text-neutral-600 font-normal">(requerido)</span>
                                     </FormLabel>
                                     <Select value={field.value || ""}
                                         onValueChange={(val) => field.onChange(Number(val))}>
-                                        <SelectTrigger>
+                                        <SelectTrigger className="w-full !h-10 text-base !bg-white">
                                             <SelectValue placeholder="Seleccionar inmueble">
                                                 {
                                                     properties.find(p => p.id_property === field.value)?.street +
@@ -230,15 +235,14 @@ const CreateContractForm = () => {
                                 name="startDate"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="mb-2 text-sm font-semibold">
+                                        <FormLabel className="text-sm font-semibold">
                                             Fecha de inicio
                                             <span className="text-neutral-600 font-normal">(requerido)</span>
                                         </FormLabel>
                                         <Popover modal>
                                             <PopoverTrigger
-                                                className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"
-                                            >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                className="flex gap-1 items-center h-10 pl-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"                                            >
+                                                <CalendarIcon className="mr-2 text-neutral-500 w-6 h-6" />
                                                 {field.value ? field.value : <span>Selecciona una fecha</span>}
                                             </PopoverTrigger>
                                             <PopoverContent className="z-[100]">
@@ -264,15 +268,14 @@ const CreateContractForm = () => {
                                 name="endDate"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="mb-2 text-sm font-semibold">
+                                        <FormLabel className="text-sm font-semibold">
                                             Fecha de finalización
                                             <span className="text-neutral-600 font-normal">(requerido)</span>
                                         </FormLabel>
                                         <Popover modal>
                                             <PopoverTrigger
-                                                className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"
-                                            >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                className="flex gap-1 items-center h-10 pl-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"                                            >
+                                                <CalendarIcon className="mr-2 text-neutral-500 w-6 h-6" />
                                                 {field.value ? field.value : <span>Selecciona una fecha</span>}
                                             </PopoverTrigger>
                                             <PopoverContent className="z-[100]">
@@ -300,13 +303,13 @@ const CreateContractForm = () => {
                             name="baseRent"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="mb-2 text-sm font-semibold">
+                                    <FormLabel className="text-sm font-semibold">
                                         Valor del alquiler
                                         <span className="text-neutral-600 font-normal">(requerido)</span>
                                     </FormLabel>
                                     <Input
                                         type="number"
-                                        className="no-spinner"
+                                        className="no-spinner h-10 !text-base !bg-white"
                                         placeholder="$400000"
                                         onChange={(e) => {
                                             const value = parseFloat(e.target.value);
@@ -321,13 +324,15 @@ const CreateContractForm = () => {
                             name="deadline"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="mb-2 text-sm font-semibold">
+                                    <FormLabel className="text-sm font-semibold">
                                         Fecha límite de pago
                                         <span className="text-neutral-600 font-normal">(requerido)</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <div className="flex items-center gap-2 border-2 rounded-sm p-2 border-gray-300 w-[9rem] mt-2">
-                                            <span>{field.value}</span>
+                                        <div className="flex items-center justify-center pl-3 pr-2 gap-2 border-1 rounded-sm border-gray-300 w-[9rem] !h-10">
+                                            <span className="text-neutral-600 pr-2 pl-3 cursor-default">
+                                                {field.value}
+                                            </span>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
@@ -360,33 +365,32 @@ const CreateContractForm = () => {
                                     >
                                         <FormItem className="flex items-center space-x-2 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem value="1" />
+                                                <RadioGroupItem value="1" className="cursor-pointer" />
                                             </FormControl>
-                                            <FormLabel className="font-normal">Pagó</FormLabel>
+                                            <FormLabel className="font-normal text-base">Si, pagó</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-2 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem value="0" />
+                                                <RadioGroupItem value="0" className="cursor-pointer" />
                                             </FormControl>
-                                            <FormLabel className="font-normal">No pagó</FormLabel>
+                                            <FormLabel className="font-normal text-base">No pagó</FormLabel>
                                         </FormItem>
                                     </RadioGroup>
                                 </FormControl>
                             </FormItem>
 
-                            {/* Campo de depósito controlado por react-hook-form */}
                             <FormField
                                 name="deposit"
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="mb-2 text-sm font-semibold">
+                                        <FormLabel className="text-sm font-semibold">
                                             Valor del depósito
                                             <span className="text-neutral-600 font-normal">(requerido)</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                            className='no-spinner'
+                                                className='no-spinner w-full h-10 !text-base !bg-white'
                                                 type="number"
                                                 placeholder="$"
                                                 {...field}
@@ -420,9 +424,10 @@ const CreateContractForm = () => {
                                             {Object.values(AdjustmentFrequency).map((freq) => (
                                                 <FormItem key={freq} className="flex items-center gap-2 space-y-0">
                                                     <FormControl>
-                                                        <RadioGroupItem value={freq} />
+                                                        <RadioGroupItem value={freq}
+                                                            className="cursor-pointer" />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal">
+                                                    <FormLabel className="font-normal text-base">
                                                         {freq.charAt(0) + freq.slice(1).toLowerCase()}
                                                     </FormLabel>
                                                 </FormItem>
@@ -433,12 +438,12 @@ const CreateContractForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <section className="flex justify-between items-center gap-4">
+                        <section className="grid grid-cols-2 gap-4">
                             <FormField
                                 control={form.control}
                                 name="adjustmentType"
                                 render={({ field }) => (
-                                    <FormItem className="space-y-3">
+                                    <FormItem className="">
                                         <FormLabel className="text-sm font-semibold">
                                             Método de actualización
                                         </FormLabel>
@@ -449,11 +454,12 @@ const CreateContractForm = () => {
                                                 className="flex gap-10"
                                             >
                                                 {Object.values(AdjustmentType).map((method) => (
-                                                    <FormItem key={method} className="flex items-center gap-2 space-y-0">
+                                                    <FormItem key={method} className="flex items-center gap-2">
                                                         <FormControl>
-                                                            <RadioGroupItem value={method} />
+                                                            <RadioGroupItem value={method}
+                                                                className="cursor-pointer" />
                                                         </FormControl>
-                                                        <FormLabel className="font-normal">
+                                                        <FormLabel className="font-normal text-base">
                                                             {method === AdjustmentType.FIJO ? "% Fijo" : method}
                                                         </FormLabel>
                                                     </FormItem>
@@ -471,14 +477,14 @@ const CreateContractForm = () => {
                                 name="adjustmentPercentage"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="mb-2 text-sm font-semibold">
+                                        <FormLabel className="text-sm font-semibold">
                                             % Fijo
                                             <span className="text-neutral-600 font-normal"> (requerido)</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="number"
-                                                className="no-spinner w-[22rem]"
+                                                className="w-full h-10 !text-base !bg-white no-spinner"
                                                 placeholder='%'
                                                 onChange={(e) => {
                                                     const value = parseFloat(e.target.value);
@@ -495,7 +501,7 @@ const CreateContractForm = () => {
                         <div className="flex justify-center items-center mt-6">
                             <Button
                                 type="submit"
-                                className="w-[45rem] mt-6 bg-brand-800 flex items-center justify-center gap-2 text-white hover:bg-brand-700"
+                                className="w-full mt-6 h-10 bg-brand-800 rounded-sm flex items-center justify-center gap-2 text-white hover:bg-brand-700"
                             >
                                 <SaveIcon />
                                 Guardar
@@ -503,30 +509,10 @@ const CreateContractForm = () => {
                         </div>
                     </div>
 
-                    <FormField
-                        control={form.control}
-                        name="documents"
-                        render={({ field }) => (
-                            <FormItem className="bg-white px-6 border-l-2 border-neutral-200">
-                                <FormLabel className="text-xl font-semibold mb-4">Documentación</FormLabel>
-                                <div className="space-y-2">
-                                    <FormLabel className="text-sm font-semibold">Subir Documento</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="file"
-                                            multiple
-                                            onChange={(e) => {
-                                                const files = e.target.files ? Array.from(e.target.files) : [];
-                                                field.onChange(files);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </div>
-                            </FormItem>
-                        )}
-                    />
-
+                    <div>
+                        <h3 className="font-semibold text-xl mb-6">Documentos</h3>
+                        <DocumentUpload />
+                    </div>
                 </form>
 
             </Form >
