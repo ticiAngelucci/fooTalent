@@ -8,6 +8,7 @@ import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Contracts.DTOs.ContractRequest;
 import BackEnd.Rentary.Contracts.DTOs.ContractResponse;
 import BackEnd.Rentary.Contracts.Entity.Contract;
+import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Contracts.Mapper.ContractMapper;
 import BackEnd.Rentary.Contracts.Respository.IContractRepository;
 import BackEnd.Rentary.Exceptions.*;
@@ -42,7 +43,6 @@ public class ContractServiceImpl implements IContractService {
     private final TenantsRepository tenantsRepository;
     private final ContractMapper contractMapper;
     private final FileUploadService fileUploadService;
-    private final PaymentService paymentService;
     private final BcraApiService bcraApiService;
     private String getCurrentUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -65,6 +65,13 @@ public class ContractServiceImpl implements IContractService {
         contract.setTenant(tenant);
         contract.setActive(true);
         contract.setCreatedBy(getCurrentUserEmail());
+        if (contract.getAdjustmentType() == AdjustmentType.ICL) {
+            Double currentIcl = bcraApiService.getCurrentIclValueBlocking();
+            if (currentIcl == null) {
+                throw new IllegalStateException("No se pudo obtener el valor actual del ICL desde BCRA");
+            }
+            contract.setInitialIcl(currentIcl);
+        }
         property.setStatus(PropertyStatus.OCUPADO);
         propertyRepository.save(property);
 
