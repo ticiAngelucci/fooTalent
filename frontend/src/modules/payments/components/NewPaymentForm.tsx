@@ -22,9 +22,10 @@ import { Calendar } from "@/shared/components/ui/calendar"
 
 interface Props{
   id: string;
+  onSuccess?: () => void;
 }
 
-const NewPaymentForm = ({id}: Props) => {
+const NewPaymentForm = ({ id, onSuccess }: Props) => {
   const form = useForm<PaymentFormData>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
@@ -51,7 +52,7 @@ const NewPaymentForm = ({id}: Props) => {
           duration: 5000,
         }
       )
-
+      if (onSuccess) onSuccess();
     } catch (error) {
       toast.custom(
         () => (

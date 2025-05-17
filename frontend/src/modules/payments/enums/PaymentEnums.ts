@@ -4,6 +4,7 @@ export enum ServiceType {
   EXPENSAS = "EXPENSAS",
   LUZ = "LUZ",
   AGUA = "AGUA",
+  GAS = "GAS",
   MUNICIPALIDAD = "MUNICIPALIDAD",
   NO_APLICA = "NO_APLICA"
 }

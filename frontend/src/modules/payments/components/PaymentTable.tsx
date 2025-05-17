@@ -109,40 +109,38 @@ export const PaymentTable = ({
             <TableCell colSpan={8} className="text-center py-4">No se encontraron pagos</TableCell>
           </TableRow>
         ) : (
-          payments.map((payment) => (
-            <TableRow key={payment.id}>
-              <TableCell></TableCell>
-              <TableCell className="font-medium">{payment.tenantName}</TableCell>
-              <TableCell>{payment.propertyAddress}</TableCell>
-              <TableCell>{payment.adjustmentFrequency}</TableCell>
-              <TableCell>{payment.adjustmentType}</TableCell>
-              <TableCell>$ {payment.amount.toLocaleString()}</TableCell>
-              <TableCell>{formatDeadline(payment.deadline)}</TableCell>
-              <TableCell><PaymentStatusBadge status={payment.status} /></TableCell>
-              <TableCell>
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem ><MoveUpRight className="text-black inline" />Acceder</DropdownMenuItem>
-                    <DropdownMenuItem >
-                      <Button onClick={() => handleOpen(payment.id.toString(), payment.tenantName, payment.propertyAddress)}>
+          payments
+            .filter((payment) => payment.serviceType === "ALQUILER")
+            .map((payment) => (
+              <TableRow key={payment.id}>
+                <TableCell></TableCell>
+                <TableCell className="font-medium">{payment.tenantName}</TableCell>
+                <TableCell>{payment.propertyAddress}</TableCell>
+                <TableCell>{payment.adjustmentFrequency}</TableCell>
+                <TableCell>{payment.adjustmentType}</TableCell>
+                <TableCell>$ {payment.amount.toLocaleString()}</TableCell>
+                <TableCell>{formatDeadline(payment.deadline)}</TableCell>
+                <TableCell><PaymentStatusBadge status={payment.status} /></TableCell>
+                <TableCell>
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem ><MoveUpRight className="text-black inline" />Acceder</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleOpen(payment.contractId.toString(), payment.tenantName, payment.propertyAddress)}>
                         <DollarSign />Registrar pago
-                      </Button>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem >
-                      <Button onClick={()=>handleDelete(payment.toString())}>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDelete(payment.contractId.toString())}>
                         <Trash2 /> Eliminar
-                      </Button>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
         )}
       </TableBody>
     </Table >
