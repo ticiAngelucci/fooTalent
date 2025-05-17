@@ -1,5 +1,6 @@
 export interface Payment {
   id: number
+  contractId: number
   tenantName: string
   propertyAddress: string
   adjustmentFrequency: string
@@ -7,6 +8,7 @@ export interface Payment {
   deadline: number
   status: string
   adjustmentType: string
+  serviceType: string
 }
 
 export interface ApiResponse {
