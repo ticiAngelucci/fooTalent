@@ -7,7 +7,6 @@ import BackEnd.Rentary.Payments.Enums.PaymentMethod;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
 import BackEnd.Rentary.Payments.Utils.PaymentCalculationUtil;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -20,7 +19,8 @@ public class PaymentFactory {
             ServiceType serviceType,
             PaymentMethod paymentMethod,
             Currency currency,
-            String description) {
+            String description,
+            String createdBy) {
 
         LocalDate today = LocalDate.now();
         int currentMonth = today.getMonthValue();
@@ -39,6 +39,7 @@ public class PaymentFactory {
                 .description(description)
                 .period(currentMonth)
                 .year(currentYear)
+                .createdBy(createdBy)
                 .build();
     }
 }

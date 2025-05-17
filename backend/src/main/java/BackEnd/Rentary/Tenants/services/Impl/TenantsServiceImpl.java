@@ -5,13 +5,8 @@ import BackEnd.Rentary.Common.DocumentUploadResult;
 import BackEnd.Rentary.Common.Enums.EntityType;
 import BackEnd.Rentary.Common.Service.FileUploadService;
 import BackEnd.Rentary.Contracts.Entity.Contract;
-import BackEnd.Rentary.Exceptions.DuplicateDniException;
-import BackEnd.Rentary.Exceptions.FileUploadException;
-import BackEnd.Rentary.Exceptions.TenantHasActiveContractException;
-import BackEnd.Rentary.Exceptions.TenantNotFoundExceptions;
-import BackEnd.Rentary.Tenants.DTOs.TenantsPageResponseDto;
-import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
-import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
+import BackEnd.Rentary.Exceptions.*;
+import BackEnd.Rentary.Tenants.DTOs.*;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import BackEnd.Rentary.Tenants.mappers.TenantsMapper;
 import BackEnd.Rentary.Tenants.repositories.TenantsRepository;
@@ -19,9 +14,8 @@ import BackEnd.Rentary.Tenants.services.TenantsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -38,11 +32,16 @@ public class TenantsServiceImpl implements TenantsService {
     private final TenantsMapper tenantsMapper;
     private final FileUploadService fileUploadService;
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @Override
     @Transactional(readOnly = true)
     public TenantsPageResponseDto findAllTenants(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Tenants> tenantPage = tenantsRepository.findAll(pageable);
+        String email = getCurrentUserEmail();
+        Page<Tenants> tenantPage = tenantsRepository.findByCreatedBy(email, pageable);
         List<TenantsResponseDto> tenantsDtos = tenantPage.getContent().stream()
                 .map(tenantsMapper::toDto)
                 .collect(Collectors.toList());
@@ -57,7 +56,7 @@ public class TenantsServiceImpl implements TenantsService {
     @Transactional(readOnly = true)
     @Cacheable(value = "tenant", key = "#id")
     public TenantsResponseDto findTenantsById(Long id) {
-        Tenants tenant = tenantsRepository.findById(id)
+        Tenants tenant = tenantsRepository.findByIdAndCreatedBy(id, getCurrentUserEmail())
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
         return tenantsMapper.toDto(tenant);
     }
@@ -65,12 +64,12 @@ public class TenantsServiceImpl implements TenantsService {
     @Override
     @Transactional
     public TenantsResponseDto saveTenant(TenantsRequestDto tenantsRequestDto, MultipartFile[] documents) {
-
-        if (tenantsRepository.existsByDni((tenantsRequestDto.dni()))) {
+        if (tenantsRepository.existsByDniAndCreatedBy(tenantsRequestDto.dni(), getCurrentUserEmail())) {
             throw new DuplicateDniException("Ya existe un inquilino con DNI: " + tenantsRequestDto.dni());
         }
 
         Tenants tenant = tenantsMapper.toEntity(tenantsRequestDto);
+        tenant.setCreatedBy(getCurrentUserEmail());
 
         tenant = tenantsRepository.save(tenant);
 
@@ -83,7 +82,6 @@ public class TenantsServiceImpl implements TenantsService {
                         tenant.getDni());
 
                 Set<AttachedDocument> attachedDocs = new HashSet<>();
-
                 for (DocumentUploadResult result : results) {
                     AttachedDocument doc = AttachedDocument.builder()
                             .id(UUID.randomUUID().toString())
@@ -93,30 +91,27 @@ public class TenantsServiceImpl implements TenantsService {
                             .fileType(result.getFileType())
                             .extension(result.getExtension())
                             .build();
-
                     attachedDocs.add(doc);
                 }
 
                 tenant.setDocuments(attachedDocs);
-
             } catch (Exception e) {
                 throw new FileUploadException("Error al subir documentos: " + e.getMessage());
             }
         }
 
-        Tenants savedTenant = tenantsRepository.save(tenant);
-        return tenantsMapper.toDto(savedTenant);
+        return tenantsMapper.toDto(tenantsRepository.save(tenant));
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "tenant", key = "#id")
     public TenantsResponseDto updateTenant(Long id, TenantsRequestDto dto, MultipartFile[] documents) {
-        Tenants existingTenant = tenantsRepository.findById(id)
+        Tenants existingTenant = tenantsRepository.findByIdAndCreatedBy(id, getCurrentUserEmail())
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
         if (!existingTenant.getDni().equals(dto.dni()) &&
-                tenantsRepository.existsByDni(dto.dni())) {
+                tenantsRepository.existsByDniAndCreatedBy(dto.dni(), getCurrentUserEmail())) {
             throw new DuplicateDniException("Ya existe otro inquilino con DNI: " + dto.dni());
         }
 
@@ -161,76 +156,56 @@ public class TenantsServiceImpl implements TenantsService {
             }
         }
 
-        Tenants updatedTenant = tenantsRepository.save(existingTenant);
-
-        return tenantsMapper.toDto(updatedTenant);
+        return tenantsMapper.toDto(tenantsRepository.save(existingTenant));
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "tenant", key = "#id")
     public void deleteTenant(Long id) {
-
-        Tenants tenant = tenantsRepository.findById(id)
+        Tenants tenant = tenantsRepository.findByIdAndCreatedBy(id, getCurrentUserEmail())
                 .orElseThrow(() -> new TenantNotFoundExceptions(id.toString()));
 
         boolean hasActiveContract = tenant.getContracts().stream().anyMatch(Contract::isActive);
-
         if (hasActiveContract) {
-            throw new TenantHasActiveContractException("El inquilino ya tiene al menos un contrato activo y no puede ser eliminado.");
+            throw new TenantHasActiveContractException("El inquilino tiene al menos un contrato activo.");
         }
 
-        List<String> publicIds = new ArrayList<>();
-
-        for (AttachedDocument doc : tenant.getDocuments()) {
-            if (doc.getPublicId() != null && !doc.getPublicId().isEmpty()) {
-                publicIds.add(doc.getPublicId());
-            }
-        }
+        List<String> publicIds = tenant.getDocuments().stream()
+                .map(AttachedDocument::getPublicId)
+                .filter(pid -> pid != null && !pid.isEmpty())
+                .collect(Collectors.toList());
 
         if (!publicIds.isEmpty()) {
             try {
                 fileUploadService.deleteMultipleFiles(publicIds);
             } catch (Exception e) {
-                throw new FileUploadException("Error al eliminar algunos documentos de Cloudinary: " + e.getMessage());
+                throw new FileUploadException("Error al eliminar documentos: " + e.getMessage());
             }
         }
 
-        tenantsRepository.deleteById(id);
+        tenantsRepository.delete(tenant);
     }
 
     @Override
     @Transactional
     public void removeTenantDocumentById(Long tenantId, String documentId) {
-
-        Tenants tenant = tenantsRepository.findById(tenantId)
+        Tenants tenant = tenantsRepository.findByIdAndCreatedBy(tenantId, getCurrentUserEmail())
                 .orElseThrow(() -> new TenantNotFoundExceptions(tenantId.toString()));
 
-        AttachedDocument docToRemove = null;
-        for (AttachedDocument doc : tenant.getDocuments()) {
-            if (doc.getId() != null && doc.getId().equals(documentId)) {
-                docToRemove = doc;
-                break;
-            }
-        }
+        AttachedDocument docToRemove = tenant.getDocuments().stream()
+                .filter(doc -> doc.getId() != null && doc.getId().equals(documentId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontró el documento para el inquilino"));
 
-        if (docToRemove != null) {
-            // Guardar el publicId para eliminarlo de Cloudinary
-            String publicId = docToRemove.getPublicId();
+        String publicId = docToRemove.getPublicId();
+        tenant.getDocuments().remove(docToRemove);
+        tenantsRepository.save(tenant);
 
-            // Eliminar el documento de la colección
-            tenant.getDocuments().remove(docToRemove);
-            tenantsRepository.save(tenant);
-
-            // Eliminar de Cloudinary
-            try {
-                fileUploadService.deleteFile(publicId);
-                throw new RuntimeException("Documento eliminado del inquilino ID");
-            } catch (Exception e) {
-                throw new FileUploadException("Error al eliminar documento de Cloudinary: " + e.getMessage());
-            }
-        } else {
-            throw new RuntimeException("No se encontró el documento para el inquilino");
+        try {
+            fileUploadService.deleteFile(publicId);
+        } catch (Exception e) {
+            throw new FileUploadException("Error al eliminar documento: " + e.getMessage());
         }
     }
 }

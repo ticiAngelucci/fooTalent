@@ -15,6 +15,7 @@ import BackEnd.Rentary.Properties.Repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,10 @@ public class PropertyServiceImpl implements IPropertyService {
     private final OwnerRepository ownerRepository;
     private final PropertyMapper propertyMapper;
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @Override
     @Transactional
     public PropertyResponseDto createProperty(PropertyRequestDto dto, Long userId) {
@@ -33,6 +38,8 @@ public class PropertyServiceImpl implements IPropertyService {
                 .orElseThrow(() -> new OwnerNotFoundException("Propietario con ID: " + dto.ownerId() + " no encontrado."));
 
         Property property = propertyMapper.toEntity(dto, owner);
+        property.setCreatedBy(getCurrentUserEmail());
+
         if (propertyRepository.existsByAddress(property.getAddress())) {
             throw new PropertyAddressExistsException("Ya existe un inmueble con la dirección especificada.");
         }
@@ -43,7 +50,7 @@ public class PropertyServiceImpl implements IPropertyService {
 
     @Override
     public void deleteProperty(Long id) {
-        Property property = propertyRepository.findById(id)
+        Property property = propertyRepository.findByidPropertyAndCreatedBy(id, getCurrentUserEmail())
                 .orElseThrow(() -> new PropertyNotFoundException(id.toString()));
 
         boolean hasActiveContract = property.getContracts().stream()
@@ -58,9 +65,10 @@ public class PropertyServiceImpl implements IPropertyService {
 
     @Override
     public Page<PropertyResponseDto> getAllActivePropertiesFiltered(String locality, TypeOfProperty type, Pageable pageable) {
-        Page<Property> properties = propertyRepository.findAvailablePropertiesWithFilters(locality, type, pageable);
+        String userEmail = getCurrentUserEmail();
+        Page<Property> properties = propertyRepository.findAvailablePropertiesWithFiltersAndCreatedBy(locality, type, userEmail, pageable);
 
-        if (properties.isEmpty()){
+        if (properties.isEmpty()) {
             return Page.empty();
         }
         return properties.map(propertyMapper::toDto);
@@ -69,7 +77,7 @@ public class PropertyServiceImpl implements IPropertyService {
     @Override
     @Transactional
     public PropertyResponseDto updateProperty(Long propertyId, PropertyRequestDto dto) {
-        Property existingProperty = propertyRepository.findById(propertyId)
+        Property existingProperty = propertyRepository.findByidPropertyAndCreatedBy(propertyId, getCurrentUserEmail())
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + propertyId + " no encontrado."));
 
         if (existingProperty.getStatus() == PropertyStatus.NO_DISPONIBLE) {
@@ -93,13 +101,13 @@ public class PropertyServiceImpl implements IPropertyService {
 
     @Override
     public Page<PropertyResponseDto> getAllProperties(Pageable pageable) {
-        return propertyRepository.findAll(pageable)
+        return propertyRepository.findByCreatedBy(getCurrentUserEmail(), pageable)
                 .map(propertyMapper::toDto);
     }
 
     @Override
     public PropertyResponseDto getPropertyById(Long id) {
-        Property property = propertyRepository.findById(id)
+        Property property = propertyRepository.findByidPropertyAndCreatedBy(id, getCurrentUserEmail())
                 .orElseThrow(() -> new PropertyNotFoundException(id.toString()));
         return propertyMapper.toDto(property);
     }
