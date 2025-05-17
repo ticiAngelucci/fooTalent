@@ -7,7 +7,7 @@ import {
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { DownloadIcon, Trash2Icon, File } from "lucide-react";
-import { deleteDocumentFromContract } from "../services/deleteDocumentService";
+// import { deleteDocumentFromContract } from "../services/deleteDocumentService";
 
 export type ExistingDoc = {
   id: string;
@@ -51,16 +51,16 @@ export const DocumentUpload = ({ existingDocs = [], contractId }: DocumentUpload
           setLocalFiles(updated);
         };
 
-        const handleDeleteFromDb = async (documentId: number) => {
-          if (!contractId) return;
-          try {
-            await deleteDocumentFromContract(contractId, documentId);
-            const updated = docsFromDb.filter((d) => d.id !== documentId.toString());
-            setDocsFromDb(updated);
-          } catch (error) {
-            console.error("Error eliminando documento:", error);
-          }
-        };
+        // const handleDeleteFromDb = async (documentId: number) => {
+        //   if (!contractId) return;
+        //   try {
+        //     await deleteDocumentFromContract(contractId, documentId);
+        //     const updated = docsFromDb.filter((d) => d.id !== documentId.toString());
+        //     setDocsFromDb(updated);
+        //   } catch (error) {
+        //     console.error("Error eliminando documento:", error);
+        //   }
+        // };
 
         return (
           <FormItem className="space-y-4">
