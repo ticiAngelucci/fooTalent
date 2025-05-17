@@ -180,9 +180,7 @@ public class OwnerServiceImpl implements OwnerService {
     public Page<OwnerResponseDto> getOwner(Pageable pageable) {
         String email = getCurrentUserEmail();
 
-        // Aquí también filtrar por createdBy si quieres que el usuario solo vea sus owners
-        // Si quieres dejar todos, omite este filtro
-        return ownerRepository.findAll(pageable)
+        return ownerRepository.findAllByCreatedBy(email, pageable)
                 .map(ownerMapper::toDto);
     }
 
