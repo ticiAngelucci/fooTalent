@@ -79,6 +79,7 @@ public class PaymentMapper {
                 .adjustmentFrequency(contract.getAdjustmentFrequency())
                 .adjustmentType(contract.getAdjustmentType())
                 .deadline(contract.getDeadline())
+                .serviceType(payment.getServiceType())
                 .build();
     }
 
