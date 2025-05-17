@@ -8,6 +8,10 @@ import { Route } from "@/shared/constants/route";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/components/ui/button";
 import { UserRoundPlus } from "lucide-react";
+import { deleteProperty } from "@/modules/properties/services/PropertyService";
+import SuccessToast from "@/shared/components/Toasts/SuccessToast";
+import ErrorToast from "@/shared/components/Toasts/ErrorToast";
+import { toast } from "sonner";
 
 
 
@@ -18,7 +22,40 @@ export default function InmueblesView() {
         fetchProperties();
     }, [fetchProperties]);
 
-    const columns = getPropertyColumns();
+
+   const handleDelete = async (id: any) => {
+  try {
+    await deleteProperty(id);
+    fetchProperties();
+    toast.custom(
+      () => (
+        <SuccessToast
+          title="Inmueble borrado!"
+          description="El inmueble fue borrado exitosamente"
+        />
+      ),
+      {
+        duration: 5000,
+      }
+    );
+  } catch (error: any) {
+    toast.custom(
+      () => (
+        <ErrorToast
+          title="Error"
+          description="Ocurrió un error al borrar el inmueble, intenta de nuevo"
+        />
+      ),
+      {
+        duration: 5000,
+      }
+    );
+  }
+};
+
+
+
+    const columns = getPropertyColumns(handleDelete);
 
     return (
         <DashboardLayout title="Inmuebles"
@@ -37,7 +74,8 @@ export default function InmueblesView() {
                             error={error}
                             columns={columns}
                             totalElements={totalElements}
-                            
+                            handleDelete={handleDelete}
+
                         />
                     </TabsContent>
                 </Tabs>

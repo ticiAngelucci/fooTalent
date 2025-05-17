@@ -33,7 +33,10 @@ interface PropertyTableProps {
   error: string | null;
   columns: ColumnDef<Property>[];
   totalElements: number;
+  handleDelete: (id: any) => void;
 }
+
+
 
 export function PropertyTable({
   data,
@@ -61,6 +64,7 @@ export function PropertyTable({
     }
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   };
+
 
   const table = useReactTable({
     data,

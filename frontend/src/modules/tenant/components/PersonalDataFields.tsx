@@ -8,6 +8,7 @@ import {
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { WarrantyType } from "../enum/TenantEnum";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 
 
 interface PersonalDataFieldsProps {
@@ -96,19 +97,22 @@ const PersonalDataFields = ({ disabled, disableDni }: PersonalDataFieldsProps) =
         render={({ field }) => (
           <FormItem>
             <FormLabel>Garantía</FormLabel>
-            <FormControl>
-              <select
-                {...field}
-                disabled={disabled}
-                className="border border-gray-500 rounded-md px-3 py-2 text-sm w-full"
-              >
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              disabled={disabled}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecciona una garantía" />
+              </SelectTrigger>
+              <SelectContent>
                 {Object.values(WarrantyType).map((warranty) => (
-                  <option key={warranty} value={warranty}>
+                  <SelectItem key={warranty} value={warranty}>
                     {warranty}
-                  </option>
+                  </SelectItem>
                 ))}
-              </select>
-            </FormControl>
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}

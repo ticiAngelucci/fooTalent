@@ -19,16 +19,16 @@ const DashboardLayout = ({ title, subtitle, redirect, dashBtn, children }: Layou
 
     return (
         <SidebarProvider>
-            <div className="flex h-screen w-full bg-neutral-50">
+            <div className="flex min-h-screen w-full bg-neutral-50 overflow-auto">
                 <AppSidebar />
                 <div className="flex flex-col gap-6 w-full">
                     <header className="h-14 w-full px-7 justify-between bg-white flex items-center border-b" role="banner">
                         <SidebarTrigger />
-                        <Link to={Route.Profile}>
+                        <Link to={Route.Profile} className="hover:scale-110 transition-all">
                             <UserAvatar />
                         </Link>
                     </header>
-                    <main className="flex flex-col gap-6 overflow-y-auto overflow-x-hidden px-8">
+                    <main className="flex flex-col gap-6 px-8 overflow-x-auto">
                         <div className="flex gap-4 w-full items-center justify-between font-semibold border-b">
                             <div className="display flex gap-4 pb-4">
                                 {redirect && (

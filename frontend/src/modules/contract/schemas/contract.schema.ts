@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { dates, floatValues, onlyNumber } from "@/utils/validations";
+import { dates, floatValues, onlyNumber, optionalFloat } from "@/utils/validations";
 import { AdjustmentFrequency, AdjustmentType } from "../enums/ContractEnums";
 
 export const ContractSchema = z.object({
@@ -9,10 +9,10 @@ export const ContractSchema = z.object({
   endDate: dates,
   baseRent: floatValues,
   deadline: onlyNumber,
-  deposit: floatValues.optional(),
+  deposit: optionalFloat.optional(),
   adjustmentFrequency: z.nativeEnum(AdjustmentFrequency),
   adjustmentType: z.nativeEnum(AdjustmentType),
-  adjustmentPercentage: floatValues,
+  adjustmentPercentage: optionalFloat,
   documents: z.array(z.instanceof(File)).optional(), // agregado
 });
 

@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 //   type: T["type"];
 //   items: T[];
 // }
-const InfoCard = ({ title, subtitle, type, items }: InfoCardProps) => {
+const InfoCard = ({ title, subtitle, type, items, redirect }: InfoCardProps) => {
     return (
         <div className="bg-neutral-50 flex flex-col justify-between rounded-2xl gap-2.5 shadow-md p-6 space-y-4 border border-zinc-200 h-full">
             <div className="flex flex-col gap-0.5">
@@ -75,7 +75,7 @@ const InfoCard = ({ title, subtitle, type, items }: InfoCardProps) => {
                 })}
             </div>
 
-            <Link className="self-end" to={"#"}>
+            <Link className="self-end" to={redirect}>
                 Ver todos
             </Link>
         </div>

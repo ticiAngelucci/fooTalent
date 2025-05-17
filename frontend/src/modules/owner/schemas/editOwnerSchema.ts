@@ -1,7 +1,7 @@
 import { noSpecialChar, onlyLetters, onlyNumberString, zipCode } from "@/utils/validations";
 import { z } from "zod";
 
-export const ownerSchema = z.object({
+export const EditOwnerSchema = z.object({
   firstName: z
     .string()
     .trim()
@@ -16,18 +16,16 @@ export const ownerSchema = z.object({
     .string()
     .trim()
     .regex(/^\d{8}$/, "El DNI debe tener 8 dígitos, sin puntos ni guiones"),
-  phone: onlyNumberString,
   email: z.string().trim().email("Debes ingresar un correo electrónico válido"),
-  street: noSpecialChar,
-  number: onlyNumberString,
-  locality: onlyLetters,
-  country: onlyLetters,
-  province: onlyLetters,
-  postalCode: zipCode,
-  attachedDocument: z
-    .array(z.instanceof(File))
-    .max(7, "Solo se permiten hasta 7 archivos")
-    .optional(),
+  phone: onlyNumberString,
+  address: z.object({
+    country: onlyLetters,
+    province: onlyLetters,
+    locality: onlyLetters,
+    street: noSpecialChar,
+    number: onlyNumberString,
+    postalCode: zipCode,
+  }),
 });
 
-export type Owner = z.infer<typeof ownerSchema>;
+export type EditOwnerType = z.infer<typeof EditOwnerSchema>;

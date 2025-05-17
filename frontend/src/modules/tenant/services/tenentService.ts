@@ -1,7 +1,6 @@
 import { API_URL } from "@/shared/constants/api";
 import axios from "axios";
-import { Tenant } from "../types/tenant";
-import { useUserStore } from "@/store/userStore";
+import { Tenant } from "../schemas/tenantSchema";
 
 export const createTenant = async (data: Tenant) => {
   const {
@@ -12,7 +11,7 @@ export const createTenant = async (data: Tenant) => {
     email,
     street,
     number,
-    city,
+    locality,
     warranty,
     country,
     province,
@@ -30,7 +29,7 @@ export const createTenant = async (data: Tenant) => {
     address: {
       country: country,
       province: province,
-      locality: city,
+      locality: locality,
       street: street,
       number: number?.toString(),
       postalCode: postalCode,
@@ -40,7 +39,11 @@ export const createTenant = async (data: Tenant) => {
   const token = sessionStorage.getItem("token");
   const formData = new FormData();
   console.log(token);
-  formData.append("tenant", new Blob([JSON.stringify(dataEnviar)], { type: "application/json" }));
+  formData.append(
+    "tenant",
+    new Blob([JSON.stringify(dataEnviar)], { type: "application/json" })
+  );
+  
   files.forEach((file: File) => {
     formData.append("documents", file);
   });

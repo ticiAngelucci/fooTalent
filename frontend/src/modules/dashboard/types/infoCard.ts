@@ -6,6 +6,7 @@ interface BaseCardProps<T, Type extends CardTypes> {
   title: string;
   subtitle: string;
   type: Type;
+  redirect: string;
   items: T[];
 }
 

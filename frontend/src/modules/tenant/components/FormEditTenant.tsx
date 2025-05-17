@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { tenantSchema } from "../schemas/tenantSchema";
-import { Tenant } from "../types/tenant";
+import { Tenant, tenantSchema } from "../schemas/tenantSchema";
 import { FormProvider } from "react-hook-form";
 import PersonalDataFields from "./PersonalDataFields";
 import AddressFields from "./AddressFields";
@@ -14,8 +13,14 @@ import { useUserStore } from "@/store/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Check, CircleAlert } from "lucide-react";
+import { DocumentFromAPI } from "@/shared/interfaces/documentInterface";
 
-const EditTenant = ({ initialData }: { initialData: Tenant }) => {
+type EditTenantProps = {
+  initialData: Tenant;
+  documents?: DocumentFromAPI[];
+};
+
+const EditTenant = ({ initialData, documents }: EditTenantProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -28,7 +33,7 @@ const EditTenant = ({ initialData }: { initialData: Tenant }) => {
     try {
       setIsDeleting(true);
       const response = await axios.delete(
-        `${API_URL}/tenant/${tenantId}`,
+        `${API_URL}/tenants/${tenantId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,6 +68,7 @@ const EditTenant = ({ initialData }: { initialData: Tenant }) => {
       address: {
         country: data.country,
         province: data.province || "",
+        locality: data.locality || "",
         street: data.street || "",
         number: data.number?.toString() || "",
         postalCode: data.postalCode || "",
@@ -130,7 +136,7 @@ const EditTenant = ({ initialData }: { initialData: Tenant }) => {
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PersonalDataFields disabled={!isEditing} disableDni={true} />
-          <DocumentUpload />
+          <DocumentUpload documents={documents} />
         </div>
 
         <AddressFields disabled={!isEditing} />

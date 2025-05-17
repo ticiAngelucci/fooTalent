@@ -9,78 +9,8 @@ import { useContractStore } from "../store/contractStore";
 import { usePropertyStore } from "../store/propertyStore";
 import { useTenantStore } from "../store/tenantStore";
 import { InfoCardProps } from "@/modules/dashboard/types/infoCard";
+import { Route } from "@/shared/constants/route";
 
-// const summary = [
-
-//   { label: "Pagos vencidos", value: 4, icon: <AlertCircle className="size-20 text-error-600" />, borderClass: "border-error-600" },
-//   { label: "Pagos pendientes", value: 6, icon: <Clock4 className="size-20 text-alert-600" />, borderClass: "border-alert-600" },
-//   { label: "Pagos al día", value: 12, icon: <CircleCheck className="size-20 text-success-600" />, borderClass: "border-success-600" },
-// ];
-
-// const properties = [
-//   {
-//     type: "Casa",
-//     location: "San Andrés #4613",
-//     status: "Disponible",
-//     image: "https://example.com/casa.jpg",
-//     name: "Casa Moderna"
-//   },
-//   {
-//     type: "Depto",
-//     location: "San Andrés #4613",
-//     status: "Disponible",
-//     image: "https://example.com/depto.jpg",
-//     name: "Depto Familiar"
-//   },
-// ];
-
-// const contracts = [
-//   {
-//     name: "Maria García",
-//     location: "San Andrés #4613",
-//     image: "https://example.com/avatar1.jpg",
-//     type: "Contrato",
-//     status: "Vigente"
-//   },
-//   {
-//     name: "Juan Perez",
-//     location: "San Andrés #4613",
-//     image: "https://example.com/avatar2.jpg",
-//     type: "Contrato",
-//     status: "Vigente"
-//   },
-// ];
-
-// const contacts = [
-//   {
-//     name: "Carlos Pérez",
-//     location: "San Andrés #4613",
-//     type: "Inquilino",
-//     image: "https://example.com/avatar3.jpg",
-//     status: "Activo"
-//   },
-// ];
-
-// const infoSections = [
-//   {
-//     type: "contract",
-//     title: "Contratos",
-//     subtitle: "Contratos vigentes",
-//     items: contracts,
-//   },
-//   {
-//     type: "property",
-//     title: "Inmuebles",
-//     subtitle: "Listado de inmuebles",
-//     items: properties,
-//   },
-//   {
-//     type: "contact",
-//     title: "Contactos",
-//     subtitle: "Listado de contratos",
-//     items: contacts,
-//   },
-// ];
 const Dashboard = () => {
   const username = useUserStore((state) => state.firstName);
 
@@ -90,28 +20,31 @@ const Dashboard = () => {
   const contracts = useContractStore((state) => state.contracts);
   const fetchContracts = useContractStore((state) => state.fetchContracts);
 
-  const properties = usePropertyStore((state)=> state.properties);
-  const fetchProperties = usePropertyStore((state)=> state.fetchProperties);
+  const properties = usePropertyStore((state) => state.properties);
+  const fetchProperties = usePropertyStore((state) => state.fetchProperties);
 
-  const tenants = useTenantStore((state)=> state.tenants);
-  const fetchTenants = useTenantStore((state)=> state.fetchTenants);
+  const tenants = useTenantStore((state) => state.tenants);
+  const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
+
+  useEffect(()=>{
+    fetchPagos();
+  },[])
 
   useEffect(() => {
     if (contracts.length === 0) {
       fetchContracts();
-    } else {
     }
   }, [contracts.length, fetchContracts]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (properties.length === 0) {
       fetchProperties();
     } else {
     }
   }, [properties.length, fetchProperties]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (tenants.length === 0) {
       fetchTenants();
     } else {
@@ -152,34 +85,51 @@ const Dashboard = () => {
 
   //Cards Sections
 
- const infoSections: InfoCardProps[] = [
-  {
-    type: "contract",
-    title: "Contratos",
-    subtitle: "Contratos vigentes",
-    items: contracts,
-  },
-  {
-    type: "property",
-    title: "Inmuebles",
-    subtitle: "Listado de inmuebles",
-    items: properties,
-  },
-  {
-    type: "contact",
-    title: "Contactos",
-    subtitle: "Listado de contratos",
-    items: tenants,
-  },
-];
+  const infoSections: InfoCardProps[] = [
+    {
+      type: "contract",
+      title: "Contratos",
+      subtitle: "Contratos vigentes",
+      redirect: Route.Contracts,
+      items: contracts,
+    },
+    {
+      type: "property",
+      title: "Inmuebles",
+      subtitle: "Listado de inmuebles",
+      redirect: Route.Immovables,
+      items: properties,
+    },
+    {
+      type: "contact",
+      title: "Contactos",
+      subtitle: "Listado de contratos",
+      redirect: Route.Contact,
+      items: tenants,
+    },
+  ];
 
   if (!username) return null;
 
   return (
     <DashboardLayout subtitle={`Tablero`}>
-      <div className="flex flex-col items-start gap-1 p-3 w-full rounded-2xl text-neutral-950">
-        <h3 className="text-[40px]">¡Bienvenido, <span className="font-bold">{username}!</span></h3>
-        <p className="text-sm font-medium text-neutral-600">Es hora de ponernos al día con tus propiedades. ¡Comencemos!</p>
+      <div className="flex justify-between items-center p-3 w-full rounded-2xl text-neutral-950">
+        {/* Contenido textual */}
+        <div className="flex flex-col items-start gap-1">
+          <h3 className="text-2xl font-semibold">
+            Bienvenido, <span className="font-bold">{username}</span>
+          </h3>
+          <p className="text-sm font-medium text-neutral-600">
+            Es hora de ponernos al día con tus propiedades. ¡Comencemos!
+          </p>
+        </div>
+
+        {/* Imagen decorativa */}
+        <img
+          src="/dashboardLogo.png"
+          alt="Dashboard Logo"
+          className="w-[200px] h-auto object-contain"
+        />
       </div>
       <div className="flex flex-col w-full space-y-6 mb-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 justify-items-center">
@@ -193,6 +143,7 @@ const Dashboard = () => {
               key={idx}
               type={section.type}
               subtitle={section.subtitle}
+              redirect={section.redirect}
               title={section.title}
               items={section.items}
             />

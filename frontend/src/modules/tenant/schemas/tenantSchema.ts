@@ -25,10 +25,10 @@ export const tenantSchema = z.object({
   email: z.string().trim().email("Debes ingresar un correo electrónico válido"),
   street: noSpecialChar,
   number: onlyNumberString,
-  city: onlyLetters,
   country: onlyLetters,
-  warranty: onlyLetters,
+  warranty: noSpecialChar,
   province: onlyLetters,
+  locality: onlyLetters,
   postalCode: zipCode,
   files: z
     .array(z.instanceof(File))

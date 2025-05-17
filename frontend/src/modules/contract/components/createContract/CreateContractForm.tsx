@@ -31,6 +31,8 @@ const CreateContractForm = () => {
     const [ownerId, setOwnerId] = useState<string>();
     const [tenants, setTenants] = useState<Tenant[]>([]);
     const [properties, setProperties] = useState<Property[]>([]);
+    const [hasPaidGuarantee, setHasPaidGuarantee] = useState<boolean>(false);
+
 
     const token = useUserStore.getState().token;
 
@@ -61,18 +63,28 @@ const CreateContractForm = () => {
         getOwnerProperties();
     }, [ownerId])
 
+
     const form = useForm<ContractFormData>({
         resolver: zodResolver(ContractSchema),
         defaultValues: {
             baseRent: 0,
             deadline: 1,
             deposit: 0,
-            adjustmentPercentage: 0
+            // adjustmentPercentage: 
         }
     })
 
+    const adjustmentType = form.watch("adjustmentType");
+
+    useEffect(() => {
+        if (adjustmentType !== AdjustmentType.FIJO) {
+            form.setValue("adjustmentPercentage", 0);
+        }
+    }, [adjustmentType, form]);
+
     const handleSubmit = async (data: ContractFormData) => {
         try {
+            console.log("Datos a enviar", data);
             const formDataToSend = new FormData();
             const contractBlob = new Blob([JSON.stringify(data)], {
                 type: "application/json",
@@ -225,7 +237,7 @@ const CreateContractForm = () => {
                                         <Popover modal>
                                             <PopoverTrigger
                                                 className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"
-                                                >
+                                            >
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                                 {field.value ? field.value : <span>Selecciona una fecha</span>}
                                             </PopoverTrigger>
@@ -259,7 +271,7 @@ const CreateContractForm = () => {
                                         <Popover modal>
                                             <PopoverTrigger
                                                 className="flex gap-1 items-center py-2 px-3 w-full form-input-custom justify-start !font-normal disabled:bg-neutral-50"
-                                                >
+                                            >
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                                 {field.value ? field.value : <span>Selecciona una fecha</span>}
                                             </PopoverTrigger>
@@ -301,9 +313,9 @@ const CreateContractForm = () => {
                                             field.onChange(isNaN(value) ? undefined : value);
                                         }}
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )} />
-
                         <FormField
                             control={form.control}
                             name="deadline"
@@ -339,40 +351,33 @@ const CreateContractForm = () => {
                             )}
                         />
                         <div className="grid grid-cols-2 gap-4">
+                            <FormItem className="space-y-3">
+                                <FormLabel className="text-sm font-semibold">¿Pagó garantía?</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={(val) => setHasPaidGuarantee(val === "1")}
+                                        className="flex gap-4"
+                                    >
+                                        <FormItem className="flex items-center space-x-2 space-y-0">
+                                            <FormControl>
+                                                <RadioGroupItem value="1" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">Pagó</FormLabel>
+                                        </FormItem>
+                                        <FormItem className="flex items-center space-x-2 space-y-0">
+                                            <FormControl>
+                                                <RadioGroupItem value="0" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">No pagó</FormLabel>
+                                        </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                            </FormItem>
+
+                            {/* Campo de depósito controlado por react-hook-form */}
                             <FormField
-                                control={form.control}
                                 name="deposit"
-                                render={({ field }) => (
-                                    <FormItem className="space-y-3">
-                                        <FormLabel className="text-sm font-semibold">
-                                            ¿Pagó garantía?
-                                        </FormLabel>
-                                        <FormControl>
-                                            <RadioGroup
-                                                onValueChange={(val) => field.onChange(Number(val))}
-                                                defaultValue={field.value?.toString()}
-                                                className="flex gap-4"
-                                            >
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="1" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">Pagó</FormLabel>
-                                                </FormItem>
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="0" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">No pagó</FormLabel>
-                                                </FormItem>
-                                            </RadioGroup>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name=''
+                                control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="mb-2 text-sm font-semibold">
@@ -381,15 +386,21 @@ const CreateContractForm = () => {
                                         </FormLabel>
                                         <FormControl>
                                             <Input
+                                            className='no-spinner'
                                                 type="number"
-                                                placeholder='$'
+                                                placeholder="$"
                                                 {...field}
-                                                disabled={form.getValues("deposit") === 0}
+                                                onChange={(e) => {
+                                                    const numberValue = parseInt(e.target.value, 10);
+                                                    field.onChange(isNaN(numberValue) ? undefined : numberValue);
+                                                }}
+                                                disabled={!hasPaidGuarantee}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
-                                )} />
+                                )}
+                            />
                         </div>
 
                         <FormField
@@ -443,7 +454,7 @@ const CreateContractForm = () => {
                                                             <RadioGroupItem value={method} />
                                                         </FormControl>
                                                         <FormLabel className="font-normal">
-                                                            {method === AdjustmentType.FIJO ? "% fijo" : method}
+                                                            {method === AdjustmentType.FIJO ? "% Fijo" : method}
                                                         </FormLabel>
                                                     </FormItem>
                                                 ))}
@@ -471,7 +482,7 @@ const CreateContractForm = () => {
                                                 placeholder='%'
                                                 onChange={(e) => {
                                                     const value = parseFloat(e.target.value);
-                                                    field.onChange(isNaN(value) ? undefined : value);
+                                                    field.onChange(isNaN(value) ? 0 : value);
                                                 }}
                                                 disabled={form.watch("adjustmentType") !== AdjustmentType.FIJO}
                                             />
