@@ -3,6 +3,7 @@ package BackEnd.Rentary.Payments.DTOs;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
+import BackEnd.Rentary.Payments.Enums.ServiceType;
 import lombok.Builder;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -19,4 +20,5 @@ public class PaymentDetailedResponse {
     private AdjustmentFrequency adjustmentFrequency;
     private AdjustmentType adjustmentType;
     private int deadline;
+    private ServiceType serviceType;
 }
