@@ -1,4 +1,5 @@
-![Logo](https://media.discordapp.net/attachments/1357793365369819236/1368021024586858556/9.png?ex=6816b45c&is=681562dc&hm=50789013b0939519c13812fe19f5068b30a3bec81d5393143b4f2795eb3c3db6&=&format=webp&quality=lossless&width=1712&height=856)
+![Logo](https://media.discordapp.net/attachments/1357793365369819236/1368021024586858556/9.png?ex=6829d21c&is=6828809c&hm=2eb2625fbc457fdb52d0fe0cc154571126e528716d8408c84926760a69afd5d7&=&format=webp&quality=lossless&width=1712&height=856)
+
 
 - [Rentary](#rentary)
   - [Descripción](#descripción)
@@ -49,20 +50,19 @@ https://foo-talent.vercel.app/
 
 
 
-|<img src="https://media.licdn.com/dms/image/v2/D4D03AQHY7DLB8pepQg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1719027465917?e=1751500800&v=beta&t=0182GteP94xBUfAFIzN5kwfH2R7QvgUytf96uYeASlY" width="100" height="100" alt="Valentina De Armas">|<img src="https://media.licdn.com/dms/image/v2/D4D03AQEB1mmPXzqisA/profile-displayphoto-shrink_800_800/B4DZX82DxhGkAc-/0/1743703784985?e=1751500800&v=beta&t=IkeSPKx4OgqaYlR2MzON28r4SsvpX73pjABdPG09GOI" width="100" height="100" alt="Sebastián Gómez">|<img src="https://media.licdn.com/dms/image/v2/D4D03AQEDq0mTDEpjNQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1675814382529?e=1751500800&v=beta&t=Hb_dEAZJXPrxJGAbarMt1Ap5YssfPkbiP6D6UQHmK-Y" width="100" height="100" alt="Daiana Romano">|<img src="https://media.discordapp.net/attachments/1366936047170355252/1367945465915637760/avatar1_1.png?ex=68166dfe&is=68151c7e&hm=1e6f47fc21f77f31fc6dabb819b5542a4f9a97cc172ee2dc2319e102de681e4a&=&format=webp&quality=lossless" width="100" height="100" alt="Rodrigo Manriquez">|
+|<img src="https://media.licdn.com/dms/image/v2/D4D03AQHY7DLB8pepQg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1719027465917?e=1751500800&v=beta&t=0182GteP94xBUfAFIzN5kwfH2R7QvgUytf96uYeASlY" width="100" height="100" alt="Valentina De Armas">|<img src="https://media.licdn.com/dms/image/v2/D4D03AQEB1mmPXzqisA/profile-displayphoto-shrink_800_800/B4DZX82DxhGkAc-/0/1743703784985?e=1751500800&v=beta&t=IkeSPKx4OgqaYlR2MzON28r4SsvpX73pjABdPG09GOI" width="100" height="100" alt="Sebastián Gómez">|<img src="https://media.licdn.com/dms/image/v2/D4D03AQEDq0mTDEpjNQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1675814382529?e=1751500800&v=beta&t=Hb_dEAZJXPrxJGAbarMt1Ap5YssfPkbiP6D6UQHmK-Y" width="100" height="100" alt="Daiana Romano">|<img src="https://media.licdn.com/dms/image/v2/D4E03AQGofiBqY9sCRQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1720991341142?e=1752710400&v=beta&t=7HmntPf3a1eZ52lRVwGXSfgksFolfZXpcqocnqJm1BA" width="100" height="100" alt="Rodrigo Manriquez">|
 | :--: | :--: | :--: | :--: |
 |**Valentina De Armas**|**Sebastián Gómez**|**Daiana Romano**|**Rodrigo Manriquez**|
 |[![Behance](https://img.shields.io/badge/Behance-1769FF?style=for-the-badge&logo=Behance&logoColor=white)](https://www.behance.net/valentinadearmas) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white)](https://www.linkedin.com/in/valentina-de-armas) | [![Behance](https://img.shields.io/badge/Behance-1769FF?style=for-the-badge&logo=Behance&logoColor=white)](https://www.behance.net/sebasrgomez90) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white)](https://www.linkedin.com/in/sebasr-gomez90/) |[![Behance](https://img.shields.io/badge/Behance-1769FF?style=for-the-badge&logo=Behance&logoColor=white)]() [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white)](https://www.linkedin.com/in/daianaromano/) | [![Behance](https://img.shields.io/badge/Behance-1769FF?style=for-the-badge&logo=Behance&logoColor=white)](https://www.behance.net/rodrigomanriqu7) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=LinkedIn&logoColor=white)](https://www.linkedin.com/in/romanriquez/) |
+
 
 ### QA | testing
 
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
-|<img src="https://media.licdn.com/dms/image/v2/D4E35AQH3B7hb3UUnVw/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1679417827951?e=1746817200&v=beta&t=IDqWdXv9ma9uvg15Bf-ngr2M6bECNT9cVEaQplmaoVw" width="100" height="100" alt="Handrych Márquez">|
-|:--:|
-|**Handrych Márquez**<br>*QA Manual*|
-|[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/handrych-m%C3%A1rquez/)|
-
+|<img src="https://media.licdn.com/dms/image/v2/D4E35AQH3B7hb3UUnVw/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1679417827951?e=1748109600&v=beta&t=5rREHlSfOZTugjcXzM-ToA9_gj5329h3nWEBsg1uQ5Q" width="100" height="100" alt="Handrych Márquez">|<img src="https://media.licdn.com/dms/image/v2/D4E03AQFBiePXwSDa0w/profile-displayphoto-shrink_800_800/B4EZaURM7vHMAc-/0/1746244260589?e=1752710400&v=beta&t=Hn-tIrDusab4fXrOkhnGOR9rpuJt_EyctIOLbmtpdf4" width="100" height="100" alt="Gabriela Gutierrez">|
+|:--:|:--:|
+|**Handrych Márquez**<br>*QA Manual*<br>[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/handrych-m%C3%A1rquez/)|**Gabriela Gutierrez**<br>*QA Manual*<br>[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gabriela-gutierrez-376296250/)|
 
 ### Frontend
 
