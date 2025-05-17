@@ -4,18 +4,15 @@ package BackEnd.Rentary.BCRA.Controller;
 import BackEnd.Rentary.BCRA.DTO.BcraResponse;
 import BackEnd.Rentary.BCRA.DTO.BcraResult;
 import BackEnd.Rentary.BCRA.Service.BcraApiService;
-import BackEnd.Rentary.BCRA.Service.RentUpdateService;
-import BackEnd.Rentary.Contracts.Entity.Contract;
-import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
-import BackEnd.Rentary.Contracts.Respository.IContractRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
+import java.time.LocalDate;
 import static BackEnd.Rentary.BCRA.Util.Calcs.calculateAdjustedRent;
-
+import static BackEnd.Rentary.BCRA.Util.Calcs.shouldAdjust;
 
 
 @RestController
@@ -23,13 +20,9 @@ import static BackEnd.Rentary.BCRA.Util.Calcs.calculateAdjustedRent;
 public class BcraController {
 
     private final BcraApiService bcraApiService;
-    private final IContractRepository contractRepository;
-    private final RentUpdateService rentUpdateService;
 
-    public BcraController(BcraApiService bcraApiService, IContractRepository contractRepository, RentUpdateService rentUpdateService) {
+    public BcraController(BcraApiService bcraApiService) {
         this.bcraApiService = bcraApiService;
-        this.contractRepository = contractRepository;
-        this.rentUpdateService = rentUpdateService;
     }
 
     @GetMapping("/data")
@@ -44,35 +37,21 @@ public class BcraController {
     }
 
     @GetMapping("/rental-adjustment")
-    public Mono<Double> getRentalAdjustment(@RequestParam Long contractId) {
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contrato no encontrado"));
+    public Mono<Double> getRentalAdjustment(
+            @RequestParam double baseRent,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam int monthsBetweenAdjustments) {
 
-        if (contract.getAdjustmentType() == AdjustmentType.ICL) {
-            return bcraApiService.fetchData()
-                    .map(response -> response.results().stream()
-                            .findFirst()
-                            .orElseThrow(() -> new IllegalStateException("No se encontró valor ICL actual"))
-                    )
-                    .map(icl -> {
-                        double newRent = calculateAdjustedRent(contract, icl.value());
-                        contract.setCurrentRent(newRent);
-                        return contractRepository.save(contract).getCurrentRent();
-                    });
-        } else {
-            double newRent = calculateAdjustedRent(contract, 0.0);
-            contract.setCurrentRent(newRent);
-            contractRepository.save(contract);
-            return Mono.just(newRent);
+        LocalDate today = LocalDate.now();
+
+        if (!shouldAdjust(startDate, monthsBetweenAdjustments, today)) {
+            return Mono.just(baseRent); // Not time to adjust yet
         }
-    }
-    @PostMapping("/trigger-rent-update")
-    public ResponseEntity<String> triggerRentUpdate() {
-        rentUpdateService.updateCurrentRentAndPayments();
-        return ResponseEntity.ok("Actualización de rentas y pagos ejecutada manualmente.");
+
+        return bcraApiService.fetchData()
+                .map(response -> response.results().isEmpty() ? null : response.results().get(0))
+                .map(icl -> calculateAdjustedRent(baseRent, icl.value()));
     }
 }
-
-
 
 
