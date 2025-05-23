@@ -3,8 +3,8 @@ package BackEnd.Rentary.Auth.DTOs;
 import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
-        @NotBlank(message = "El email no puede ser vacío")
+        @NotBlank(message = "El campo email no puede estar vacío")
         String email,
-        @NotBlank(message = "La contraseña no puede ser vacío")
+        @NotBlank(message = "el campo contraseña no puede estar vacío")
         String password
 ) {}
