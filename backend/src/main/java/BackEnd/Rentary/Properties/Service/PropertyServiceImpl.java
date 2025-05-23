@@ -40,10 +40,6 @@ public class PropertyServiceImpl implements IPropertyService {
         Property property = propertyMapper.toEntity(dto, owner);
         property.setCreatedBy(getCurrentUserEmail());
 
-        if (propertyRepository.existsByAddress(property.getAddress())) {
-            throw new PropertyAddressExistsException("Ya existe un inmueble con la dirección especificada.");
-        }
-
         propertyRepository.save(property);
         return propertyMapper.toDto(property);
     }
