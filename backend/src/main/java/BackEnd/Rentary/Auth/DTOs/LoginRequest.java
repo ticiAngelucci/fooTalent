@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 public record LoginRequest(
         @NotBlank(message = "El campo email no puede estar vacío")
         String email,
-        @NotBlank(message = "el campo contraseña no puede estar vacío")
+        @NotBlank(message = "El campo contraseña no puede estar vacío")
         String password
 ) {}
