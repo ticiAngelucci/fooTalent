@@ -76,10 +76,6 @@ public class PropertyServiceImpl implements IPropertyService {
         Property existingProperty = propertyRepository.findByidPropertyAndCreatedBy(propertyId, getCurrentUserEmail())
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + propertyId + " no encontrado."));
 
-        if (existingProperty.getStatus() == PropertyStatus.NO_DISPONIBLE) {
-            throw new PropertyDeletedStatusException("No se puede editar. Este inmueble fue eliminado.");
-        }
-
         Address newAddress = dto.address();
         Address currentAddress = existingProperty.getAddress();
 
