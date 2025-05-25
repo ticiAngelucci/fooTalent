@@ -1,7 +1,6 @@
 package BackEnd.Rentary.Payments.Mapper;
 
 import BackEnd.Rentary.Contracts.Entity.Contract;
-import BackEnd.Rentary.Payments.DTOs.ContractSummary;
 import BackEnd.Rentary.Payments.DTOs.PaymentDetailedResponse;
 import BackEnd.Rentary.Payments.DTOs.PaymentRentalResponseDto;
 import BackEnd.Rentary.Payments.DTOs.PaymentResponse;
@@ -10,7 +9,6 @@ import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Tenants.entities.Tenants;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 
 @Component
 public class PaymentMapper {
