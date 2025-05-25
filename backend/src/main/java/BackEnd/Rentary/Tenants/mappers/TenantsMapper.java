@@ -1,12 +1,10 @@
 package BackEnd.Rentary.Tenants.mappers;
 
 import BackEnd.Rentary.Common.Address;
-import BackEnd.Rentary.Common.AttachedDocument;
 import BackEnd.Rentary.Common.DTOs.DocumentDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsRequestDto;
 import BackEnd.Rentary.Tenants.DTOs.TenantsResponseDto;
 import BackEnd.Rentary.Tenants.entities.Tenants;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -47,7 +47,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler))
-                //se añaden manejos de excepciones que el navegador toma como falla de CORS
+
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())

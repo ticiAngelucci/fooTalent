@@ -28,7 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String path = request.getServletPath();
 
-        // Saltar filtros para rutas públicas
+
         if (path.startsWith("/auth") || path.startsWith("/Oauth") || path.startsWith("/swagger") || path.startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
             return;

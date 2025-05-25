@@ -8,7 +8,6 @@ import BackEnd.Rentary.Owners.Repositories.OwnerRepository;
 import BackEnd.Rentary.Properties.DTOs.PropertyRequestDto;
 import BackEnd.Rentary.Properties.DTOs.PropertyResponseDto;
 import BackEnd.Rentary.Properties.Entities.Property;
-import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import BackEnd.Rentary.Properties.Enums.TypeOfProperty;
 import BackEnd.Rentary.Properties.Mapper.PropertyMapper;
 import BackEnd.Rentary.Properties.Repository.PropertyRepository;

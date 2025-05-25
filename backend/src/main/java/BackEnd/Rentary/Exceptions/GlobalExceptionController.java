@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @RestControllerAdvice
 public class GlobalExceptionController {
 
@@ -35,7 +35,6 @@ public class GlobalExceptionController {
                 details
         );
 
-        log.warn("Validation error: {}", details);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -47,7 +46,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("Verifica la sintaxis JSON y los tipos de datos enviados")
         );
 
-        log.warn("Invalid request body: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -59,7 +57,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMostSpecificCause().getMessage())
         );
 
-        log.warn("Invalid data access: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -76,7 +73,6 @@ public class GlobalExceptionController {
                 details
         );
 
-        log.warn("Constraint violation: {}", details);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -92,7 +88,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("Métodos soportados: " + String.join(", ", supportedMethods))
         );
 
-        log.warn("Method not allowed: {} for path {}", ex.getMethod(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
@@ -104,7 +99,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("Path: " + ex.getRequestURL())
         );
 
-        log.warn("Resource not found: {}", ex.getRequestURL());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -116,7 +110,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("No tienes los permisos necesarios para realizar esta acción")
         );
 
-        log.warn("Access denied for user");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
@@ -128,7 +121,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.error("Internal server error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
@@ -141,7 +133,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("ID del contrato: " + ex.getMessage())
         );
 
-        log.warn("Contract not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -153,7 +144,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("ID del pago: " + ex.getMessage())
         );
 
-        log.warn("Payment not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -165,7 +155,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("ID del contrato: " + ex.getMessage())
         );
 
-        log.warn("Contract already exists: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
@@ -177,7 +166,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("ID del inmueble: " + ex.getMessage())
         );
 
-        log.warn("Property not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -189,7 +177,6 @@ public class GlobalExceptionController {
                 Collections.singletonList("ID del inquilino: " + ex.getMessage())
         );
 
-        log.warn("Tenant not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -201,7 +188,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("Property unavailable: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
@@ -213,7 +199,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("Owner not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -225,7 +210,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("Duplicate DNI: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
@@ -237,7 +221,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("Property address exists: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
@@ -249,7 +232,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("Attempt to modify deleted property: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -261,7 +243,6 @@ public class GlobalExceptionController {
                 Collections.singletonList(ex.getMessage())
         );
 
-        log.warn("File upload error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }

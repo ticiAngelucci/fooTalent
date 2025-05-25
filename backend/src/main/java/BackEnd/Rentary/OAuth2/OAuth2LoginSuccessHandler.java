@@ -42,7 +42,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         user.setIsActive(true);
         String jwt = jwtService.generateToken(user);
 
-        // Redireccionamiento directo con el token en la URL
         String redirectUrl = frontUrl + "/oauth-redirect?token=" + jwt;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
