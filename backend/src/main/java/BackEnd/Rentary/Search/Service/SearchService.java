@@ -24,7 +24,6 @@ public class SearchService {
     public Map<String, Object> search(String term, String entityType) {
         Map<String, Object> result = new HashMap<>();
 
-        // Validar si el término corresponde a un enum de tipo de propiedad
         TypeOfProperty type = parseTypeOfProperty(term);
 
         if ("owner".equalsIgnoreCase(entityType)) {
@@ -52,7 +51,6 @@ public class SearchService {
             result.put("properties", properties);
 
         } else {
-            // Búsqueda en todas las entidades
             List<Owner> owners = ownerRepository
                     .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDniContainingIgnoreCaseOrEmailContainingIgnoreCase(
                             term, term, term, term);

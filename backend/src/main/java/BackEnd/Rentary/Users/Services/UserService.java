@@ -61,12 +61,10 @@ public class UserService {
         return userRepository.findAllUserByIsActiveTrue(pageable);
     }
 
-    // Entity to DTO
     public UserDTO convertToDto(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
 
-    //Busca o crea el user cuando se inicia sesion con google
     public User findOrCreateUser(String email, String fullName) {
         String normalizedEmail = email.trim().toLowerCase();
 
@@ -97,7 +95,6 @@ public class UserService {
 
         boolean isModified = false;
 
-        // Validar y actualizar firstName
         if (updatedUserDTO.getFirstName() != null && !updatedUserDTO.getFirstName().equals(existingUser.getFirstName())) {
             AuthResponse firstNameValidation = userValidation.validateName(updatedUserDTO.getFirstName(), "Nombre");
             if (!firstNameValidation.success()) {
@@ -107,7 +104,6 @@ public class UserService {
             isModified = true;
         }
 
-        // Validar y actualizar lastName
         if (updatedUserDTO.getLastName() != null && !updatedUserDTO.getLastName().equals(existingUser.getLastName())) {
             AuthResponse lastNameValidation = userValidation.validateName(updatedUserDTO.getLastName(), "Apellido");
             if (!lastNameValidation.success()) {

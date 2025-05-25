@@ -4,7 +4,6 @@ import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

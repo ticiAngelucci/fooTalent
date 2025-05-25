@@ -21,7 +21,7 @@ public class JwtService {
                 .withClaim("lastName", user.getLastName())
                 .withClaim("role", user.getRole().name())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 86400000)) // 1 día
+                .withExpiresAt(new Date(System.currentTimeMillis() + 86400000))
                 .sign(Algorithm.HMAC256(SECRET_KEY));
     }
 
