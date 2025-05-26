@@ -1,13 +1,13 @@
 import { InfoCardProps } from "@/modules/dashboard/types/infoCard";
-import { Check, CircleAlert, ClipboardPenLine, ContactRound, House } from "lucide-react";
+import {
+  Check,
+  CircleAlert,
+  ClipboardPenLine,
+  ContactRound,
+  House,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
-// interface Props<T extends InfoCardItem> {
-//   title: string;
-//   subtitle: string;
-//   type: T["type"];
-//   items: T[];
-// }
 const InfoCard = ({
   title,
   subtitle,
@@ -33,7 +33,7 @@ const InfoCard = ({
                 {type === "contact" && (
                   <>
                     <ContactRound className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2">
+                    <div className="flex flex-col w-full h-full gap-2 truncate">
                       <p>
                         Nombre:{" "}
                         <span className="text-black font-semibold">
@@ -64,12 +64,12 @@ const InfoCard = ({
                 {type === "contract" && (
                   <>
                     <ClipboardPenLine className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2">
+                    <div className="flex flex-col w-full h-full gap-2 truncate">
                       <p>
                         Tipo Inmueble:{" "}
                         <span className="text-black font-semibold">Casa</span>
                       </p>
-                      <p className=" overflow-ellipsis">
+                      <p className=" truncate">
                         Ubicación:{" "}
                         <span className="text-black font-semibold">
                           {item.propertyAddress}
@@ -81,7 +81,7 @@ const InfoCard = ({
                           {item.ownerFullName}
                         </span>
                       </p>
-                    {item.active ? (
+                      {item.active ? (
                         <span className="flex gap-2.5  items-center mt-1 text-success-700 bg-green-50 border border-success-700 px-2 py-1 rounded-full w-fit text-sm">
                           <Check className="size-5" />
                           Vigente
@@ -98,17 +98,24 @@ const InfoCard = ({
                 {type === "property" && (
                   <>
                     <House className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2">
+                    <div className="flex flex-col w-full h-full gap-2 truncate">
                       <p>
                         Tipo de inmueble:{" "}
                         <span className="text-black font-semibold">
-                          {item.type}
+                          {item.typeOfProperty
+                            .toLowerCase()
+                            .split("_")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}
                         </span>
                       </p>
-                      <p>
+                      <p className="truncate">
                         Ubicación:{" "}
                         <span className="text-black font-semibold">
-                          Sarmiento 1111, reti...
+                          {`${item.street}, ${item.locality}, ${item.province}`}
                         </span>
                       </p>
                       <p>
@@ -121,7 +128,9 @@ const InfoCard = ({
                       item.propertyStatus == "DISPONIBLE" ? (
                         <span className="flex gap-2.5  items-center mt-1 text-xs text-success-700 bg-green-50 border border-success-700 px-2 py-1 rounded-full w-fit normal-case">
                           <Check className="size-5" />
-                          {item.propertyStatus === "DISPONBLE" && <>Disponible</>}
+                          {item.propertyStatus === "DISPONBLE" && (
+                            <>Disponible</>
+                          )}
                         </span>
                       ) : (
                         <span className="flex gap-2.5  items-center mt-1 text-xs text-error-700 bg-error-50 border border-error-700 px-2 py-1 rounded-full w-fit normal-case">
