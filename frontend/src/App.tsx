@@ -3,7 +3,6 @@ import Register from "./modules/auth/pages/Register";
 import Login from "./modules/auth/pages/Login";
 import Dashboard from "./modules/dashboard/pages/Dashboard";
 import LandingPage from "./modules/landingPage/page/LandingPage";
-import Contact from "./modules/contact/pages/Contact";
 import Immovables from "./modules/immovables/pages/Immovables";
 import NotFound from "./modules/error/pages/404NotFound";
 import { Route as AppRoute } from "./shared/constants/route";
@@ -27,6 +26,7 @@ import PaymentRegister from "./modules/payments/pages/PaymentRegister";
 import ListContracts from "./modules/contract/pages/ListContracts";
 import AddContract from "./modules/contract/pages/AddContract";
 import EditContract from "./modules/contract/pages/EditContract";
+import ContactsView from "./modules/contact/pages/ContactsView";
 
 function App() {
   //comentario para pushear y asi dejar el nuevo env andando
@@ -63,7 +63,7 @@ function App() {
           <Route path={AppRoute.Immovables} element={<Immovables />} />
           <Route path={AppRoute.NewProperty} element={<PropertyRegister />} />
           <Route path={AppRoute.EditProperty} element={<PropertyEdit />} />
-          <Route path={AppRoute.Contact} element={<Contact />} />
+          <Route path={AppRoute.Contact} element={<ContactsView />} />
           <Route path={AppRoute.AddOwner} element={<AddOwner />} />
           <Route path={AppRoute.AddTenant} element={<AddTenant />} />
           <Route path={AppRoute.EditOwner} element={<EditOwner />} />

@@ -24,6 +24,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+import { Button } from "@/shared/components/ui/button";
 
 interface ContractTableProps {
   data: Contract[];
@@ -42,7 +43,7 @@ export function ContractTable({
 }: ContractTableProps) {
   const { fetchContracts } = useContractStore();
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [globalFilter, setGlobalFilter] = useState("");
   
 
   const [pagination, setPagination] = useState<PaginationState>({
