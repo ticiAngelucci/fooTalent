@@ -24,7 +24,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Button } from "@/shared/components/ui/button";
 
 interface ContractTableProps {
   data: Contract[];
@@ -43,7 +42,6 @@ export function ContractTable({
 }: ContractTableProps) {
   const { fetchContracts } = useContractStore();
   const [searchQuery, setSearchQuery] = useState("");
-   const [globalFilter, setGlobalFilter] = useState("");
 
   
 
@@ -94,8 +92,6 @@ export function ContractTable({
     fetchContracts(pageIndex, pageSize);
   }, [pageIndex, pageSize, fetchContracts]);
 
-  
-
   if (isLoading) {
     return <div className="text-center py-6">Cargando contratos...</div>;
   }
@@ -137,7 +133,7 @@ export function ContractTable({
 
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
         <Table className="w-full table-fixed">
-          <TableHeader className="bg-[#E5E7EB]">
+          <TableHeader className="bg-neutral-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -164,6 +160,9 @@ export function ContractTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={
+                    row.index % 2 === 0 ? "bg-white" : "bg-neutral-100"
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
