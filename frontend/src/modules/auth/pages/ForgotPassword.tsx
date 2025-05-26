@@ -59,7 +59,6 @@ const ForgotPassword = () => {
                 let errorMessage = "Ocurrió un error al enviar el correo";
                 if (axios.isAxiosError(error) && error.response) {
                     errorMessage = error.response.data?.message || error.message;
-                    console.error(errorMessage);
                 }
                 
                 

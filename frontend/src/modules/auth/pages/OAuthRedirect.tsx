@@ -17,7 +17,7 @@ export default function OauthRedirect() {
         sessionStorage.setItem("token", token);
         setLogin(token);
         await getUser();
-        navigate(Route.Dashboard); // <- no olvides redirigir tras login exitoso
+        navigate(Route.Dashboard);
       } else {
         navigate(Route.Login);
       }

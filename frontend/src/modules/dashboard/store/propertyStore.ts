@@ -17,7 +17,7 @@ const createFetchProperties = (
   return async () => {
     set({ loading: true, error: null });
     try {
-      const data = await getProperties(); // debe devolver Property[]
+      const data = await getProperties();
       set({ properties: data, loading: false });
     } catch (error) {
       set({

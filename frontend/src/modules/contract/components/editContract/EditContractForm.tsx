@@ -159,7 +159,7 @@ const UpdateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
       <Form {...form}>
         <form
           className="grid grid-cols-[4fr_3fr] gap-8 p-6 rounded-md shadow-inner bg-white"
-          onSubmit={form.handleSubmit(handleSubmit, (errors) => console.error("Errores de validación", errors))}>
+          onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="space-y-4">
             <h3 className="font-semibold text-xl mb-10">Datos del contrato</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -335,7 +335,6 @@ const UpdateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
                     Fecha límite de pago
                     <span className="text-neutral-600 font-normal">(requerido)</span>
                   </FormLabel>
-                  {/*//Componentizar esto nestor */}
                   <FormControl>
                     <div className="flex items-center justify-center gap-2 border-1 rounded-sm p-2 border-neutral-300 h-10 w-[9rem]">
                       <span>{field.value}</span>
@@ -484,7 +483,6 @@ const UpdateContractForm = ({ contract, handleDelete }: CreateContractFormProps)
                 )}
               />
 
-              {/* Porcentaje fijo */}
               <FormField
                 control={form.control}
                 name="adjustmentPercentage"

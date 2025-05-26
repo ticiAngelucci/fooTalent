@@ -28,12 +28,10 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
     mode: "onChange",
   });
 
-  // Validar la contraseña en tiempo real
   const watchPassword = form.watch("password");
   const watchConfirmPassword = form.watch("confirmPassword");
 
   useEffect(() => {
-    // Verificar todos los requisitos
     const hasMinLength = watchPassword.length >= 8;
     const hasMaxLength = watchPassword.length <= 16;
     const hasUpperCase = /[A-Z]/.test(watchPassword);
@@ -42,14 +40,13 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
     setIsPasswordValid(hasMinLength && hasMaxLength && hasUpperCase && hasNumber);
   }, [watchPassword]);
 
-  // Validar que las contraseñas coincidan
   useEffect(() => {
     if (watchConfirmPassword) {
       setPasswordsMatch(watchPassword === watchConfirmPassword);
-      setShowPasswordMatch(true); // Mostrar estado de coincidencia cuando se ha escrito algo en el segundo campo
+      setShowPasswordMatch(true);
     } else {
       setPasswordsMatch(true);
-      setShowPasswordMatch(false); // No mostrar mensajes si el segundo campo está vacío
+      setShowPasswordMatch(false);
     }
   }, [watchPassword, watchConfirmPassword]);
 

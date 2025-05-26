@@ -27,7 +27,6 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
     ),
     accessorFn: (row) => `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
     cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
-    // Definiendo el ancho de la columna
     size: 407,
     minSize: 407,
     maxSize: 407,

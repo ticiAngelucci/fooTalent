@@ -8,20 +8,16 @@ const token = useUserStore.getState().token;
 export const createOwner = async (
   data: ReturnType<typeof adaptOwnerToPayload>
 ) => {
-  console.log(data);
-
   const { attachedDocument } = data;
   const { attachedDocument: _, ...ownerWithoutFile } = data;
 
   const formData = new FormData();
 
-  // Agregar el objeto owner sin el documento
   formData.append(
     "owner",
     new Blob([JSON.stringify(ownerWithoutFile)], { type: "application/json" })
   );
 
-  // Agregar el documento si existe
   attachedDocument.forEach((file: File) => {
     formData.append("documents", file);
   });
@@ -44,7 +40,9 @@ export const fetchOwner = async (id: any) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching owner:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data; 
+    }
   }
 };
 
@@ -71,13 +69,11 @@ export const EditOwner = async (
 
   const formData = new FormData();
 
-  // Agregar el objeto owner sin el documento
   formData.append(
     "owner",
     new Blob([JSON.stringify(ownerWithoutFile)], { type: "application/json" })
   );
 
-  // Agregar el documento si existe
   attachedDocument.forEach((file: File) => {
     formData.append("documents", file);
   });

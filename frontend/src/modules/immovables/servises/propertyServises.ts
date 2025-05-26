@@ -30,8 +30,3 @@ export async function fetchAllProperties(page: number = 0, size: number = defaul
     throw error;
   }
 }
-
-// Aquí se  agrega las otras funciones como:
-// export async function createProperty(propertyData: Omit<Property, 'id_property'>): Promise<Property> { ... }
-// export async function updateProperty(id: number, propertyData: Partial<Property>): Promise<Property> { ... }
-// export async function deleteProperty(id: number): Promise<void> { ... }

@@ -40,10 +40,11 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
           },
         }
       );
-      console.log("response", response.data);
       navigate("/contact");
     } catch (err) {
-      console.error(err);
+      if (axios.isAxiosError(err) && err.response) {
+      throw err.response.data;
+    }
     } finally {
       setIsDeleting(false);
     }

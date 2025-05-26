@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Tenant } from "@/modules/tenant/types/tenant";
-import { getTenants } from "../service/dashboardService"; // Ajusta el path si es necesario
+import { getTenants } from "../service/dashboardService";
 
 interface TenantState {
   tenants: Tenant[];
