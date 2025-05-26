@@ -196,9 +196,9 @@ const RegisterForm = () => {
                           {(fieldName === "password" && showPassword) ||
                           (fieldName === "confirmPassword" &&
                             showConfirmPassword) ? (
-                            <EyeOff size={18} />
-                          ) : (
                             <Eye size={18} />
+                          ) : (
+                            <EyeOff size={18} />
                           )}
                         </button>
                       )}
