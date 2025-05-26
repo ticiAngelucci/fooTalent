@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { CircleAlert } from 'lucide-react';
 import { Check } from 'lucide-react';
+import { AxiosError } from "axios";
 
 const FormAddTenant = () => {
 
@@ -55,23 +56,30 @@ const FormAddTenant = () => {
       );
       navigate("/contact")
 
-    } catch {
+    }  catch(error: unknown) {
+      const err = error as AxiosError<{ errorCode: string; errorMessage: string; details: string[] }>;
+    
+      const isConflict = err.response?.status === 409;
+      const detailMessage = err.response?.data?.details?.[0] || "Ya existe un inquilino con ese DNI.";
+    
       toast.custom(
         () => (
           <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-                <CircleAlert/>¡Ha ocurrido un error!
+              <CircleAlert />
+              ¡Ha ocurrido un error!
             </p>
             <p className="text-gray-700 text-sm mt-1">
-              El inquilino no se pudo añadir al sistema, intente nuevamente.
+              {isConflict
+                ? `No se pudo registrar el inquilino. ${detailMessage}`
+                : "El inquilino no se pudo añadir al sistema, intente nuevamente."
+              }
             </p>
           </div>
         ),
-        {
-          duration: 5000,
+        { duration: 5000 }
+          );
         }
-      );
-    }
   });
 
   return (
