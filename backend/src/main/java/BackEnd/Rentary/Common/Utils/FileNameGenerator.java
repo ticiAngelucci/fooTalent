@@ -6,7 +6,6 @@ import java.util.UUID;
 
 
 @Component
-@Slf4j
 public class FileNameGenerator {
 
 
