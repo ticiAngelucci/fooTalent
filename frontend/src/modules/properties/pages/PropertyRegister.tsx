@@ -14,10 +14,12 @@ import { createProperty, getOwnerList } from "../services/PropertyService"
 import { TypeOfProperty } from "../enums/TypeOfProperty"
 import { toast } from "sonner"
 import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react";
 
 const PropertyRegister = () => {
 
     const [ownerList, setOwnerList] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const getOwners = async () => {
@@ -46,7 +48,7 @@ const PropertyRegister = () => {
     });
 
     const onSubmit = async (data: PropertyFormData) => {
-
+        setIsSubmitting(true);
         try {
             await createProperty(data);
             toast.custom(
@@ -66,7 +68,7 @@ const PropertyRegister = () => {
                 },
             );
             navigate(Route.Immovables);
-        } catch (error) {
+        } catch {
             toast.custom(
                 () => (
                     <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
@@ -82,6 +84,8 @@ const PropertyRegister = () => {
                     duration: 5000,
                 }
             );
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -281,8 +285,17 @@ const PropertyRegister = () => {
                             )}
                         />
                         <br />
-                        <Button type="submit" className="col-span-2 flex items-center w-full text-base btn-primary">
-                            <Save className="size-6 mr-2" /> Guardar
+                        <Button
+                            type="submit"
+                            className="col-span-2 flex items-center w-full text-base btn-primary"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="animate-spin size-6 mr-2" />
+                            ) : (
+                                <Save className="size-6 mr-2" />
+                            )}
+                            Guardar
                         </Button>
                     </form>
                 </Form>
