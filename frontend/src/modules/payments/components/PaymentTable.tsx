@@ -109,9 +109,9 @@ export const PaymentTable = ({
         ) : payments.length === 0 ? (
           <TableRow>
             <TableCell colSpan={8} className="text-center py-20">
-               
-              <span className="text-lg text-black font-bold">No se encontraron resultados</span>              
-              </TableCell>
+
+              <span className="text-lg text-black font-bold">No se encontraron resultados</span>
+            </TableCell>
           </TableRow>
         ) : (
           payments
@@ -136,18 +136,18 @@ export const PaymentTable = ({
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem >
                         <Link
-                          className="text-neutral-950"
+                          className="!text-black visited:!text-black"
                           to={Route.EditContract}
                           state={{ contract: payment }}
                         >
-                          <ArrowUpRight className="text-neutral-950 inline !h-5 !w-5" /> Acceder
+                          <ArrowUpRight className="!text-black inline !h-5 !w-5" /> Acceder
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleOpen(payment.contractId.toString(), payment.tenantName, payment.propertyAddress)}>
-                        <DollarSign className="text-neutral-950 inline !h-5 !w-5"/>Registrar pago
+                        <DollarSign className="text-neutral-950 inline !h-5 !w-5" />Registrar pago
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDelete(payment.contractId.toString())}>
-                        <Trash2 className="text-neutral-950 inline !h-5 !w-5"/> Eliminar
+                        <Trash2 className="text-neutral-950 inline !h-5 !w-5" /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
