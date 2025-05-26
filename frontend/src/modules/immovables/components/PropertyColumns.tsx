@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import { Property } from "../types/property";
-import { ChevronsUpDown, MoreHorizontal, Trash2, MoveUpRight } from "lucide-react";
+import { ChevronsUpDown, MoreHorizontal, Trash2, ArrowUpRight } from "lucide-react";
 import clsx from "clsx";
 import {
   DropdownMenu,
@@ -83,17 +83,23 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
     ),
     cell: ({ row }) => {
       const estado = row.getValue("disponibilidad") as string;
+      const estadoLabel =
+    estado === "DISPONIBLE"
+      ? "Disponible"
+      : estado === "OCUPADO"
+      ? "Ocupado"
+      : estado;
       return (
         <span
           className={clsx(
-            "px-3 py-1 rounded-full text-xs font-semibold border",
+            "px-4 py-0.5 rounded-full text-sm font-raleway border inline-block text-center min-w-[98px]",
             {
-              "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
+              "text-green-700 bg-green-50 border-green-400": estado == "DISPONIBLE",
               "text-neutral-700 bg-neutral-50 border-neutral-700": estado === "OCUPADO"
             }
           )}
         >
-          {estado}
+          {estadoLabel}
         </span>
       );
     },
@@ -128,11 +134,11 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
               <Link className="!text-black" to={Route.EditProperty} state={{ property: row.original }}>
-                <MoveUpRight className="text-black inline" /> Acceder
+                <ArrowUpRight className="text-neutral-950 inline !h-5 !w-5" /> Acceder
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleDelete(row.original.id_property.toString())}>
-              <Trash2 className="text-black" />Eliminar
+              <Trash2 className="text-neutral-950 inline !h-5 !w-5"/>Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu >

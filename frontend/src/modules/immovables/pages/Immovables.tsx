@@ -7,7 +7,7 @@ import { PropertyTable } from "../components/PropertyTables";
 import { Route } from "@/shared/constants/route";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/components/ui/button";
-import { UserRoundPlus } from "lucide-react";
+import { HousePlus } from "lucide-react";
 import { deleteProperty } from "@/modules/properties/services/PropertyService";
 import SuccessToast from "@/shared/components/Toasts/SuccessToast";
 import ErrorToast from "@/shared/components/Toasts/ErrorToast";
@@ -23,9 +23,9 @@ export default function InmueblesView() {
     }, [fetchProperties]);
 
 
-   const handleDelete = async (id: any) => {
+   const handleDelete = async (id: string | number) => {
   try {
-    await deleteProperty(id);
+    await deleteProperty(String(id));
     fetchProperties();
     toast.custom(
       () => (
@@ -38,7 +38,7 @@ export default function InmueblesView() {
         duration: 5000,
       }
     );
-  } catch (error: any) {
+  } catch {
     toast.custom(
       () => (
         <ErrorToast
@@ -62,7 +62,7 @@ export default function InmueblesView() {
             redirect={Route.Dashboard}
             dashBtn={<Link to={Route.NewProperty}>
                 <Button className="btn-primary my-4">
-                    <UserRoundPlus />Crear inmueble
+                    <HousePlus />Añadir inmueble
                 </Button>
             </Link>}>
             <div className="rounded-md border mt-4 overflow-x-auto ">

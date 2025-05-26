@@ -2,7 +2,7 @@ import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayou
 import { Button } from "@/shared/components/ui/button";
 import { Tabs, TabsContent } from "@/shared/components/ui/tabs";
 import { Route } from "@/shared/constants/route"
-import { UserRoundPlus } from "lucide-react";
+import { ClipboardPenLine } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useContractStore } from "../store/contractStore";
@@ -30,7 +30,7 @@ const ListContracts = () => {
             redirect={Route.Dashboard}
             dashBtn={<Link to={Route.NewContract}>
                 <Button className="btn-primary my-4">
-                    <UserRoundPlus />Crear contrato
+                    <ClipboardPenLine />Crear contrato
                 </Button>
             </Link>}>
             <div className="rounded-md border mt-4 overflow-x-auto ">

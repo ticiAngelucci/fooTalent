@@ -24,6 +24,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+import { Button } from "@/shared/components/ui/button";
 
 interface ContractTableProps {
   data: Contract[];
@@ -42,6 +43,7 @@ export function ContractTable({
 }: ContractTableProps) {
   const { fetchContracts } = useContractStore();
   const [searchQuery, setSearchQuery] = useState("");
+   const [globalFilter, setGlobalFilter] = useState("");
 
   
 
@@ -55,10 +57,12 @@ export function ContractTable({
     columns,
     state: {
       pagination,
-      globalFilter: searchQuery,
+      globalFilter,
+
+      
     },
-    onPaginationChange: setPagination,
-    onGlobalFilterChange: setSearchQuery,
+    onPaginationChange: setPagination,    
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -66,11 +70,23 @@ export function ContractTable({
     manualPagination: true,
     pageCount: Math.ceil(totalElements / pagination.pageSize),
     globalFilterFn: (row, _columnId, filterValue) => {
-      return Object.values(row.original).some((value) =>
-        String(value).toLowerCase().includes(filterValue.toLowerCase())
+      
+      const originalValues = Object.values(row.original).map(value =>
+        String(value ?? "").toLowerCase()
+      );
+      
+      const cellValues = row.getAllCells().map(cell =>
+        String(cell.getValue() ?? "").toLowerCase()
+      );
+      
+      const allValues = [...originalValues, ...cellValues];
+      return allValues.some(value =>
+        value.includes(filterValue.toLowerCase())
       );
     },
-  });
+});
+
+  
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
@@ -88,6 +104,15 @@ export function ContractTable({
     return <div className="text-center text-red-600 py-6">{error}</div>;
   }
 
+  const handleSearchButton = () => {
+    setGlobalFilter(searchQuery);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setGlobalFilter(value);
+  };
+
   return (
     <>
       <div className="flex gap-2 justify-start items-center w-full mb-4">
@@ -96,12 +121,18 @@ export function ContractTable({
             <Search />
           </span>
           <Input
-            placeholder="Buscar contrato..."
+            placeholder="Buscar"
             className="w-full text-lg py-3 pl-10 pr-4"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
+        <Button
+          variant="outline"
+          onClick={handleSearchButton}
+        >
+          Buscar
+        </Button>
       </div>
 
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
@@ -152,9 +183,9 @@ export function ContractTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center py-20"
                 >
-                  No se encontraron resultados.
+                  <span className="text-lg text-black font-bold">No se encontraron resultados</span> 
                 </TableCell>
               </TableRow>
             )}

@@ -1,4 +1,4 @@
-import { ChevronsUpDown, DollarSign, MoreHorizontal, MoveUpRight, Trash2 } from "lucide-react"
+import { ArrowUpRight, ChevronsUpDown, DollarSign, MoreHorizontal, Trash2 } from "lucide-react"
 import { PaymentStatusBadge } from "./PaymentStatusBadge"
 import { Button } from "@/shared/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table"
@@ -108,7 +108,10 @@ export const PaymentTable = ({
           </TableRow>
         ) : payments.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={8} className="text-center py-4">No se encontraron pagos</TableCell>
+            <TableCell colSpan={8} className="text-center py-20">
+               
+              <span className="text-lg text-black font-bold">No se encontraron resultados</span>              
+              </TableCell>
           </TableRow>
         ) : (
           payments
@@ -137,14 +140,14 @@ export const PaymentTable = ({
                           to={Route.EditContract}
                           state={{ contract: payment }}
                         >
-                          <MoveUpRight className="text-neutral-950 inline" /> Acceder
+                          <ArrowUpRight className="text-neutral-950 inline !h-5 !w-5" /> Acceder
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleOpen(payment.contractId.toString(), payment.tenantName, payment.propertyAddress)}>
-                        <DollarSign />Registrar pago
+                        <DollarSign className="text-neutral-950 inline !h-5 !w-5"/>Registrar pago
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDelete(payment.contractId.toString())}>
-                        <Trash2 /> Eliminar
+                        <Trash2 className="text-neutral-950 inline !h-5 !w-5"/> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
