@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 
 @Component
-@Slf4j
 public class FileValidator {
 
     private static final String[] ACCEPTED_PDF_TYPES = {

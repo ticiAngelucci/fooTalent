@@ -20,7 +20,7 @@ public class EmailService {
 
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body, true); // true para que el body sea HTML
+            helper.setText(body, true);
             helper.setFrom("TU_CORREO@gmail.com");
 
             mailSender.send(message);

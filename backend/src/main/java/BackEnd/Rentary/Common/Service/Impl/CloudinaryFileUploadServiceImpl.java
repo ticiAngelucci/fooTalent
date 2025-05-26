@@ -18,7 +18,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CloudinaryFileUploadServiceImpl implements FileUploadService {
     private final Cloudinary cloudinary;
     private final FileValidator fileValidator;
@@ -48,9 +47,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             String contentType = file.getContentType();
             String originalFilename = file.getOriginalFilename();
 
-            log.info("Subiendo archivo: {} con tipo de contenido: {} para entidad: {}",
-                    originalFilename, contentType, entityType);
-
             String fileExtension = fileNameGenerator.extractFileExtension(originalFilename);
             if (fileExtension.isEmpty()) {
                 fileExtension = fileValidator.determineFileExtension(contentType);
@@ -68,8 +64,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             String secureUrl = (String) uploadResult.get("secure_url");
             String publicId = (String) uploadResult.get("public_id");
 
-            log.info("Archivo subido con éxito a Cloudinary: {}", secureUrl);
-
             return DocumentUploadResult.builder()
                     .url(secureUrl)
                     .publicId(publicId)
@@ -80,7 +74,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
                     .build();
 
         } catch (IOException e) {
-            log.error("Error al subir archivo a Cloudinary", e);
             throw new FileUploadException("Error al subir archivo: " + e.getMessage());
         }
     }
@@ -110,9 +103,8 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
         for (String imageId : imagePublicIds) {
             try {
                 cloudinary.uploader().destroy(imageId, ObjectUtils.emptyMap());
-                log.info("Imagen eliminada con éxito: {}", imageId);
             } catch (Exception e) {
-                log.warn("Error al eliminar imagen {}: {}", imageId, e.getMessage());
+                throw new RuntimeException("Error:" + e);
             }
         }
 
@@ -120,9 +112,8 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
         for (String pdfId : pdfPublicIds) {
             try {
                 cloudinary.uploader().destroy(pdfId, rawOptions);
-                log.info("PDF eliminado con éxito: {}", pdfId);
             } catch (Exception e) {
-                log.warn("Error al eliminar PDF {}: {}", pdfId, e.getMessage());
+                throw new RuntimeException("Error:" + e);
             }
         }
     }
@@ -140,9 +131,7 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
             }
 
             cloudinary.uploader().destroy(publicId, options);
-            log.info("Archivo eliminado con éxito de Cloudinary: {}", publicId);
         } catch (IOException e) {
-            log.error("Error al eliminar archivo de Cloudinary: {}. Error: {}", publicId, e.getMessage());
             throw new RuntimeException("Error al eliminar archivo: " + e.getMessage());
         }
     }
@@ -180,7 +169,6 @@ public class CloudinaryFileUploadServiceImpl implements FileUploadService {
                 }
             }
         } catch (Exception e) {
-            log.error("Error al extraer public_id de URL: {}", url, e);
             return null;
         }
     }
