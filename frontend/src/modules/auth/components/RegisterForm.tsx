@@ -17,10 +17,13 @@ import { Button } from "@/shared/components/ui/button";
 import { MdErrorOutline } from "react-icons/md";
 import { MdCheckCircle } from "react-icons/md";
 import Spinner from "./Spinner";
+import { EyeOff, Eye } from "lucide-react";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [registerError, setRegisterError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -48,11 +51,16 @@ const RegisterForm = () => {
     try {
       const register = await userRegister(data);
       if (register.success == true) {
-        navigate(Route.EmailSendConfirmation, { state: { email: data.email, from: 'register' } });
+        navigate(Route.EmailSendConfirmation, {
+          state: { email: data.email, from: "register" },
+        });
         setRegisterError("");
       }
     } catch (error: any) {
-      if (error?.response?.status === 400 && error?.response?.data?.message === "El email ya está registrado") {
+      if (
+        error?.response?.status === 400 &&
+        error?.response?.data?.message === "El email ya está registrado"
+      ) {
         form.setError("email", {
           type: "server",
           message: "El correo ya está registrado",
@@ -142,32 +150,61 @@ const RegisterForm = () => {
                     }
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type={
-                        fieldName === "password" ||
-                          fieldName === "confirmPassword"
-                          ? "password"
-                          : fieldName === "email"
+                    <div className="relative">
+                      <Input
+                        type={
+                          fieldName === "password"
+                            ? showPassword
+                              ? "text"
+                              : "password"
+                            : fieldName === "confirmPassword"
+                            ? showConfirmPassword
+                              ? "text"
+                              : "password"
+                            : fieldName === "email"
                             ? "email"
                             : "text"
-                      }
-                      placeholder={
-                        fieldName === "email"
-                          ? "Ej: rentary@tudominio.ar"
-                          : fieldName === "password" ||
-                            fieldName === "confirmPassword"
+                        }
+                        placeholder={
+                          fieldName === "email"
+                            ? "Ej: rentary@tudominio.ar"
+                            : fieldName === "password" ||
+                              fieldName === "confirmPassword"
                             ? "***********"
                             : ""
-                      }
-                      {...field}
-                      className={`${inputClass} ${hasError
-                          ? "border-red-500 text-red-700"
-                          : isValid
+                        }
+                        {...field}
+                        className={`${inputClass} pr-10 ${
+                          hasError
+                            ? "border-red-500 text-red-700"
+                            : isValid
                             ? "border-green-500 text-green-700"
                             : "border-gray-400 text-black"
                         }`}
-                    />
+                      />
+                      {(fieldName === "password" ||
+                        fieldName === "confirmPassword") && (
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
+                          onClick={() =>
+                            fieldName === "password"
+                              ? setShowPassword(!showPassword)
+                              : setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        >
+                          {(fieldName === "password" && showPassword) ||
+                          (fieldName === "confirmPassword" &&
+                            showConfirmPassword) ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </FormControl>
+
                   {hasError
                     ? renderError(fieldError?.message || registerError)
                     : renderSuccess(fieldName)}
