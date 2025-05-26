@@ -33,7 +33,7 @@ interface PropertyTableProps {
   error: string | null;
   columns: ColumnDef<Property>[];
   totalElements: number;
-  handleDelete: (id: any) => void;
+  handleDelete: (id: string | number) => void;
 }
 
 
@@ -240,9 +240,9 @@ export function PropertyTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24 text-center py-20"
                   >
-                    No se encontraron resultados.
+                    <span className="text-lg text-black font-bold">No se encontraron resultados</span> 
                   </TableCell>
                 </TableRow>
               )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import {  ArrowUpRight } from 'lucide-react';
 
 import error404Image from '../assets/error-404-illustration.png';
 
@@ -49,7 +49,7 @@ export const Error404Frame: React.FC<Error404FrameProps> = ({ onReturn }) => {
               className="text-[#1E40AF] hover:text-[#1E40AF] border-[#1E40AF] hover:bg-blue-50 font-medium inline-flex items-center"
             >
               Ir al tablero
-              <ArrowRight className="ml-2 h-3 w-3" />
+              <ArrowUpRight className="ml-2 h-3 w-3" />
             </Button>
           </div>
         </div>
