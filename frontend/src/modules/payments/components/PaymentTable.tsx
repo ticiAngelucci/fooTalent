@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronsUpDown, DollarSign, MoreHorizontal, Trash2 } from "lucide-react"
+import { ChevronsUpDown, DollarSign, MoreHorizontal, MoveUpRight, Trash2 } from "lucide-react"
 import { PaymentStatusBadge } from "./PaymentStatusBadge"
 import { Button } from "@/shared/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table"
@@ -9,9 +9,9 @@ import { Route } from "@/shared/constants/route"
 import { Link } from "react-router-dom"
 
 interface PaymentTableProps {
-  payments: Payment[]
-  loading: boolean
-  sortData: (column: keyof Payment) => void
+  payments: Payment[];
+  loading: boolean;
+  sortData: (column: keyof Payment) => void;
   handleOpen: (id: string, name: string, address: string) => void;
   handleDelete: (id: string) => void;
 }
@@ -21,12 +21,12 @@ export const PaymentTable = ({
   loading,
   sortData,
   handleOpen,
-  handleDelete
+  handleDelete,
 }: PaymentTableProps) => {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="bg-gray-50">
+        <TableRow className="bg-neutral-100">
           <TableHead className="w-12"></TableHead>
           <TableHead>
             <Button
@@ -104,28 +104,34 @@ export const PaymentTable = ({
       <TableBody>
         {loading ? (
           <TableRow>
-            <TableCell colSpan={8} className="text-center py-4">Cargando pagos...</TableCell>
+            <TableCell colSpan={8} className="text-center py-4">
+              Cargando pagos...
+            </TableCell>
           </TableRow>
         ) : payments.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={8} className="text-center py-20">
-
-              <span className="text-lg text-black font-bold">No se encontraron resultados</span>
-            </TableCell>
+            <TableCell colSpan={8} className="text-center py-4">No se encontraron pagos</TableCell>
           </TableRow>
         ) : (
           payments
             .filter((payment) => payment.serviceType === "ALQUILER")
-            .map((payment) => (
-              <TableRow key={payment.id}>
+            .map((payment,index) => (
+              <TableRow
+                key={payment.id}
+                className={index % 2 === 0 ? "bg-white" : "bg-neutral-100"}
+              >
                 <TableCell></TableCell>
-                <TableCell className="font-medium">{payment.tenantName}</TableCell>
+                <TableCell className="font-medium">
+                  {payment.tenantName}
+                </TableCell>
                 <TableCell>{payment.propertyAddress}</TableCell>
                 <TableCell>{payment.adjustmentFrequency}</TableCell>
                 <TableCell>{payment.adjustmentType}</TableCell>
                 <TableCell>$ {payment.amount.toLocaleString()}</TableCell>
                 <TableCell>{formatDeadline(payment.deadline)}</TableCell>
-                <TableCell><PaymentStatusBadge status={payment.status} /></TableCell>
+                <TableCell>
+                  <PaymentStatusBadge status={payment.status} />
+                </TableCell>
                 <TableCell>
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
@@ -134,20 +140,20 @@ export const PaymentTable = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem >
+                      <DropdownMenuItem>
                         <Link
                           className="!text-black visited:!text-black"
                           to={Route.EditContract}
                           state={{ contract: payment }}
                         >
-                          <ArrowUpRight className="!text-black inline !h-5 !w-5" /> Acceder
+                          <MoveUpRight className="text-neutral-950 inline" /> Acceder
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleOpen(payment.contractId.toString(), payment.tenantName, payment.propertyAddress)}>
-                        <DollarSign className="text-neutral-950 inline !h-5 !w-5" />Registrar pago
+                        <DollarSign />Registrar pago
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDelete(payment.contractId.toString())}>
-                        <Trash2 className="text-neutral-950 inline !h-5 !w-5" /> Eliminar
+                        <Trash2 /> Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -156,6 +162,6 @@ export const PaymentTable = ({
             ))
         )}
       </TableBody>
-    </Table >
-  )
-}
+    </Table>
+  );
+};

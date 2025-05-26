@@ -174,7 +174,7 @@ export function PropertyTable({
 
         <div className="w-full relative">
           <Table className="w-full table-fixed">
-            <TableHeader className="bg-[#E5E7EB]">
+            <TableHeader className="bg-neutral-100">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -221,6 +221,8 @@ export function PropertyTable({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                      className={row.index % 2 === 0 ? "bg-white" : "bg-neutral-100"}
+
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

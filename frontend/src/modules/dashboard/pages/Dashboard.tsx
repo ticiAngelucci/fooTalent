@@ -84,7 +84,7 @@ const Dashboard = () => {
     {
       type: "contract",
       title: "Contratos",
-      subtitle: "Contratos vigentes",
+      subtitle: "Listado de contratos",
       redirect: Route.Contracts,
       items: contracts,
     },
@@ -98,7 +98,7 @@ const Dashboard = () => {
     {
       type: "contact",
       title: "Contactos",
-      subtitle: "Listado de contratos",
+      subtitle: "Listado de contactos",
       redirect: Route.Contact,
       items: tenants,
     },
