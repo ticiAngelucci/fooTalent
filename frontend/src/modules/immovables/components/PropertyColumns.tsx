@@ -1,7 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import { Property } from "../types/property";
-import { ChevronsUpDown, MoreHorizontal, Trash2, ArrowUpRight } from "lucide-react";
+import {
+  ChevronsUpDown,
+  MoreHorizontal,
+  Trash2,
+  ArrowUpRight,
+} from "lucide-react";
 import clsx from "clsx";
 import {
   DropdownMenu,
@@ -12,7 +17,9 @@ import {
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 
-export const getPropertyColumns = (handleDelete: (propertyId: string) => void): ColumnDef<Property>[] => [
+export const getPropertyColumns = (
+  handleDelete: (propertyId: string) => void
+): ColumnDef<Property>[] => [
   {
     id: "direccion",
     header: ({ column }) => (
@@ -25,8 +32,11 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
         <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    accessorFn: (row) => `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
-    cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
+    accessorFn: (row) =>
+      `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
+    cell: ({ getValue }) => (
+      <div className="truncate">{getValue() as string}</div>
+    ),
     size: 407,
     minSize: 407,
     maxSize: 407,
@@ -44,7 +54,9 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
       </Button>
     ),
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
+    cell: ({ getValue }) => (
+      <div className="truncate">{getValue() as string}</div>
+    ),
     size: 203,
     minSize: 203,
     maxSize: 203,
@@ -62,7 +74,16 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
         <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div>{row.getValue("tipoInmueble")}</div>,
+    cell: ({ row }) => (
+      <div>
+        {row
+          .getValue("tipoInmueble")
+          .toLowerCase()
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}
+      </div>
+    ),
     size: 179,
     minSize: 179,
     maxSize: 179,
@@ -83,18 +104,20 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
     cell: ({ row }) => {
       const estado = row.getValue("disponibilidad") as string;
       const estadoLabel =
-    estado === "DISPONIBLE"
-      ? "Disponible"
-      : estado === "OCUPADO"
-      ? "Ocupado"
-      : estado;
+        estado === "DISPONIBLE"
+          ? "Disponible"
+          : estado === "OCUPADO"
+          ? "Ocupado"
+          : estado;
       return (
         <span
           className={clsx(
             "px-4 py-0.5 rounded-full text-sm font-raleway border inline-block text-center min-w-[98px]",
             {
-              "text-green-700 bg-green-50 border-green-400": estado == "DISPONIBLE",
-              "text-neutral-700 bg-neutral-50 border-neutral-700": estado === "OCUPADO"
+              "text-green-700 bg-green-50 border-green-400":
+                estado == "DISPONIBLE",
+              "text-neutral-700 bg-neutral-50 border-neutral-700":
+                estado === "OCUPADO",
             }
           )}
         >
@@ -132,15 +155,23 @@ export const getPropertyColumns = (handleDelete: (propertyId: string) => void): 
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
-              <Link className="!text-black" to={Route.EditProperty} state={{ property: row.original }}>
-                <ArrowUpRight className="text-neutral-950 inline !h-5 !w-5" /> Acceder
+              <Link
+                className="!text-black"
+                to={Route.EditProperty}
+                state={{ property: row.original }}
+              >
+                <ArrowUpRight className="text-neutral-950 inline !h-5 !w-5" />{" "}
+                Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(row.original.id_property.toString())}>
-              <Trash2 className="text-neutral-950 inline !h-5 !w-5"/>Eliminar
+            <DropdownMenuItem
+              onClick={() => handleDelete(row.original.id_property.toString())}
+            >
+              <Trash2 className="text-neutral-950 inline !h-5 !w-5" />
+              Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu >
+        </DropdownMenu>
       );
     },
     size: 50,
