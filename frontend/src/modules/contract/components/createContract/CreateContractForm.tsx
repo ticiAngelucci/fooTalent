@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom'
 import { Route } from '@/shared/constants/route'
 import ErrorToast from '@/shared/components/Toasts/ErrorToast'
 import DocumentUpload from '../DocumentUpload'
+import { Loader2 } from 'lucide-react'
 
 const CreateContractForm = () => {
     const [owners, setOwners] = useState<Owner[]>([]);
@@ -33,6 +34,7 @@ const CreateContractForm = () => {
     const [tenants, setTenants] = useState<Tenant[]>([]);
     const [properties, setProperties] = useState<Property[]>([]);
     const [hasPaidGuarantee, setHasPaidGuarantee] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
 
     const token = useUserStore.getState().token;
@@ -84,6 +86,7 @@ const CreateContractForm = () => {
     }, [adjustmentType, form]);
 
     const handleSubmit = async (data: ContractFormData) => {
+        setIsSubmitting(true); // Deshabilita el botón y muestra loader
         try {
             const formDataToSend = new FormData();
             const contractBlob = new Blob([JSON.stringify(data)], {
@@ -119,6 +122,8 @@ const CreateContractForm = () => {
                     description={errorMessage}
                 />
             ));
+        } finally {
+            setIsSubmitting(false); // Habilita el botón nuevamente si hay error
         }
     };
 
@@ -498,14 +503,19 @@ const CreateContractForm = () => {
                             />
                         </section>
                         <div className="flex justify-center items-center mt-6">
-                            <Button
-                                type="submit"
-                                className="w-full mt-6 h-10 bg-brand-800 rounded-sm flex items-center justify-center gap-2 text-white hover:bg-brand-700"
-                            >
+                        <Button
+                            type="submit"
+                            className="w-full mt-6 h-10 bg-brand-800 rounded-sm flex items-center justify-center gap-2 text-white hover:bg-brand-700"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? (
+                                <Loader2 className="animate-spin h-5 w-5" />
+                            ) : (
                                 <SaveIcon />
-                                Guardar
-                            </Button>
-                        </div>
+                            )}
+                            Guardar
+                        </Button>
+                    </div>
                     </div>
 
                     <div>
