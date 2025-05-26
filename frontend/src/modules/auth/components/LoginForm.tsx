@@ -36,7 +36,6 @@ const LoginForm = () => {
     },
   });
 
-  // Limpiar error cuando el usuario modifica los campos
   useEffect(() => {
     const subscription = form.watch(() => {
       if (loginError) setLoginError("");

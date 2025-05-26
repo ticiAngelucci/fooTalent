@@ -32,7 +32,9 @@ export async function fetchAllContracts(page: number = 0, size: number = default
     
     return response.data;
   } catch (error) {
-    console.error("Error al obtener contratos:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw error;
   }
 }

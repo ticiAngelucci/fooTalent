@@ -16,7 +16,9 @@ export const createPayment = async (data: PaymentFormData) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data; 
+    }
     throw error;
   }
 };
@@ -37,7 +39,9 @@ export const deletePayment = async (id: string) => {
     );
     return response.data;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data; 
+    }
     throw error;
   }
 };

@@ -21,7 +21,6 @@ export const usePayments = (contractId: number) => {
         setError(null);
       } catch (err) {
         setError('Error al cargar los datos de pagos');
-        console.error('Error al cargar los datos:', err);
       } finally {
         setLoading(false);
       }

@@ -12,7 +12,7 @@ interface BaseCardProps<T, Type extends CardTypes> {
 
 type ContractCardProps = BaseCardProps<Contract, "contract">;
 
-// Cuando tengas estos modelos reales, podés tipar igual
+
 type PropertyCardProps = BaseCardProps<any, "property">;
 type ContactCardProps = BaseCardProps<any, "contact">;
 

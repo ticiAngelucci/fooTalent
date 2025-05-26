@@ -58,7 +58,6 @@ export const DocumentUpload = ({ existingDocs = [], contractId }: DocumentUpload
             const updated = docsFromDb.filter((d) => d.id !== documentId.toString());
             setDocsFromDb(updated);
           } catch (error) {
-            console.error("Error eliminando documento:", error);
           }
         };
 

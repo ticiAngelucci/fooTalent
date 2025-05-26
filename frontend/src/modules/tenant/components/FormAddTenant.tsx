@@ -36,7 +36,6 @@ const FormAddTenant = () => {
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      console.log(data);
       await createTenant({ ...data });
       toast.custom(
         () => (
@@ -78,7 +77,6 @@ const FormAddTenant = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} className="space-y-6">
-        {/* Datos + Documentos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <PersonalDataFields />
@@ -88,13 +86,11 @@ const FormAddTenant = () => {
           </div>
         </div>
 
-        {/* Dirección */}
         <div className="pt-2">
           <h4 className="text-md font-semibold mb-2">Dirección</h4>
           <AddressFields />
         </div>
 
-        {/* Botones */}
         <FormFooter />
       </form>
     </FormProvider>

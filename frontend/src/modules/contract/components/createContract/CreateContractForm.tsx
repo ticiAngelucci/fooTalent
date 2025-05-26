@@ -85,7 +85,6 @@ const CreateContractForm = () => {
 
     const handleSubmit = async (data: ContractFormData) => {
         try {
-            console.log("Datos a enviar", data);
             const formDataToSend = new FormData();
             const contractBlob = new Blob([JSON.stringify(data)], {
                 type: "application/json",
@@ -129,7 +128,7 @@ const CreateContractForm = () => {
             <Form {...form}>
                 <form
                     className="grid grid-cols-[4fr_3fr] gap-8 p-6 rounded-md shadow-inner bg-white"
-                    onSubmit={form.handleSubmit(handleSubmit, (errors) => console.error("Errores de validación", errors))}>
+                    onSubmit={form.handleSubmit(handleSubmit)}>
                     <div className="space-y-4">
                         <h3 className="font-semibold text-xl">Datos del contrato</h3>
                         <div className="grid grid-cols-2 gap-4">

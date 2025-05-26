@@ -18,7 +18,6 @@ import ErrorToast from "@/shared/components/Toasts/ErrorToast"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover"
 import { Calendar } from "@/shared/components/ui/calendar"
 
-//If Rent value is the one to go, amount cannot exceed that value
 
 interface Props{
   id: string;
@@ -41,7 +40,6 @@ const NewPaymentForm = ({ id, onSuccess }: Props) => {
 
   const onSubmit = async (data: PaymentFormData) => {
     try {
-      console.log("Datos de pago a enviar", data);
       await createPayment(data);
       toast.custom(
         () => (
@@ -72,7 +70,7 @@ const NewPaymentForm = ({ id, onSuccess }: Props) => {
       <Form {...form}>
         <form
           className="flex flex-col gap-4"
-          onSubmit={form.handleSubmit(onSubmit, (errors) => console.error("Errores de validación", errors))}>
+          onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             name="serviceType"
             render={({ field }) => (

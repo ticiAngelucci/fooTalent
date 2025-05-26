@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import { Contract } from "@/modules/contract/types/contract";
 import { getContracts } from "../service/dashboardService";
 
-// Tipo del estado
 interface ContractState {
   contracts: Contract[];
   loading: boolean;
@@ -12,7 +11,6 @@ interface ContractState {
   reset: () => void;
 }
 
-// Función externa para manejar la lógica de fetch y actualizar el estado
 const createFetchContracts = (
   set: (partial: Partial<ContractState>) => void
 ): (() => Promise<void>) => {
@@ -30,7 +28,6 @@ const createFetchContracts = (
   };
 };
 
-// Store principal
 export const useContractStore = create<ContractState>()(
   persist(
     (set) => {

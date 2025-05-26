@@ -27,32 +27,6 @@ import { useNavigate } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 import axios from "axios";
 
-// {
-//       "id": 3,
-//       "firstName": "Pedro",
-//       "lastName": "perez",
-//       "email": "lucas@gmail.com.co",
-//       "phone": "2615446912",
-//       "dni": "23123456",
-//       "warranty": "GARANTE PROPIETARIO",
-//       "country": "Argentina",
-//       "province": "Cordoba",
-//       "locality": "La escondida",
-//       "street": "El bolson",
-//       "number": "123",
-//       "postalCode": "5500",
-//       "documents": [
-//         {
-//           "id": "7704e193-e406-467d-bcb5-5f40d3a5e84b",
-//           "url": "https://res.cloudinary.com/rentary/image/upload/v1747447432/rentary/tenants/images/banneralma_id3_23123456_ab29b483.jpg.jpg",
-//           "publicId": "rentary/tenants/images/banneralma_id3_23123456_ab29b483.jpg",
-//           "originalName": "banneralma3.jpg",
-//           "fileType": "image",
-//           "extension": "jpg"
-//         }
-//       ]
-//     }
-
 interface ContactoInquilino {
     id: number;
     firstName: string;
@@ -107,7 +81,6 @@ export default function ContactosView() {
         setLoading(true);
         setError("");
         const token = sessionStorage.getItem("token");
-        console.log("id",id)
         try {
             await axios.delete(
                 `${API_URL}${tipo === "inquilinos"
@@ -128,7 +101,6 @@ export default function ContactosView() {
             }
         } catch (err) {
             setError("Error al eliminar el contacto.");
-            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -148,7 +120,6 @@ export default function ContactosView() {
             setContactos(tipo === "inquilinos" ? data.dto || [] : data.content || []);
         } catch (err) {
             setError("Error al cargar contactos.");
-            console.error(err);
         } finally {
             setLoading(false);
         }

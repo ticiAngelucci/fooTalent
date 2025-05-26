@@ -23,7 +23,6 @@ interface PaymentState {
   fetchPagos: () => Promise<void>;
 }
 
-// Esta función hace la llamada y actualiza el estado del store
 const createFetchPayments = (set: (partial: Partial<PaymentState>) => void): (() => Promise<void>) => {
   return async () => {
     set({ loading: true, error: null });

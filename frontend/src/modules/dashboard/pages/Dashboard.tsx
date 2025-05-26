@@ -40,14 +40,12 @@ const Dashboard = () => {
   useEffect(() => {
     if (properties.length === 0) {
       fetchProperties();
-    } else {
     }
   }, [properties.length, fetchProperties]);
 
   useEffect(() => {
     if (tenants.length === 0) {
       fetchTenants();
-    } else {
     }
   }, [tenants.length, fetchTenants]);
 
@@ -57,7 +55,6 @@ const Dashboard = () => {
     }
   }, [pagos.length, fetchPagos]);
 
-  // Payments
   const pagosVencidos = pagos.filter(p => p.status === "VENCIDO").length;
   const pagosPendientes = pagos.filter(p => p.status === "PENDIENTE").length;
   const pagosAlDia = pagos.filter(p => p.status === "PAGADO").length;
@@ -82,8 +79,6 @@ const Dashboard = () => {
       borderClass: "border-success-600",
     },
   ];
-
-  //Cards Sections
 
   const infoSections: InfoCardProps[] = [
     {
@@ -114,7 +109,6 @@ const Dashboard = () => {
   return (
     <DashboardLayout subtitle={`Tablero`}>
       <div className="flex justify-between items-center p-3 w-full rounded-2xl text-neutral-950">
-        {/* Contenido textual */}
         <div className="flex flex-col items-start gap-1">
           <h3 className="text-2xl font-semibold">
             Bienvenido, <span className="font-bold">{username}</span>
@@ -124,7 +118,6 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Imagen decorativa */}
         <img
           src="/dashboardLogo.png"
           alt="Dashboard Logo"
