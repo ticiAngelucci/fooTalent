@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,23 @@ public class PaymentController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(paymentMapper.toResponse(payment));
+    }
+
+    @PutMapping("/{paymentId}")
+    public ResponseEntity<PaymentResponse> confirmRentalPayment(
+            @PathVariable Long paymentId,
+            @RequestBody @Valid PaymentRequest request) throws ChangeSetPersister.NotFoundException {
+
+        Payment payment = paymentService.confirmRentalPayment(
+                paymentId,
+                request.amount(),
+                request.paymentDate(),
+                request.paymentMethod(),
+                request.currency(),
+                request.description()
+        );
+
+        return ResponseEntity.ok(paymentMapper.toResponse(payment));
     }
 
     @Operation(summary = "Obtener pagos por contrato", description = "Obtiene todos los pagos asociados a un contrato específico")
