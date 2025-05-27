@@ -18,7 +18,7 @@ const Navbar = () => {
       </div>
 
       <div className="hidden md:flex items-center gap-2">
-        <Button variant="outline" className="text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px]">Contáctanos</Button>
+        <a href="/#contacto" className=""><Button variant="outline" className="text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px] text-black">Contáctanos</Button></a>
         <Link to={Route.Register}>
           <Button className="bg-[#1E40AF] !rounded-[4px] text-white text-sm px-4 py-2">
             Probar demo
