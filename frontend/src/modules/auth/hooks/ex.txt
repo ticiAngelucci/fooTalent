@@ -1,9 +1,0 @@
-# Auth Hooks
-
-This folder is intended to contain custom hooks related to authentication, such as:
-- `useAuth`: Hook for accessing the current authentication state (e.g., is the user logged in?)
-- `useLogin`: Custom hook to handle login logic
-- `useRegister`: Custom hook to handle registration logic
-- Any other hooks that abstract authentication-related behavior
-
-[PLEASE DELETE THIS TXT once the hooks are added]
