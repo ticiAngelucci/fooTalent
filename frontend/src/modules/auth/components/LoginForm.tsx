@@ -18,6 +18,7 @@ import { Button } from "@/shared/components/ui/button";
 import { userLogin } from "../services/authService";
 import { Route } from "@/shared/constants/route";
 import Spinner from "./Spinner";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
   const inputClass =
@@ -25,8 +26,9 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
   const storeLogin = useUserStore((state) => state.login);
-  const getUser = useUserStore((state)=> state.getCredentials)
+  const getUser = useUserStore((state) => state.getCredentials);
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -88,12 +90,24 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Contraseña</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="********"
-                  {...field}
-                  className={inputClass}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="********"
+                    {...field}
+                    className={inputClass}
+                  />
+
+                  {
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                    </button>
+                  }
+                </div>
               </FormControl>
             </FormItem>
           )}
