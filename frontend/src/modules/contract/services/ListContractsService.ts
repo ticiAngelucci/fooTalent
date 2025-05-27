@@ -26,10 +26,7 @@ export async function fetchAllContracts(page: number = 0, size: number = default
         Authorization: `Bearer ${token}`,
       },
     });
-    
-    
-    console.log("response.data", response.data);
-    
+        
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

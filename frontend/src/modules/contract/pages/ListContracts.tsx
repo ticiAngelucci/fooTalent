@@ -21,7 +21,7 @@ const ListContracts = () => {
 
     useEffect(() => {
         fetchContracts();
-    }, [fetchContracts]);
+    }, []);
 
     const columns = getContractColumns({handleDelete, handleCancel});
 

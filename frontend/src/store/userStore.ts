@@ -82,6 +82,7 @@ export const useUserStore = create<UserState>()(
 
       logout: () => {
         sessionStorage.removeItem("token");
+        localStorage.clear();
         set({
           id: null,
           firstName: null,
