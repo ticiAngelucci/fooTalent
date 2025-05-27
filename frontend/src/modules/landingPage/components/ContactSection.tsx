@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { sendContactForm } from "../services/LandingPageServices"
 import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { Button } from "@/shared/components/ui/button"
 import { Send } from "lucide-react"
 import Form from "../assets/form.png"
+import { useLocation } from "react-router-dom"
 export type ContactFormData = {
   fullName: string
   email: string
@@ -18,7 +19,6 @@ type ContactFormErrors = {
   text?: string
 }
 export default function ContactSection() {
-
   const [formData, setFormData] = useState<ContactFormData>({
     fullName: "",
     email: "",
@@ -82,6 +82,19 @@ export default function ContactSection() {
       setLoading(false)
     }
   }
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        // Esperamos un pequeño delay por si hay animaciones/layout
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, [location]);
 
   return (
     <section id="contacto" className="px-6 py-16 bg-white flex flex-col items-center">
