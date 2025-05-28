@@ -30,23 +30,6 @@ export const ModalLegal = ({ open, onClose, content }: ModalLegalProps) => {
             ))}
           </ul>
         </ScrollArea>
-        <DialogFooter className="pt-4">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            className="flex items-center gap-2 hover:bg-red-50"
-          >
-            <X className="w-5 h-5" />
-            Rechazar
-          </Button>
-          <Button
-            onClick={onClose}
-            className="flex items-center gap-2 bg-[#1E40AF] hover:bg-[#1B3B9D]"
-          >
-            <Check className="w-5 h-5 text-white" />
-            Aceptar
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
