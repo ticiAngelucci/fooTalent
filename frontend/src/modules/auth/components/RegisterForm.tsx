@@ -57,15 +57,18 @@ const RegisterForm = () => {
         setRegisterError("");
       }
     } catch (error: any) {
-      if (
-        error?.response?.status === 400 &&
-        error?.response?.data?.message === "El email ya está registrado"
-      ) {
+      const msg =
+        error?.response?.data?.message || error?.message || "Error desconocido";
+
+      if (msg.includes("email ya está registrado")) {
         form.setError("email", {
           type: "server",
-          message: "El correo ya está registrado",
+          message: "El email ya está registrado",
         });
+        console.log("ERROR DE EMAIL:", msg);
+        console.log("ERRORES ACTUALES", form.formState.errors);
       } else {
+        console.log("ERROR GENERAL", error);
         setRegisterError("Ocurrió un error al registrarse. Intenta de nuevo.");
       }
     }
@@ -110,6 +113,9 @@ const RegisterForm = () => {
       </div>
     );
   };
+
+  console.log("Errores en el render:", form.formState.errors);
+
 
   return (
     <Form {...form}>
@@ -204,10 +210,9 @@ const RegisterForm = () => {
                       )}
                     </div>
                   </FormControl>
-
-                  {hasError
-                    ? renderError(fieldError?.message || registerError)
-                    : renderSuccess(fieldName)}
+                  {fieldError?.message
+                    ? renderError(fieldError.message)
+                    : isTouched && renderSuccess(fieldName)}
                 </FormItem>
               )}
             />
