@@ -4,6 +4,5 @@ public enum PaymentMethod {
     EFECTIVO,
     TRANSFERENCIA,
     CHEQUE,
-    TARJETA,
-    OTROS
+    TARJETA
 }
