@@ -40,10 +40,6 @@ public class PropertyServiceImpl implements IPropertyService {
         Property property = propertyMapper.toEntity(dto, owner);
         property.setCreatedBy(getCurrentUserEmail());
 
-        if (propertyRepository.existsByAddress(property.getAddress())) {
-            throw new PropertyAddressExistsException("Ya existe un inmueble con la dirección especificada.");
-        }
-
         propertyRepository.save(property);
         return propertyMapper.toDto(property);
     }
@@ -79,10 +75,6 @@ public class PropertyServiceImpl implements IPropertyService {
     public PropertyResponseDto updateProperty(Long propertyId, PropertyRequestDto dto) {
         Property existingProperty = propertyRepository.findByidPropertyAndCreatedBy(propertyId, getCurrentUserEmail())
                 .orElseThrow(() -> new PropertyNotFoundException("Inmueble con ID: " + propertyId + " no encontrado."));
-
-        if (existingProperty.getStatus() == PropertyStatus.NO_DISPONIBLE) {
-            throw new PropertyDeletedStatusException("No se puede editar. Este inmueble fue eliminado.");
-        }
 
         Address newAddress = dto.address();
         Address currentAddress = existingProperty.getAddress();

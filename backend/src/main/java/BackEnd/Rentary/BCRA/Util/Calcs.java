@@ -20,10 +20,10 @@ public class Calcs {
 
             BigDecimal baseRent = BigDecimal.valueOf(contract.getBaseRent());
             BigDecimal coefficient = BigDecimal.valueOf(currentIcl)
-                    .divide(BigDecimal.valueOf(initialIcl), 6, RoundingMode.HALF_UP); // precisión intermedia
+                    .divide(BigDecimal.valueOf(initialIcl), 6, RoundingMode.HALF_UP);
 
             BigDecimal adjustedRent = baseRent.multiply(coefficient)
-                    .setScale(0, RoundingMode.HALF_UP); // redondeo final sin decimales
+                    .setScale(0, RoundingMode.HALF_UP);
 
             return adjustedRent.doubleValue();
         } else {

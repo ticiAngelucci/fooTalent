@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/tenants")
 @Validated
-@Slf4j
 public class TenantsController {
         private final TenantsService tenantsService;
 
@@ -48,10 +46,6 @@ public class TenantsController {
                         @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
                         @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
 
-                log.info("Creando nuevo inquilino: {} con {} documentos",
-                                tenantData.firstName(),
-                                documents != null ? documents.length : 0);
-
                 TenantsResponseDto createdTenant = tenantsService.saveTenant(tenantData, documents);
                 return ResponseEntity.status(HttpStatus.CREATED).body(createdTenant);
         }
@@ -62,9 +56,6 @@ public class TenantsController {
                         @PathVariable Long id,
                         @RequestPart("tenant") @Valid TenantsRequestDto tenantData,
                         @RequestPart(value = "documents", required = false) MultipartFile[] documents) {
-
-                log.info("Actualizando inquilino con ID: {} y añadiendo {} documentos",
-                                id, documents != null ? documents.length : 0);
 
                 TenantsResponseDto updatedTenant = tenantsService.updateTenant(id, tenantData, documents);
                 return ResponseEntity.ok(updatedTenant);
@@ -88,7 +79,6 @@ public class TenantsController {
         public ResponseEntity<Void> removeTenantDocument(
                         @PathVariable Long tenantId,
                         @PathVariable String documentId) {
-                log.info("Eliminando documento {} del inquilino ID: {}", documentId, tenantId);
                 tenantsService.removeTenantDocumentById(tenantId, documentId);
                 return ResponseEntity.noContent().build();
         }

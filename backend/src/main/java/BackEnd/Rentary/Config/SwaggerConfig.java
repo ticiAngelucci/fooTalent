@@ -36,7 +36,7 @@ import org.springframework.http.HttpHeaders;
                 ),
                 @Server(
                         description = "Production Server",
-                        url = "https://rrentary.koyeb.app"
+                        url = "https://renttary.koyeb.app/"
                 )
         },
         security = @SecurityRequirement(
