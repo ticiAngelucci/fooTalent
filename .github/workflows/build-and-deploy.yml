@@ -41,4 +41,4 @@ jobs:
           echo "${HOME}/.koyeb/bin" >> $GITHUB_PATH
 
       - name: Redeploy service on Koyeb
-        run: koyeb service redeploy rentary/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
+        run: koyeb service redeploy rentarry/footalent-backend --token ${{ secrets.KOYEB_API_TOKEN }}
