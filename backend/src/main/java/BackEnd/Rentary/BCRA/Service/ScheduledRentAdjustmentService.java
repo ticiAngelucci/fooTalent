@@ -60,7 +60,6 @@ public class ScheduledRentAdjustmentService {
                 int safeDay = Math.min(dayOfMonth, now.lengthOfMonth());
                 dueDate = LocalDate.of(now.getYear(), now.getMonth(), safeDay);
             }
-            // Crear el nuevo pago pendiente
             Payment payment = PaymentFactory.createPaymentEntity(
                     contract,
                     BigDecimal.valueOf(newRent),
@@ -71,7 +70,6 @@ public class ScheduledRentAdjustmentService {
                     "Pago mensual automático",
                     contract.getCreatedBy()
             );
-            System.out.println("Due date calculado: " + dueDate);
             payment.setPaymentDate(payment.getDueDate());
 
             payment.setStatus(PaymentStatus.PENDIENTE);
@@ -79,6 +77,5 @@ public class ScheduledRentAdjustmentService {
         }
 
         contractRepository.saveAll(activeContracts);
-        System.out.println("Rentas y pagos actualizados correctamente.");
     }
 }

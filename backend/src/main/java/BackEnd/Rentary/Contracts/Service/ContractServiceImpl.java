@@ -17,7 +17,6 @@ import BackEnd.Rentary.Payments.Enums.Currency;
 import BackEnd.Rentary.Payments.Enums.PaymentMethod;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
-import BackEnd.Rentary.Payments.Service.PaymentService;
 import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Properties.Enums.PropertyStatus;
 import BackEnd.Rentary.Properties.Repository.PropertyRepository;

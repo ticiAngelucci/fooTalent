@@ -64,7 +64,7 @@ public class OwnerServiceImpl implements OwnerService {
         }
 
         Owner owner = ownerMapper.toEntity(ownerDto);
-        owner.setCreatedBy(getCurrentUserEmail());  // <--- Se setea el createdBy al crear
+        owner.setCreatedBy(getCurrentUserEmail());
 
         owner = ownerRepository.save(owner);
 

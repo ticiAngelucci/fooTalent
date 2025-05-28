@@ -53,8 +53,6 @@ public class RentUpdateService {
             int safeDay = Math.min(dayOfMonth, now.lengthOfMonth());
             LocalDate dueDate = LocalDate.of(now.getYear(), now.getMonth(), safeDay);
 
-            System.out.println("Fecha calculada para dueDate: " + dueDate);
-
             Payment payment = PaymentFactory.createPaymentEntity(
                     contract,
                     BigDecimal.valueOf(newRent).setScale(0, RoundingMode.HALF_UP),
@@ -67,7 +65,6 @@ public class RentUpdateService {
             );
 
             payment.setStatus(PaymentStatus.PENDIENTE);
-            System.out.println("Creando pago con dueDate: " + payment.getDueDate());
             paymentRepository.save(payment);
         }
 
