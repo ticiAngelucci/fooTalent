@@ -4,10 +4,11 @@ import BackEnd.Rentary.Contracts.Entity.Contract;
 import BackEnd.Rentary.Contracts.Respository.IContractRepository;
 import BackEnd.Rentary.Exceptions.ContractNotFoundException;
 import BackEnd.Rentary.Exceptions.InvalidPaymentException;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
-
+@Component
 public class PaymentValidationUtil {
 
 

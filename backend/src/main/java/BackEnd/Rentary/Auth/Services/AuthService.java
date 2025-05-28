@@ -51,18 +51,15 @@ public class AuthService {
         tempUser.setEmail(request.email());
         tempUser.setPassword(request.password());
 
-        // Validamos email y password
         AuthResponse validationResponse = userValidation.validate(tempUser);
         if (!validationResponse.success()) {
             return validationResponse;
         }
 
-        // Verificamos si el email ya existe
         if (userRepository.findByEmail(request.email()).isPresent()) {
             return new AuthResponse(null, "El email ya está registrado", false);
         }
 
-        // Crear el usuario
         User user = new User();
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
@@ -71,16 +68,13 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.USER);
 
-        // Crear token de verificación
         String verificationToken = UUID.randomUUID().toString();
         user.setVerificationToken(verificationToken);
         user.setVerificationTokenExpiration(new Date(System.currentTimeMillis() + 86400000)); // Expira en 1 día
         user.setIsActive(false);
 
-        // Guardar en base de datos
         userRepository.save(user);
 
-        // Enviar email de verificación
         String link = backUrl + "/auth/verifyToken?token=" + verificationToken;
         emailService.sendEmail(user.getEmail(), "Verifica tu cuenta",
                 "<p>Hola " + user.getUsername() + ",</p>" +
@@ -93,13 +87,11 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        // Verificar si el usuario existe antes de autenticar
         Optional<User> optionalUser = userRepository.findByEmail(request.email());
         if (optionalUser.isEmpty()) {
             return new AuthResponse(null, "Usuario no encontrado.", false);
         }
         try {
-            // Autenticamos con Spring Security
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.email(),
@@ -107,11 +99,9 @@ public class AuthService {
                     )
             );
         } catch (Exception e) {
-            // Contraseña incorrecta o autenticación fallida
             return new AuthResponse(null, "Contraseña incorrecta.", false);
         }
 
-        // Si todo esta bien, generamos el JWT y lo devolvemos
         User user = optionalUser.get();
         String jwt = jwtService.generateToken(user);
 
@@ -127,27 +117,22 @@ public class AuthService {
         }
         User user = optionalUser.get();
 
-        // Verificar que la contraseña actual sea correcta
         if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
             return new AuthResponse(null, "Contraseña actual incorrecta.", false);
         }
 
-       // Validar formato de la nueva contraseña
         AuthResponse passwordValidation = userValidation.validatePassword(request.newPassword());
         if (!passwordValidation.success()) {
             return passwordValidation;
         }
 
-        // Evitar que la nueva contraseña sea igual a la anterior
         if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
             return new AuthResponse(null, "La nueva contraseña no puede ser igual a la anterior.", false);
         }
 
-        // Actualizar la contraseña
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
-        // Generar nuevo JWT
         String jwt = jwtService.generateToken(user);
 
         return new AuthResponse(jwt, "Contraseña actualizada con éxito.", true);
@@ -161,19 +146,16 @@ public class AuthService {
 
         User user = optionalUser.get();
 
-        // Eliminar tokens anteriores asociados al usuario
         verificationTokenRepository.deleteByUser(user);
 
         String token = generateUniqueToken();
 
-        // Crear nuevo token
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
         verificationToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         verificationTokenRepository.save(verificationToken);
 
-        // Enviar email
         String link = frontUrl + "/reset_password?token=" + token;
         emailService.sendEmail(user.getEmail(), "Recuperar contraseña",
                 "<p>Hola " + user.getUsername() + ",</p>" +
@@ -192,7 +174,6 @@ public class AuthService {
         return token;
     }
 
-    //Verificacion de token y password, cambio de password, elimina el token usado
     public AuthResponse resetPassword(ResetPasswordRequest request) {
         if (!request.newPassword().equals(request.confirmPassword())) {
             return new AuthResponse(null, "Las contraseñas no coinciden.", false);
@@ -213,7 +194,6 @@ public class AuthService {
         User user = token.getUser();
         user.setPassword(passwordEncoder.encode(request.newPassword()));
 
-        // Guardar el nuevo password y eliminar el token
         userRepository.save(user);
         verificationTokenRepository.delete(token);
 

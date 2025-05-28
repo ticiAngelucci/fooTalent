@@ -17,6 +17,7 @@ import BackEnd.Rentary.Payments.Service.PaymentService;
 import BackEnd.Rentary.Payments.Utils.PaymentCalculationUtil;
 import BackEnd.Rentary.Payments.Utils.PaymentValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -235,6 +236,35 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentRepository.delete(payment);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Payment confirmRentalPayment(Long paymentId, BigDecimal amount, LocalDate paymentDate,
+                                        PaymentMethod paymentMethod, Currency currency, String description) throws ChangeSetPersister.NotFoundException {
+
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        if (payment.getServiceType() != ServiceType.ALQUILER) {
+            throw new InvalidPaymentException("Solo se pueden confirmar pagos de alquiler");
+        }
+
+        if (payment.getStatus() != PaymentStatus.PENDIENTE) {
+            throw new InvalidPaymentException("El pago ya fue confirmado o no está pendiente");
+        }
+
+        PaymentValidationUtil.validatePaymentAmount(amount);
+        validateRentalPaymentAmount(payment.getContract().getContractId(), amount);
+
+        payment.setAmount(amount);
+        payment.setPaymentDate(paymentDate);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setCurrency(currency);
+        payment.setDescription(description);
+        payment.setStatus(PaymentStatus.PAGADO);
+
+        return paymentRepository.save(payment);
     }
 
     private BigDecimal getTotalPaidForContract(Long contractId, String currentUser) {
