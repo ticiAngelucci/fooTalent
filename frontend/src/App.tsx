@@ -29,7 +29,6 @@ import EditContract from "./modules/contract/pages/EditContract";
 import ContactsView from "./modules/contact/pages/ContactsView";
 
 function App() {
-  //comentario para pushear y asi dejar el nuevo env andando
   return (
     <>
       <Routes>

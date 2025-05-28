@@ -56,7 +56,7 @@ export default function ContactSection() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -65,7 +65,7 @@ export default function ContactSection() {
     setErrors((prev) => ({ ...prev, [id]: "" }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setSuccess(false)
     setError("")

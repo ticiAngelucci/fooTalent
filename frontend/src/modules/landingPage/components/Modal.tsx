@@ -1,7 +1,5 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/shared/components/ui/dialog"
-import { Button } from "@/shared/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog"
 import { ScrollArea } from "@/shared/components/ui/scroll-area"
-import { Check, X } from "lucide-react"
 
 interface ModalContent {
   title: string
