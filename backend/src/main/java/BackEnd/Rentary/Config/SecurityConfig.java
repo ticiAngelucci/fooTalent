@@ -42,12 +42,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/bcra/**","/auth/**", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/oauth2/**", "/login/oauth2/**","/").permitAll()
+                        .requestMatchers("/sendEmailLanding", "/bcra/**","/auth/**", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/oauth2/**", "/login/oauth2/**","/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler))
-                //se añaden manejos de excepciones que el navegador toma como falla de CORS
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())

@@ -8,6 +8,7 @@ import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Payments.Enums.Currency;
 import BackEnd.Rentary.Payments.Enums.PaymentMethod;
 import BackEnd.Rentary.Payments.Enums.ServiceType;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public interface PaymentService {
     PaymentRentalResponsePage getRentalPaymentsByContract(Long contractId, int page, int size);
     ServicePaymentResponsePage getServicePaymentsByContractAndType(Long contractId, ServiceType serviceType, int page, int size);
     ServicePaymentResponsePage getAllServicePaymentsByContract(Long contractId, int page, int size);
-
+    Payment confirmRentalPayment(Long paymentId, BigDecimal amount, LocalDate paymentDate,
+                                 PaymentMethod paymentMethod, Currency currency, String description) throws ChangeSetPersister.NotFoundException;
 
 }

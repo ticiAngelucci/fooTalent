@@ -3,7 +3,6 @@ package BackEnd.Rentary.Contracts.DTOs;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentFrequency;
 import BackEnd.Rentary.Contracts.Enums.AdjustmentType;
 import BackEnd.Rentary.Contracts.Validation.ValidContractDates;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
