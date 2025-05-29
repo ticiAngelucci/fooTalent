@@ -7,9 +7,9 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record SendDTO(
-        @Schema(example = "Juan Pérez")
+        @Schema(example = "Juan Perez")
         @NotBlank(message = "El nombre completo es obligatorio")
-        @Pattern(regexp = "^[a-zA-Z]{3,}$", message = "Debe tener un nombre de al menos 3 letras")
+        @NotBlank(message = "Debe tener un nombre de al menos 3 letras")
         String fullName,
         @Schema(example = "example@exmaple.com")
         @NotBlank(message = "El email es obligatorio")
@@ -21,6 +21,6 @@ public record SendDTO(
         String phone,
         @Schema(example = "Hola, me gustaria obtener informacion del servicio")
         @NotBlank(message = "El mensaje es obligatorio")
-        @Size(min = 20, max = 1000, message = "El mensaje no puede superar los 1000 caracteres")
+        @Size(min = 5, max = 1000, message = "El mensaje no puede superar los 1000 caracteres")
         String text) {
 }

@@ -7,6 +7,5 @@ public enum ServiceType {
     LUZ,
     AGUA,
     GAS,
-    MUNICIPALIDAD,
-    NO_APLICA
+    MUNICIPALIDAD
 }

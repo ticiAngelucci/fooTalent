@@ -176,6 +176,22 @@ public class PaymentServiceImpl implements PaymentService {
         return new PaymentDetailedResponsePage(paymentResponses, page, paymentsPage.getTotalElements());
     }
 
+
+    @Transactional(readOnly = true)
+    public PaymentDetailedResponsePage getAllPaymentsRent(int page, int size) {
+        String currentUser = getCurrentUserEmail();
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Payment> paymentsPage = paymentRepository.findByCreatedByAndServiceType(
+                currentUser, ServiceType.ALQUILER, pageable);
+
+        List<PaymentDetailedResponse> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toDetailedResponse)
+                .collect(Collectors.toList());
+
+        return new PaymentDetailedResponsePage(paymentResponses, page, paymentsPage.getTotalElements());
+    }
+
     @Override
     @Transactional(readOnly = true)
     public ServicePaymentResponsePage getServicePaymentsByType(ServiceType serviceType, int page, int size) {

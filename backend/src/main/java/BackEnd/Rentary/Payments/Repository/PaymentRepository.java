@@ -36,4 +36,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     BigDecimal sumAmountByContractAndServiceTypeAndCreatedBy(@Param("contractId") Long contractId,
                                                              @Param("serviceType") ServiceType serviceType,
                                                              @Param("createdBy") String createdBy);
+
+    Page<Payment> findByCreatedByAndServiceType(String createdBy, ServiceType serviceType, Pageable pageable);
 }
