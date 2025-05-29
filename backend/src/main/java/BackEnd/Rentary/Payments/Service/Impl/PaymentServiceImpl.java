@@ -242,21 +242,20 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment confirmRentalPayment(Long paymentId, BigDecimal amount, LocalDate paymentDate,
-                                        PaymentMethod paymentMethod, Currency currency, String description) throws ChangeSetPersister.NotFoundException {
+                                        PaymentMethod paymentMethod, Currency currency, String description)
+            throws ChangeSetPersister.NotFoundException {
 
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        /*if (payment.getServiceType() != ServiceType.ALQUILER) {
-            throw new InvalidPaymentException("Solo se pueden confirmar pagos de alquiler");
-        }*/
 
         if (payment.getStatus() != PaymentStatus.PENDIENTE) {
             throw new InvalidPaymentException("El pago ya fue confirmado o no está pendiente");
         }
 
         PaymentValidationUtil.validatePaymentAmount(amount);
-        validateRentalPaymentAmount(payment.getContract().getContractId(), amount);
+
+        // ✅ usamos directamente el contrato que ya está cargado
+        validateRentalPaymentAmountRental(payment.getContract(), amount);
 
         payment.setAmount(amount);
         payment.setPaymentDate(paymentDate);
@@ -267,6 +266,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentRepository.save(payment);
     }
+
 
     private BigDecimal getTotalPaidForContract(Long contractId, String currentUser) {
         BigDecimal totalPaid = paymentRepository.sumAmountByContractAndServiceTypeAndCreatedBy(
@@ -282,6 +282,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void validateRentalPaymentAmountRental(Contract contract, BigDecimal amount) {
+        amount = amount.setScale(2, RoundingMode.HALF_UP);
         BigDecimal pendingAmount = BigDecimal
                 .valueOf(contract.getBaseRent())
                 .setScale(2, RoundingMode.HALF_UP);
@@ -290,8 +291,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
         }
     }
-
-
+    
     private void validateContractBelongsToUser(Contract contract, String currentUser) {
         if (!contract.getCreatedBy().equals(currentUser)) {
             throw new InvalidPaymentException("No tienes permisos para acceder a este contrato");
