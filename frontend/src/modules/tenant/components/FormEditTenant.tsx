@@ -104,7 +104,6 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
           duration: 5000,
         }
       );
-      console.log("Actualizado:", response.data);
       setIsEditing(false);
       navigate("/contact");
     } catch {

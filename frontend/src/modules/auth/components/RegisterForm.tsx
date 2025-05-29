@@ -65,10 +65,7 @@ const RegisterForm = () => {
           type: "server",
           message: "El email ya está registrado",
         });
-        console.log("ERROR DE EMAIL:", msg);
-        console.log("ERRORES ACTUALES", form.formState.errors);
       } else {
-        console.log("ERROR GENERAL", error);
         setRegisterError("Ocurrió un error al registrarse. Intenta de nuevo.");
       }
     }
@@ -113,8 +110,6 @@ const RegisterForm = () => {
       </div>
     );
   };
-
-  console.log("Errores en el render:", form.formState.errors);
 
 
   return (
