@@ -118,7 +118,6 @@ const PropertyRegister = () => {
               Datos del inmueble
             </h4>
 
-            {/* Propietario existente */}
             <FormField
               name="ownerId"
               render={({ field }) => (
@@ -155,7 +154,6 @@ const PropertyRegister = () => {
               )}
             />
 
-            {/* Agregar nuevo propietario */}
             <div className="col-span-2 flex flex-col justify-end">
               <label className="text-sm font-semibold">
                 Agregar Nuevo Propietario
@@ -208,7 +206,6 @@ const PropertyRegister = () => {
               )}
             />
 
-            {/* Dirección */}
             <h4 className="text-base font-semibold col-span-4">Dirección</h4>
 
             <FormField
@@ -300,28 +297,6 @@ const PropertyRegister = () => {
             />
 
             <FormField
-              name="address.country"
-              render={({ field }) => (
-                <FormItem className="col-span-1">
-                  <FormLabel className="form-label-custom">
-                    Pais
-                    <span className="text-neutral-600 font-normal">
-                      (Requerido)
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className="form-input-custom"
-                      placeholder="Ej: Argentina"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
               name="address.province"
               render={({ field }) => (
                 <FormItem className="col-span-1">
@@ -343,7 +318,28 @@ const PropertyRegister = () => {
               )}
             />
 
-            {/* Observaciones */}
+            <FormField
+              name="address.country"
+              render={({ field }) => (
+                <FormItem className="col-span-1">
+                  <FormLabel className="form-label-custom">
+                    Pais
+                    <span className="text-neutral-600 font-normal">
+                      (Requerido)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="form-input-custom"
+                      placeholder="Ej: Argentina"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               name="observations"
               render={({ field }) => (

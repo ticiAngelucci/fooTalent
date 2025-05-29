@@ -44,7 +44,7 @@ const TestimonySection = () => {
   };
 
   return (
-    <section className="py-12 px-6 text-center flex flex-col items-center">
+    <section id="testimonios" className="py-12 px-6 text-center flex flex-col items-center">
       <h1 className="text-2xl md:text-4xl lg:text-5xl leading-snug md:leading-tight mb-4 md:mb-8 w-full md:w-1/2">
         <span className="text-[#1E40AF]">Testimonios</span> de quienes ya optimizan su día a día
       </h1>

@@ -1,9 +1,0 @@
-# Auth Store
-
-This folder is intended to contain the state management logic for authentication, such as:
-- Redux slices (e.g., user authentication, session management)
-- Context providers (if used) for authentication-related state
-- Actions and reducers for authentication (if using Redux)
-- Any other state management logic specific to authentication
-
-[PLEASE DELETE THIS TXT once the store logic is added]

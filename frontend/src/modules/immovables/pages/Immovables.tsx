@@ -53,8 +53,6 @@ export default function InmueblesView() {
   }
 };
 
-
-
     const columns = getPropertyColumns(handleDelete);
 
     return (

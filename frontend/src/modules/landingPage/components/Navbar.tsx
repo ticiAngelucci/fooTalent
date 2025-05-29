@@ -15,12 +15,13 @@ const Navbar = () => {
       <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-8 text-sm font-medium">
         <a href="#inicio" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Inicio</a>
         <a href="#funcionalidades" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Funcionalidades</a>
+        <a href="#testimonios" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Testimonios</a>
       </div>
 
       <div className="hidden md:flex items-center gap-2">
-        <a href="/#contacto" className=""><Button variant="outline" className="text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px] text-black">Contáctanos</Button></a>
+        <a href="/#contacto" className=""><Button variant="outline" className="btn-secondary text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px] text-black">Contáctanos</Button></a>
         <Link to={Route.Register}>
-          <Button className="bg-[#1E40AF] !rounded-[4px] text-white text-sm px-4 py-2">
+          <Button className="btn-primary !rounded-[4px] text-white text-sm px-4 py-2">
             Probar demo
           </Button>
         </Link>

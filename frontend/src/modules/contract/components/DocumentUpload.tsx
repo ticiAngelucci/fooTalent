@@ -51,15 +51,6 @@ export const DocumentUpload = ({ existingDocs = [], contractId }: DocumentUpload
           setLocalFiles(updated);
         };
 
-        const handleDeleteFromDb = async (documentId: number) => {
-          if (!contractId) return;
-          try {
-            await deleteDocumentFromContract(contractId, documentId);
-            const updated = docsFromDb.filter((d) => d.id !== documentId.toString());
-            setDocsFromDb(updated);
-          } catch (error) {
-          }
-        };
 
         return (
           <FormItem className="space-y-4">

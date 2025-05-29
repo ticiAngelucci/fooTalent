@@ -96,7 +96,6 @@ const CreateContractForm = () => {
       baseRent: 0,
       deadline: 1,
       deposit: 0,
-      // adjustmentPercentage:
     },
   });
 
@@ -109,7 +108,7 @@ const CreateContractForm = () => {
   }, [adjustmentType, form]);
 
   const handleSubmit = async (data: ContractFormData) => {
-    setIsSubmitting(true); // Deshabilita el botón y muestra loader
+    setIsSubmitting(true);
     try {
       const formDataToSend = new FormData();
       const contractBlob = new Blob([JSON.stringify(data)], {
@@ -146,7 +145,7 @@ const CreateContractForm = () => {
         />
       ));
     } finally {
-      setIsSubmitting(false); // Habilita el botón nuevamente si hay error
+      setIsSubmitting(false);
     }
   };
 
@@ -311,7 +310,6 @@ const CreateContractForm = () => {
                             }
                           }}
                           locale={es}
-                          disabled={(date) => date < new Date()}
                         />
                       </PopoverContent>
                     </Popover>
@@ -410,6 +408,7 @@ const CreateContractForm = () => {
                         onClick={() =>
                           field.onChange(Math.max(1, Number(field.value) - 1))
                         }
+                        disabled={Number(field.value) <= 1}
                       >
                         <Minus size={16} />
                       </Button>
@@ -417,6 +416,7 @@ const CreateContractForm = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => field.onChange(Number(field.value) + 1)}
+                        disabled={Number(field.value) >= 28}
                       >
                         <Plus size={16} />
                       </Button>

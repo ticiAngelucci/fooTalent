@@ -1,4 +1,3 @@
-// ✅ pages/Contact.tsx
 import { useState, useEffect } from "react";
 import {
   Tabs,
@@ -151,7 +150,7 @@ export default function ContactsView() {
       subtitle="Contactos"
       redirect={Route.Dashboard}
       dashBtn={
-        <Button className="bg-[#1E40AF]" onClick={handleRedirect}>
+        <Button className="btn-primary" onClick={handleRedirect}>
           <UserPlus className="mr-2 w-4 h-4" />
           {tab === "inquilinos" ? "Añadir inquilino" : "Añadir propietario"}
         </Button>

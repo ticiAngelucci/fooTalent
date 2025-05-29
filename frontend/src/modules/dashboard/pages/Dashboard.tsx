@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   useEffect(()=>{
     fetchPagos();
-  },[])
+  },[fetchPagos])
 
   useEffect(() => {
     if (contracts.length === 0) {

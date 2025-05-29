@@ -93,11 +93,11 @@ const ForgotPassword = () => {
                                     name="email"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Correo Electrónico</FormLabel>
+                                            <FormLabel>Correo electrónico</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="email"
-                                                    placeholder="correo@example.com"
+                                                    placeholder="sucorreo@dominio.com"
                                                     {...field}
                                                     className={form.formState.errors.email ? "border-red-500" : ""}
                                                 />
@@ -113,7 +113,7 @@ const ForgotPassword = () => {
 
                                 <Button
                                     type="submit"
-                                    className="w-full cursor-pointer mt-3 rounded-[7px] bg-[#1E40AF] text-white hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                    className="w-full cursor-pointer mt-3 rounded-[7px] btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                 >
                                     Enviar correo
                                 </Button>
@@ -121,12 +121,12 @@ const ForgotPassword = () => {
                                 <div className="text-center text-sm text-gray-500 mt-4 space-y-2">
                                     <p>
                                         ¿No tienes una cuenta?{" "}
-                                        <Link to={Route.Register} className="font-semibold text-[#1E40AF] underline">
+                                        <Link to={Route.Register} className="font-semibold text-[#1E40AF] !underline">
                                             Regístrate
                                         </Link>
                                     </p>
                                     <p>
-                                        <Link to={Route.Home} className="text-[#1E40AF] underline">
+                                        <Link to={Route.Home} className="text-[#1E40AF] !underline">
                                             Volver al inicio
                                         </Link>
                                     </p>

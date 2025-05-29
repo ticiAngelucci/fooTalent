@@ -51,8 +51,6 @@ const PropertyEdit = () => {
     setDisabled(!isDisabled);
   };
 
-  if (!property) return null;
-
   const id = property.id_property;
 
   const navigate = useNavigate();
@@ -103,6 +101,8 @@ const PropertyEdit = () => {
     }
   };
 
+    if (!property) return null;
+
   return (
     <DashboardLayout subtitle="Añadir Inmueble" redirect={Route.Immovables}>
       <section className="p-6 rounded-[8px] border bg-white">
@@ -115,7 +115,6 @@ const PropertyEdit = () => {
               Datos del inmueble
             </h4>
 
-            {/* Propietario existente */}
             <FormField
               name="ownerId"
               render={({ field }) => (
@@ -199,7 +198,6 @@ const PropertyEdit = () => {
               )}
             />
 
-            {/* Dirección */}
             <h4 className="text-base font-semibold col-span-4">Dirección</h4>
 
             <FormField
@@ -294,6 +292,29 @@ const PropertyEdit = () => {
               )}
             />
 
+             <FormField
+              name="address.province"
+              render={({ field }) => (
+                <FormItem className="col-span-1">
+                  <FormLabel className="form-label-custom">
+                    Provincia
+                    <span className="text-neutral-600 font-normal">
+                      (Requerido)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="form-input-custom"
+                      placeholder="Ej: Buenos Aires"
+                      {...field}
+                      disabled={isDisabled ? true : false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               name="address.country"
               render={({ field }) => (
@@ -317,30 +338,6 @@ const PropertyEdit = () => {
               )}
             />
 
-            <FormField
-              name="address.province"
-              render={({ field }) => (
-                <FormItem className="col-span-1">
-                  <FormLabel className="form-label-custom">
-                    Provincia
-                    <span className="text-neutral-600 font-normal">
-                      (Requerido)
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className="form-input-custom"
-                      placeholder="Ej: Buenos Aires"
-                      {...field}
-                      disabled={isDisabled ? true : false}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Observaciones */}
             <FormField
               name="observations"
               render={({ field }) => (

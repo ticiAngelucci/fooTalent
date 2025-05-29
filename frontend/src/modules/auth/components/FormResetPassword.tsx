@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/shared/comp
 import { Input } from "@/shared/components/ui/input";
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
+import { Eye, EyeOff, IterationCw } from "lucide-react";
 
 interface FormResetPasswordProps {
   onSubmit: (data: ResetPasswordFormValues) => void;
@@ -55,13 +56,10 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full">
       <div className="flex items-center justify-center mb-6">
         <Link to={Route.Login}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1e40af]">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M12 8l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <IterationCw className="size-16 text-brand-800" />
         </Link>
       </div>
 
@@ -89,7 +87,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
                         {...field}
                         placeholder=""
                         type={showPassword ? "text" : "password"}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     </FormControl>
                     <button
@@ -98,16 +96,9 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2 12s3.6-9 10-9 10 9 10 9-3.6 9-10 9-10-9-10-9z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <Eye size={18} />
                       ) : (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2 12s3.6-9 10-9 10 9 10 9-3.6 9-10 9-10-9-10-9z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <EyeOff size={18} />
                       )}
                     </button>
                   </div>
@@ -135,7 +126,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="block text-sm font-medium text-gray-700 mb-1">
-                    Repite nueva contraseña
+                    Repitir nueva contraseña
                   </FormLabel>
                   <div className="relative">
                     <FormControl>
@@ -143,7 +134,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
                         {...field}
                         placeholder=""
                         type={showConfirmPassword ? "text" : "password"}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       />
                     </FormControl>
                     <button
@@ -152,16 +143,9 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                       {showConfirmPassword ? (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2 12s3.6-9 10-9 10 9 10 9-3.6 9-10 9-10-9-10-9z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <Eye size={18} />
                       ) : (
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2 12s3.6-9 10-9 10 9 10 9-3.6 9-10 9-10-9-10-9z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <EyeOff size={18} />
                       )}
                     </button>
                   </div>
@@ -192,7 +176,7 @@ export const FormResetPassword = ({ onSubmit }: FormResetPasswordProps) => {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-[#1E40AF] hover:bg-blue-800 text-white py-3 rounded-lg font-medium text-base mt-2">
+          <Button type="submit" className="w-full btn-primary font-medium text-base mt-2">
             Restablecer contraseña
           </Button>
         </form>

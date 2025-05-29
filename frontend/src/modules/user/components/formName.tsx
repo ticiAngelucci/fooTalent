@@ -18,22 +18,21 @@ type UserProps = {
 
 const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
   const { email } = useUserStore();
-  const [lastName, setLastName] = useState<string>(""); // Cambiado a 'string'
-  const [firstName, setFirstName] = useState<string>(""); // Cambiado a 'string'
+  const [lastName, setLastName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
   const [firstIsEditable, setFirstIsEditable] = useState<boolean>(false);
   const [lastIsEditable, setLastIsEditable] = useState<boolean>(false);
-  const [info, setInfo] = useState<UserProps | null>(null); // Inicializado como null
+  const [info, setInfo] = useState<UserProps | null>(null);
   const token = useUserStore((state) => state.token);
   const setNewData = useUserStore((state) => state.getCredentials);
 
-  // Usar useEffect correctamente
   useEffect(() => {
     const fetchUser = async () => {
       try {
         if (token) {
-          const data = await getUser(token); // Usa await para obtener el resultado
+          const data = await getUser(token);
           if (data) {
-            setInfo(data); // Asegúrate de que la respuesta no sea null o undefined
+            setInfo(data);
             setFirstName(data.firstName);
             setLastName(data.lastName);
           }
@@ -43,8 +42,8 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
       }
     };
 
-    fetchUser(); // Llamada a la función asíncrona
-  }, [token]); // Dependencias de useEffect para que se ejecute cuando 'token' cambie.
+    fetchUser();
+  }, [token]);
 
   const changeName = () => {
     setLastIsEditable(!lastIsEditable);
@@ -68,7 +67,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
         toast.custom(
           () => (
             <SuccessToast title="Datos modificados con éxito!"
-              description="Tus datos fueron mofificados exitosamente." />
+              description="Tus datos fueron modificados exitosamente." />
           ),
           {
             duration: 5000,
@@ -111,7 +110,6 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
                 minLength={3}
                 maxLength={25}
               />
-              {/* Rehacer con Zod */}
               <PencilLine
                 className="w-[18px] h-[18px] text-neutral-500 absolute right-2 top-11 transform -translate-y-1/2 "
                 onClick={changeFirstName}

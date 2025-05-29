@@ -56,7 +56,7 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
                 <div className="w-full max-w-md px-6">
                     <div>
                         <div className="flex justify-center mb-4">
-                            <MailWarning className="w-16 h-16 text-[#1E40AF]" />
+                            <MailWarning className="w-16 h-16 text-error-600" />
                         </div>
                         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
                             Ha ocurrido un error

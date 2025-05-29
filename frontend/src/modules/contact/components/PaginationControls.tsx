@@ -53,8 +53,8 @@ export default function PaginationControls({
             size="sm"
             className={
               currentPage === page
-                ? "bg-blue-700 text-white text-base font-semibold"
-                : "text-base font-semibold text-neutral-950"
+                ? "btn-primary w-10"
+                : "tertiary w-10"
             }
             onClick={() => typeof page === "number" && onPageChange(page)}
           >
