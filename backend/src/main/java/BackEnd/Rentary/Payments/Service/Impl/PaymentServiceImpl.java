@@ -53,10 +53,10 @@ public class PaymentServiceImpl implements PaymentService {
         String currentUser = getCurrentUserEmail();
         validateContractBelongsToUser(contract, currentUser);
 
-        PaymentValidationUtil.validatePaymentAmount(amount);
+        /*PaymentValidationUtil.validatePaymentAmount(amount);
         if (serviceType == ServiceType.ALQUILER) {
             validateRentalPaymentAmountRental(contract, amount);
-        }
+        }*/
 
         Payment payment = PaymentFactory.createPaymentEntity(
                 contract, amount, paymentDate, serviceType,
