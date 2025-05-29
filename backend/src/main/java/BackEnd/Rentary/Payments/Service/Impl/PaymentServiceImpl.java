@@ -53,11 +53,6 @@ public class PaymentServiceImpl implements PaymentService {
         String currentUser = getCurrentUserEmail();
         validateContractBelongsToUser(contract, currentUser);
 
-        /*PaymentValidationUtil.validatePaymentAmount(amount);
-        if (serviceType == ServiceType.ALQUILER) {
-            validateRentalPaymentAmountRental(contract, amount);
-        }*/
-
         Payment payment = PaymentFactory.createPaymentEntity(
                 contract, amount, paymentDate, serviceType,
                 paymentMethod, currency, description, currentUser
@@ -254,7 +249,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentValidationUtil.validatePaymentAmount(amount);
 
-        // ✅ usamos directamente el contrato que ya está cargado
         validateRentalPaymentAmountRental(payment.getContract(), amount);
 
         payment.setAmount(amount);
@@ -266,19 +260,11 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentRepository.save(payment);
     }
-
-
+    
     private BigDecimal getTotalPaidForContract(Long contractId, String currentUser) {
         BigDecimal totalPaid = paymentRepository.sumAmountByContractAndServiceTypeAndCreatedBy(
                 contractId, ServiceType.ALQUILER, currentUser);
         return totalPaid != null ? totalPaid : BigDecimal.ZERO;
-    }
-
-    private void validateRentalPaymentAmount(Long contractId, BigDecimal amount) {
-        BigDecimal pendingAmount = calculatePendingAmount(contractId);
-        if (amount.compareTo(pendingAmount) > 0) {
-            throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
-        }
     }
 
     private void validateRentalPaymentAmountRental(Contract contract, BigDecimal amount) {
@@ -291,7 +277,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
         }
     }
-    
+
     private void validateContractBelongsToUser(Contract contract, String currentUser) {
         if (!contract.getCreatedBy().equals(currentUser)) {
             throw new InvalidPaymentException("No tienes permisos para acceder a este contrato");

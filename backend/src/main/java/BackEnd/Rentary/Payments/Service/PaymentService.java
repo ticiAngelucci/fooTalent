@@ -31,5 +31,4 @@ public interface PaymentService {
     ServicePaymentResponsePage getAllServicePaymentsByContract(Long contractId, int page, int size);
     Payment confirmRentalPayment(Long paymentId, BigDecimal amount, LocalDate paymentDate,
                                  PaymentMethod paymentMethod, Currency currency, String description) throws ChangeSetPersister.NotFoundException;
-
 }
