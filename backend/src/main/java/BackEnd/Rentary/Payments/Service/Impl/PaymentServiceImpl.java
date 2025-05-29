@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentValidationUtil.validatePaymentAmount(amount);
         if (serviceType == ServiceType.ALQUILER) {
-            validateRentalPaymentAmount(contractId, amount);
+            validateRentalPaymentAmountRental(contract, amount);
         }
 
         Payment payment = PaymentFactory.createPaymentEntity(
@@ -279,6 +280,17 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
         }
     }
+
+    private void validateRentalPaymentAmountRental(Contract contract, BigDecimal amount) {
+        BigDecimal pendingAmount = BigDecimal
+                .valueOf(contract.getBaseRent())
+                .setScale(2, RoundingMode.HALF_UP);
+
+        if (amount.compareTo(pendingAmount) > 0) {
+            throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
+        }
+    }
+
 
     private void validateContractBelongsToUser(Contract contract, String currentUser) {
         if (!contract.getCreatedBy().equals(currentUser)) {
