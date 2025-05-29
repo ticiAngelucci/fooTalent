@@ -153,7 +153,7 @@ export default function ContactsView() {
       dashBtn={
         <Button className="bg-[#1E40AF]" onClick={handleRedirect}>
           <UserPlus className="mr-2 w-4 h-4" />
-          {tab === "inquilinos" ? "Agregar inquilino" : "Agregar propietario"}
+          {tab === "inquilinos" ? "Añadir inquilino" : "Añadir propietario"}
         </Button>
       }
     >

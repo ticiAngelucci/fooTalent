@@ -1,6 +1,5 @@
-import { ChevronLeft, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { Link } from "react-router-dom";
 import FormName from "../components/formName";
 import FormPassword from "../components/formPassword";
 import { useEffect, useState } from "react";
@@ -13,7 +12,6 @@ import SuccessToast from "@/shared/components/Toasts/SuccessToast";
 import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 
 const Profile = () => {
-  const { email } = useUserStore();
   const [info, setInfo] = useState("");
   const [imageUpdated, setImageUpdated] = useState(false);
 
@@ -65,8 +63,9 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
 
     try {
-      await uploadImage(file);
+     const userAvatar = await uploadImage(file);
       setImageUpdated((prev) => !prev);
+      useUserStore.setState({ profileImageUrl: userAvatar.imageUrl });
       toast.custom(
         () => (
           <SuccessToast

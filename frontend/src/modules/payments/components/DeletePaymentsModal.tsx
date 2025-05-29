@@ -2,18 +2,16 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from "sonner";
 import SuccessToast from "@/shared/components/Toasts/SuccessToast";
 import ErrorToast from "@/shared/components/Toasts/ErrorToast";
-import { useNavigate } from 'react-router-dom';
-import { Route } from "@/shared/constants/route";
 import { deletePayment } from "../service/paymentService";
 
 interface Props {
     id:string;
     open: boolean;
     setOpen: (value: boolean) => void;
+    loadPayments: () => Promise<void>;
 }
 
-const DeletePaymentsModal = ({ id, open, setOpen }: Props) => {
-    const navigate = useNavigate();
+const DeletePaymentsModal = ({ id, open, setOpen, loadPayments }: Props) => {
     const handleDelete = async()=>{
         try {
             await deletePayment(id);
@@ -26,7 +24,7 @@ const DeletePaymentsModal = ({ id, open, setOpen }: Props) => {
                     duration: 5000,
                 },
             );
-            navigate(Route.Immovables);
+            await loadPayments();
         } catch (error) {
             toast.custom(
                 () => (
@@ -43,9 +41,9 @@ const DeletePaymentsModal = ({ id, open, setOpen }: Props) => {
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogContent className="bg-white rounded-[8px] gap-8 p-8 border border-neutral-200">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Eliminar Inmueble</AlertDialogTitle>
+                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Eliminar Pago</AlertDialogTitle>
                     <AlertDialogDescription className="text-sm text-neutral-600 font-normal">
-                        ¿Estás seguro que deseas eliminar el inmueble? Esta acción no es recuperable
+                        ¿Estás seguro que deseas eliminar el pago? Esta acción no es recuperable
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="">

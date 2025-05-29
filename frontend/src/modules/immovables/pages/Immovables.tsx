@@ -58,7 +58,7 @@ export default function InmueblesView() {
     const columns = getPropertyColumns(handleDelete);
 
     return (
-        <DashboardLayout title="Inmuebles"
+        <DashboardLayout subtitle="Inmuebles"
             redirect={Route.Dashboard}
             dashBtn={<Link to={Route.NewProperty}>
                 <Button className="btn-primary my-4">

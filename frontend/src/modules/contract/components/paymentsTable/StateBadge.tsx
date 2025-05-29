@@ -1,5 +1,5 @@
 import { Badge } from "@/shared/components/ui/badge";
-import { Check, Clock } from "lucide-react";
+import { Check, CircleAlert, Clock } from "lucide-react";
 import { PaymentStatus } from "../../enums/PaymentsEnums";
 
 interface StateBadgeProps {
@@ -8,25 +8,25 @@ interface StateBadgeProps {
 
 export const StateBadge = ({ state }: StateBadgeProps) => {
   switch (state) {
-    case PaymentStatus.PAID:
+    case PaymentStatus.PENDING:
       return (
-        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-900">
-          <Clock className="h-3 w-3 mr-1" />
+        <Badge className="text-sm bg-alert-50 text-alert-700 hover:bg-alert-100 border-alert-700 rounded-full">
+          <CircleAlert className="h-3 w-3 mr-1" />
           Pendiente
         </Badge>
       );
     case PaymentStatus.EXPIRED:
       return (
-        <Badge className="bg-red-100 text-red-400 hover:bg-red-100 border-red-800">
+        <Badge className="text-sm bg-error-50 text-error-700 hover:bg-error-100 border-error-700 rounded-full">
           <Clock className="h-3 w-3 mr-1" />
           Vencido
         </Badge>
       );
-    case PaymentStatus.PENDING:
+    case PaymentStatus.PAID:
       return (
-        <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-green-400">
+        <Badge className="text-sm bg-success-50 text-success-700 hover:bg-success-100 border-success-700 rounded-full">
           <Check className="h-3 w-3 mr-1" />
-          Al día
+          Pendiente
         </Badge>
       );
     default:

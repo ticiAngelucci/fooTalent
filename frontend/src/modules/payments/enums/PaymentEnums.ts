@@ -13,8 +13,7 @@ export enum PaymentMethod {
   EFECTIVO = "EFECTIVO",
   TRANSFERENCIA = "TRANSFERENCIA",
   CHEQUE = "CHEQUE",
-  TARJETA = "TARJETA",
-  OTROS = "OTROS"
+  TARJETA = "TARJETA"
 }
 
 export enum Currency {
