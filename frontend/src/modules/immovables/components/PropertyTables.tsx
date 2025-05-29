@@ -23,7 +23,6 @@ import {
 import { TablePagination } from "./TablePagination";
 import { defaultPageSize, Property } from "../types/property";
 import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
 import { Search } from "lucide-react";
 import { usePropertyStore } from "../store/propertyStore";
 
@@ -129,10 +128,6 @@ export function PropertyTable({
     setGlobalFilter(value);
   };
 
-  const handleSearchButton = () => {
-    setGlobalFilter(searchQuery);
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -144,7 +139,7 @@ export function PropertyTable({
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <p className="text-lg text-red-600">{error}</p>
+        <p className="text-lg text-red-600">Ocurrió un Error al cargar Propiedades, intente nuevamente</p>
       </div>
     );
   }
@@ -163,12 +158,6 @@ export function PropertyTable({
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={handleSearchButton}
-        >
-          Buscar
-        </Button>
       </div>
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
 

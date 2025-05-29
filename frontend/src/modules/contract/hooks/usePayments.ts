@@ -62,6 +62,6 @@ export const usePayments = (contractId: number) => {
     rentPayments: sortedRentPayments,
     otherPayments: sortedOtherPayments,
     loading,
-    error
+    error,
   };
 };

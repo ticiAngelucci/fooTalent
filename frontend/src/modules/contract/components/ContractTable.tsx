@@ -24,7 +24,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Button } from "@/shared/components/ui/button";
 
 interface ContractTableProps {
   data: Contract[];
@@ -124,12 +123,6 @@ export function ContractTable({
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={handleSearchButton}
-        >
-          Buscar
-        </Button>
       </div>
 
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">

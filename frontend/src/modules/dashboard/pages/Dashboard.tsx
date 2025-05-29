@@ -107,7 +107,7 @@ const Dashboard = () => {
   if (!username) return null;
 
   return (
-    <DashboardLayout subtitle={`Tablero`}>
+    <DashboardLayout>
       <div className="flex justify-between items-center p-3 w-full rounded-2xl text-neutral-950">
         <div className="flex flex-col items-start gap-1">
           <h3 className="text-2xl font-semibold">
