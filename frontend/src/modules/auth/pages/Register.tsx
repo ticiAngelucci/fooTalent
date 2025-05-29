@@ -1,6 +1,8 @@
 import { GoogleLoginButton } from "../components/GoogleLoginButton";
 import RegisterForm from "../components/RegisterForm";
 import frameRegister from "../assets/registro.webp";
+import { Button } from "@/shared/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const Register = () => {
   return (
@@ -16,7 +18,7 @@ const Register = () => {
           src={frameRegister}
           alt="Imagen de edificio"
           className="absolute z-20 -right-20 bottom-10 scale-150"
-          />
+        />
       </section>
       <section className="w-full flex flex-col items-center lg:justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 lg:pt-32 pb-16 min-h-screen">
         <div className="w-full flex justify-around items-center">
@@ -25,6 +27,12 @@ const Register = () => {
             alt="Logo Rentary"
             className="lg:hidden size-38"
           />
+          <a href="/">
+            <Button  className="gap-2 bg-white !underline hover:bg-blue lg:top-10 text-gray box-shadow-none">
+              <ArrowLeft className="w-4 h-4" />
+              Volver al inicio
+            </Button>
+          </a>
           <a
             href="/login"
             className=" text-[#1E40AF] !underline lg:absolute lg:top-10 lg:right-20"
