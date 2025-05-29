@@ -20,14 +20,14 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUser(token); // Usa await para obtener el resultado
+        const data = await getUser(token); 
         setInfo(data);
       } catch {
         console.error("Error al obtener el usuario:");
       }
     };
 
-    fetchUser(); // Llamada a la función asíncrona
+    fetchUser(); 
   }, [token, imageUpdated]);
 
   const [editPassword, setEditPassword] = useState(false);
