@@ -128,10 +128,6 @@ export function PropertyTable({
     setGlobalFilter(value);
   };
 
-  const handleSearchButton = () => {
-    setGlobalFilter(searchQuery);
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
