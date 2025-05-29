@@ -36,7 +36,6 @@ import {
 import { Calendar } from "@/shared/components/ui/calendar";
 import parse from "date-fns/parse";
 import { useNavigate } from "react-router-dom";
-import { Route } from "@/shared/constants/route";
 
 interface Props {
   id: string;
