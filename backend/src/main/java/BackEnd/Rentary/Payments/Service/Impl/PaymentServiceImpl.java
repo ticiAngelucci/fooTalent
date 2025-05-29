@@ -247,9 +247,9 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (payment.getServiceType() != ServiceType.ALQUILER) {
+        /*if (payment.getServiceType() != ServiceType.ALQUILER) {
             throw new InvalidPaymentException("Solo se pueden confirmar pagos de alquiler");
-        }
+        }*/
 
         if (payment.getStatus() != PaymentStatus.PENDIENTE) {
             throw new InvalidPaymentException("El pago ya fue confirmado o no está pendiente");
