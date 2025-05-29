@@ -30,7 +30,6 @@ export default function EditTenantPage() {
         };
         setDocuments(response.data.documents);
         setTenant(transformedTenant);
-        console.log("transformed", transformedTenant);
       } catch (error) {
         console.error("Error fetching tenant:", error);
       } finally {

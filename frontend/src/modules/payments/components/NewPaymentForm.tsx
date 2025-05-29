@@ -36,6 +36,7 @@ import {
 import { Calendar } from "@/shared/components/ui/calendar";
 import parse from "date-fns/parse";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface Props {
   id: string;
@@ -65,12 +66,15 @@ const NewPaymentForm = ({
       description: "",
     },
   });
+
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const onSubmit = async (data: PaymentFormData) => {
     try {
+      setLoading(true);
       if (paymentId) {
-        console.log("pagando alquiler", paymentId);
         await payRent(paymentId, data);
         if (loadPayments) await loadPayments();
       } else {
@@ -90,7 +94,9 @@ const NewPaymentForm = ({
       );
       form.reset();
       setOpen(false);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.custom(
         () => (
           <ErrorToast
@@ -329,8 +335,9 @@ const NewPaymentForm = ({
             <Button
               type="submit"
               className="flex flex-1/2 items-center text-base btn-primary"
+              disabled={loading}
             >
-              <Save className="size-6 mr-2" /> Guardar Cambios
+              <Save className="size-6 mr-2" />{!loading ? "Guardar Cambios" : "Guardando..."} 
             </Button>
           </div>
         </form>

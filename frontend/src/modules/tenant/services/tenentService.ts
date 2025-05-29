@@ -38,7 +38,6 @@ export const createTenant = async (data: Tenant) => {
 
   const token = sessionStorage.getItem("token");
   const formData = new FormData();
-  console.log(token);
   formData.append(
     "tenant",
     new Blob([JSON.stringify(dataEnviar)], { type: "application/json" })
@@ -47,7 +46,6 @@ export const createTenant = async (data: Tenant) => {
   files.forEach((file: File) => {
     formData.append("documents", file);
   });
-  console.log(formData);
   try {
     const response = await axios.post(`${API_URL}/tenants`, formData, {
       headers: {

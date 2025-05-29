@@ -14,7 +14,6 @@ export const changePassword = async (userData: UserProps) => {
       throw new Error("El usuario no está autenticado.");
     }
     const data = { email: username, ...userData };
-    console.log("Datos enviados:", data);
     const response = await axios.put(`${API_URL}/auth/change_password`, data);
     return response.data;
   } catch (error: unknown) {

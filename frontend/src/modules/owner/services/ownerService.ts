@@ -53,7 +53,6 @@ export const deleteOwner = async (ownerId: number) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response", response.data);
   } catch (err) {
     console.error(err);
   }
@@ -62,7 +61,6 @@ export const deleteOwner = async (ownerId: number) => {
 export const EditOwner = async (
   data: ReturnType<typeof adaptOwnerToPayload>, id: number
 ) => {
-  console.log(data);
 
   const { attachedDocument } = data;
   const { attachedDocument: _, ...ownerWithoutFile } = data;
