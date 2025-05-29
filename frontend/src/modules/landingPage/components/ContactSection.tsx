@@ -122,7 +122,7 @@ export default function ContactSection() {
             </div>
           </div>
         ) : (
-          <form className="space-y-6 w-full max-w-md mx-auto" onSubmit={handleSubmit}>
+          <form className="space-y-6 w-2/3 max-w-md mx-auto" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="fullName" className="block mb-1 text-sm font-medium text-black">
                 Nombre y apellido

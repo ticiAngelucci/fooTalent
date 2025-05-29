@@ -3,6 +3,8 @@ import LoginForm from "../components/LoginForm";
 import loginFrame from "../assets/iniciar.webp";
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
+import { Button } from "react-day-picker";
+import { ArrowLeft } from "lucide-react";
 
 
 const Login = () => {
@@ -24,6 +26,12 @@ const Login = () => {
       <section className="w-full flex flex-col items-center lg:justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 lg:pt-32 lg:pb-56 min-h-screen">
         <div className="w-full flex justify-around items-center">
           <img src="/Logo.svg" alt="Logo Rentary" className="lg:hidden size-38"/>
+          <a href="/">
+            <Button  className="gap-2 bg-white !underline hover:bg-blue lg:top-10 text-gray box-shadow-none">
+              <ArrowLeft className="w-4 h-4" />
+              Volver al inicio
+            </Button>
+          </a>
           <a href="/register" className=" text-[#1E40AF] !underline lg:absolute lg:top-10 lg:right-20 ">
             Registrarse
           </a>
