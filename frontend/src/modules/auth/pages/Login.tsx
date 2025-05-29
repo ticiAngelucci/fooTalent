@@ -24,7 +24,7 @@ const Login = () => {
       <section className="w-full flex flex-col items-center lg:justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 lg:pt-32 lg:pb-56 min-h-screen">
         <div className="w-full flex justify-around items-center">
           <img src="/Logo.svg" alt="Logo Rentary" className="lg:hidden size-38"/>
-          <a href="/register" className=" text-[#1E40AF] lg:absolute lg:top-10 lg:right-20 underline">
+          <a href="/register" className=" text-[#1E40AF] !underline lg:absolute lg:top-10 lg:right-20 ">
             Registrarse
           </a>
         </div>
@@ -47,7 +47,7 @@ const Login = () => {
           <GoogleLoginButton />
 
           <div className="text-center mt-6 text-sm text-[#1E40AF] cursor-default">
-            <Link to={Route.ForgotPassword} className="underline hover:text-emerald-600">
+            <Link to={Route.ForgotPassword} className="!underline hover:text-emerald-600">
               ¿Olvidaste tu contraseña?
             </Link>
           </div>

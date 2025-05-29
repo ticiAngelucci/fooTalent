@@ -24,7 +24,7 @@ const EmailSentConfirmation = () => {
                     <div >
 
                         <div className="flex justify-center mb-4">
-                            <MailCheck className="w-16 h-16 text-[#1E40AF]" />
+                            <MailCheck className="w-16 h-16 text-brand-800" />
                         </div>
                         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
                             ¡Correo enviado!

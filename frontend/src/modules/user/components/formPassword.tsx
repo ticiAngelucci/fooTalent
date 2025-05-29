@@ -64,7 +64,6 @@ const FormPassword: React.FC<FormPasswordProps> = ({
   const onSubmit = async (data: passwordFormValue) => {
     setIsLoading(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...payload } = data;
       await changePassword(payload);
       onModifiedPassword();
@@ -73,7 +72,7 @@ const FormPassword: React.FC<FormPasswordProps> = ({
       setError("No coincide con la contraseña actual");
       throw new Error("Error al cambiar contraseña.");
     } finally {
-      setIsLoading(false); // Desactivamos el loading
+      setIsLoading(false);
     }
   };
 

@@ -178,7 +178,7 @@ export default function ContactSection() {
                 onChange={handleChange}
                 placeholder="Déjanos aquí tu consulta..."
                 rows={4}
-                className="w-full resize-none"
+                className="w-full min-h-32"
               />
               {errors.text && <p className="text-red-600 text-sm mt-1">{errors.text}</p>}
             </div>

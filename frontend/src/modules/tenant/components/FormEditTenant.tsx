@@ -32,19 +32,16 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
   const handleDelete = async (tenantId: number) => {
     try {
       setIsDeleting(true);
-      const response = await axios.delete(
-        `${API_URL}/tenants/${tenantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/tenants/${tenantId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate("/contact");
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
-      throw err.response.data;
-    }
+        throw err.response.data;
+      }
     } finally {
       setIsDeleting(false);
     }
@@ -85,20 +82,18 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
       formData.append("documents", file);
     });
     try {
-      const response = await axios.put(
-        `${API_URL}/tenants/${id}`, formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.put(`${API_URL}/tenants/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-green-700 font-semibold text-sm flex gap-2 items-center">
-              <Check />¡Cambios realizados con éxito!
+              <Check />
+              ¡Cambios realizados con éxito!
             </p>
             <p className="text-gray-700 text-sm mt-1">
               Los datos del inquilino se han actualizado correctamente.
@@ -107,18 +102,18 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
         ),
         {
           duration: 5000,
-        },
+        }
       );
       console.log("Actualizado:", response.data);
       setIsEditing(false);
       navigate("/contact");
-
     } catch {
       toast.custom(
         () => (
           <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-              <CircleAlert />¡Ha ocurrido un error!
+              <CircleAlert />
+              ¡Ha ocurrido un error!
             </p>
             <p className="text-gray-700 text-sm mt-1">
               Los datos no se han podido actualizar, intente nuevamente.

@@ -100,10 +100,6 @@ export function ContractTable({
     return <div className="text-center text-red-600 py-6">{error}</div>;
   }
 
-  const handleSearchButton = () => {
-    setGlobalFilter(searchQuery);
-  };
-
   const handleSearch = (value: string) => {
     setSearchQuery(value);
     setGlobalFilter(value);

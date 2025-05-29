@@ -1,8 +1,0 @@
-# Auth Services
-
-This folder is intended to contain services related to authentication, such as:
-- API calls for login, registration, and authentication management
-- Utility functions for handling authentication-related tasks (e.g., token storage, session management)
-- Any other service or business logic related to authentication
-
-[PLEASE DELETE THIS TXT once the services are added]

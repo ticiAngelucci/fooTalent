@@ -188,7 +188,7 @@ const UpdateContractForm = ({
 
       toast.custom(() => (
         <ErrorToast
-          title="¡Error al crear el contrato!"
+          title="¡Error al modificar el contrato!"
           description={errorMessage}
         />
       ));
@@ -325,7 +325,6 @@ const UpdateContractForm = ({
                             }
                           }}
                           locale={es}
-                          disabled={(date) => date < new Date()}
                         />
                       </PopoverContent>
                     </Popover>
@@ -426,7 +425,7 @@ const UpdateContractForm = ({
                         onClick={() =>
                           field.onChange(Math.max(1, Number(field.value) - 1))
                         }
-                        disabled={isDisabled ? true : false}
+                        disabled={isDisabled || Number(field.value) <= 1}
                       >
                         <Minus size={16} />
                       </Button>
@@ -434,7 +433,7 @@ const UpdateContractForm = ({
                         type="button"
                         variant="ghost"
                         onClick={() => field.onChange(Number(field.value) + 1)}
-                        disabled={isDisabled ? true : false}
+                        disabled={isDisabled || Number(field.value) >= 28}
                       >
                         <Plus size={16} />
                       </Button>
@@ -494,7 +493,6 @@ const UpdateContractForm = ({
                         value={field.value === undefined ? "" : field.value}
                         onChange={(e) => {
                           const inputValue = e.target.value;
-                          // Permitir cadena vacía para que el usuario pueda borrar el input
                           field.onChange(
                             inputValue === "" ? "" : parseFloat(inputValue)
                           );

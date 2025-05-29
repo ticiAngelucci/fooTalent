@@ -118,9 +118,9 @@ export const getContractColumns = ({
           className={clsx(
             "py-0.5 rounded-full text-sm font-raleway border inline-block text-center min-w-[98px]",
             {
-              "text-green-600 bg-green-50 border-green-600":
+              "text-success-700 bg-success-50 border-success-700":
                 estado === "Activo",
-              "text-gray-500 bg-gray-50 border-gray-600":
+              "text-neutral-700 bg-neutral-50 border-neutral-700":
                 estado === "Finalizado",
             }
           )}
