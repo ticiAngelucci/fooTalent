@@ -26,7 +26,7 @@ export const StateBadge = ({ state }: StateBadgeProps) => {
       return (
         <Badge className="text-sm bg-success-50 text-success-700 hover:bg-success-100 border-success-700 rounded-full">
           <Check className="h-3 w-3 mr-1" />
-          Pendiente
+          Al día
         </Badge>
       );
     default:

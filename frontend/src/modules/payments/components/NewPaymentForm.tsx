@@ -42,14 +42,12 @@ interface Props {
   ammount?: number;
   paymentId?: number;
   isRent?: string;
-  onSuccess?: () => void;
   setOpen: (value: boolean) => void;
   loadPayments?: () => Promise<void>;
 }
 
 const NewPaymentForm = ({
   id,
-  onSuccess,
   setOpen,
   ammount,
   paymentId,
@@ -92,7 +90,6 @@ const NewPaymentForm = ({
       );
       form.reset();
       setOpen(false);
-      if (onSuccess) onSuccess();
     } catch (error) {
       toast.custom(
         () => (

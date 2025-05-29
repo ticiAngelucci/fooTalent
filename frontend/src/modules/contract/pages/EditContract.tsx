@@ -52,7 +52,6 @@ const EditContract = () => {
           {contract?.id && (
             <NewPaymentForm
               id={String(contract.id)}
-              onSuccess={() => setOpenPaymentModal(false)}
               setOpen={setOpenPaymentModal}
             />
           )}
