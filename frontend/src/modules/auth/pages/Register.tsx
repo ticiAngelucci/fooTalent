@@ -1,14 +1,16 @@
 import { GoogleLoginButton } from "../components/GoogleLoginButton";
 import RegisterForm from "../components/RegisterForm";
 import frameRegister from "../assets/registro.webp";
-import { Button } from "@/shared/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Link} from "react-router-dom";
+import { Route } from "@/shared/constants/route";
 
 const Register = () => {
   return (
     <div className="flex min-h-screen">
       <section className="hidden lg:block lg:w-full min-h-screen bg-brand-200 text-center relative overflow-hidden">
-        <img src="/Logo.svg" alt="" className="absolute top-10 left-10" />
+        <Link to={Route.Home}>
+          <img src="/Logo.svg" alt="" className="absolute top-10 left-10" />
+        </Link>
         <p className="mt-42 text-5xl font-bold text-start px-10 mx-auto relative z-50 justify-start">
           <span className="text-brand-800">Gestiona</span> tus alquileres de
           forma <span className="text-brand-800">fácil</span> y{" "}
@@ -22,17 +24,13 @@ const Register = () => {
       </section>
       <section className="w-full flex flex-col items-center lg:justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 lg:pt-32 pb-16 min-h-screen">
         <div className="w-full flex justify-around items-center">
-          <img
-            src="/Logo.svg"
-            alt="Logo Rentary"
-            className="lg:hidden size-38"
-          />
-          <a href="/">
-            <Button  className="gap-2 bg-white !underline hover:bg-blue lg:top-10 text-gray box-shadow-none">
-              <ArrowLeft className="w-4 h-4" />
-              Volver al inicio
-            </Button>
-          </a>
+          <Link to={Route.Home}>
+            <img
+              src="/Logo.svg"
+              alt="Logo Rentary"
+              className="lg:hidden size-38"
+            />
+          </Link>
           <a
             href="/login"
             className=" text-[#1E40AF] !underline lg:absolute lg:top-10 lg:right-20"

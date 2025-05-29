@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "@fontsource/raleway/index.css" @custom-variant dark (&: is(.dark *));
 
+
+*{
+  scroll-behavior: smooth;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

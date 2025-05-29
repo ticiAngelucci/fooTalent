@@ -35,11 +35,14 @@ const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col items-start p-4 gap-4 md:hidden">
-          <a href="#inicio" className="text-sm font-bold text-[#0F172A]">Inicio</a>
-          <a href="#funcionalidades" className="text-sm font-bold text-[#0F172A]">Funcionalidades</a>
-          <a href="#contacto" className="text-sm font-bold text-[#0F172A]">Contacto</a>
-          <Button variant="outline" className="text-sm w-full">Contáctanos</Button>
-          <Button className="bg-[#1E40AF] text-white text-sm w-full">Probar demo</Button>
+          <a href="#inicio" className="text-sm font-bold !text-[#0F172A]">Inicio</a>
+          <a href="#funcionalidades" className="text-sm font-bold !text-[#0F172A]">Funcionalidades</a>
+          <a href="#contacto" className="text-sm w-full">
+            <Button variant="outline" className="text-sm w-full text-neutral-950">Contáctanos</Button>
+          </a>
+          <Link to={Route.Register} className="bg-[#1E40AF] text-white text-sm w-full rounded-sm">
+            <Button className="bg-[#1E40AF] text-white text-sm w-full">Probar demo</Button>
+          </Link>
         </div>
       )}
     </nav>
