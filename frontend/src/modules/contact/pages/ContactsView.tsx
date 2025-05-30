@@ -11,7 +11,7 @@ import { UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/shared/constants/api";
 import { Route } from "@/shared/constants/route";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import SuccessToast from "@/shared/components/Toasts/SuccessToast";
 import ErrorToast from "@/shared/components/Toasts/ErrorToast";
@@ -92,12 +92,17 @@ export default function ContactsView() {
         ),
         { duration: 5000 }
       );
-    } catch {
+    } catch(error) {
+      const err = error as AxiosError;
       toast.custom(
         () => (
           <ErrorToast
-            title="¡Ocurrió un error!"
-            description="No se pudo eliminar el contacto. Intenta nuevamente."
+            title="Error al eliminar contacto!"
+            description={
+              (err.status == 406)
+              ? String(err.response?.data)
+              : "No se pudo eliminar el contacto. Intenta nuevamente."
+            }
           />
         ),
         { duration: 5000 }

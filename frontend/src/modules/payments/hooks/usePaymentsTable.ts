@@ -35,8 +35,6 @@ export function usePaymentsTable(pageSize = 10) {
           Math.ceil((response.totalElements || response.dto.length) / pageSize)
       );
       setTotalElements(response.totalElements || response.dto.length);
-    } catch (error) {
-      console.error("Error al cargar los pagos:", error);
     } finally {
       setLoading(false);
     }

@@ -47,15 +47,12 @@ export const fetchOwner = async (id: any) => {
 };
 
 export const deleteOwner = async (ownerId: number) => {
-  try {
-    const response = await axios.delete(`${API_URL}/owner/delete/${ownerId}`, {
+     await axios.delete(`${API_URL}/owner/delete/${ownerId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-  } catch (err) {
-    console.error(err);
-  }
+
 };
 
 export const EditOwner = async (

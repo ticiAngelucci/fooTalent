@@ -42,21 +42,16 @@ export const createTenant = async (data: Tenant) => {
     "tenant",
     new Blob([JSON.stringify(dataEnviar)], { type: "application/json" })
   );
-  
+
   files.forEach((file: File) => {
     formData.append("documents", file);
   });
-  try {
-    const response = await axios.post(`${API_URL}/tenants`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  const response = await axios.post(`${API_URL}/tenants`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
-    return response.data;
-  } catch (error) {
-    console.error("Error al crear el inquilino:", error);
-    throw error;
-  }
+  return response.data;
 };

@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
-import EditTenantForm from "../components/FormEditTenant"; 
+import EditTenantForm from "../components/FormEditTenant";
 import { API_URL } from "@/shared/constants/api";
 import { useUserStore } from "@/store/userStore";
 import { Route } from "@/shared/constants/route";
 import { Tenant } from "../schemas/tenantSchema";
 import { DocumentFromAPI } from "@/shared/interfaces/documentInterface";
+import { Loader2 } from "lucide-react";
 
-export default function EditTenantPage() { 
+export default function EditTenantPage() {
   const { id } = useParams();
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,8 +31,6 @@ export default function EditTenantPage() {
         };
         setDocuments(response.data.documents);
         setTenant(transformedTenant);
-      } catch (error) {
-        console.error("Error fetching tenant:", error);
       } finally {
         setLoading(false);
       }
@@ -46,9 +45,11 @@ export default function EditTenantPage() {
     <DashboardLayout subtitle="Perfil de inquilino" redirect={Route.Contact}>
       <div className="p-6">
         {loading ? (
-          <p>Cargando inquilino...</p>
+          <div className="col-span-3 flex justify-center items-center py-10">
+            <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+          </div>
         ) : tenant ? (
-          <EditTenantForm initialData={tenant} documents={documents} /> 
+          <EditTenantForm initialData={tenant} documents={documents} />
         ) : (
           <p>No se encontró el inquilino.</p>
         )}

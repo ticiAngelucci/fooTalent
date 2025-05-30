@@ -17,6 +17,12 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
 
 interface ContractProps {
   handleDelete: (id: number) => void;
@@ -33,7 +39,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Dirección
@@ -53,7 +59,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Inquilino
@@ -73,7 +79,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Fecha de inicio
@@ -91,7 +97,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Fecha de fin
@@ -107,7 +113,7 @@ export const getContractColumns = ({
     id: "estado",
     header: () => (
       <div className="flex items-center justify-center w-full h-full">
-        <span className="font-raleway font-semibold text-gray-600">Estado</span>
+        <span className="font-medium text-neutral-600">Estado</span>
       </div>
     ),
     accessorFn: (row) => (row.active ? "Activo" : "Finalizado"),
@@ -137,11 +143,7 @@ export const getContractColumns = ({
     id: "valor",
     header: () => (
       <div className="flex items-center justify-center w-full h-full">
-        <span
-          className="font-raleway font-semibold text-gray-600"
-        >
-          Valor
-        </span>
+        <span className="font-medium text-neutral-600">Valor</span>
       </div>
     ),
     accessorFn: (row) =>
@@ -164,7 +166,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Ajuste
@@ -182,7 +184,7 @@ export const getContractColumns = ({
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-raleway font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
         style={{ color: "#4B5563" }}
       >
         Índice
@@ -190,9 +192,9 @@ export const getContractColumns = ({
       </Button>
     ),
     cell: ({ getValue }) => <div>{getValue() as string}</div>,
-    size: 80,
-    minSize: 80,
-    maxSize: 80,
+    size: 90,
+    minSize: 90,
+    maxSize: 90,
   },
   {
     id: "actions",
@@ -219,15 +221,39 @@ export const getContractColumns = ({
             <DropdownMenuItem
               className="cursor-pointer"
               onClick={() => handleCancel(Number(row.original.id))}
+              disabled={!row.original.active}
             >
               <CircleX className="text-neutral-950 !h-5 !w-5" /> Finalizar
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDelete(Number(row.original.id))}
-            >
-              <Trash2 className="text-neutral-950 !h-5 !w-5" /> Eliminar
-            </DropdownMenuItem>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuItem
+                    className={`cursor-pointer ${
+                      row.original.active
+                        ? "opacity-50 pointer-events-auto"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (!row.original.active) {
+                        handleDelete(Number(row.original.id));
+                      }
+                    }}
+                  >
+                    <Trash2 className="text-neutral-950 !h-5 !w-5" /> Eliminar
+                  </DropdownMenuItem>
+                </TooltipTrigger>
+                {row.original.active && (
+                  <TooltipContent>
+                    <p>
+                      No se puede eliminar
+                      <br />
+                      un contrato activo
+                    </p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </DropdownMenuContent>
         </DropdownMenu>
       );

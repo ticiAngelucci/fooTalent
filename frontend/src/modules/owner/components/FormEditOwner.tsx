@@ -14,16 +14,16 @@ import SuccessToast from "@/shared/components/Toasts/SuccessToast";
 import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 import { Owner, ownerSchema } from "../schemas/ownerSchema";
 import { adaptOwnerToPayload } from "../adapter/ownerAdapter";
+import { AxiosError } from "axios";
 
 interface Props {
-  initialData: OwnerFromAPI
+  initialData: OwnerFromAPI;
 }
 
-const FormEditOwner = ({ initialData }:  Props ) => {
+const FormEditOwner = ({ initialData }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const {documents} = initialData;
-
+  const { documents } = initialData;
 
   const { id } = useParams();
   const ownerId = Number(id);
@@ -33,9 +33,21 @@ const FormEditOwner = ({ initialData }:  Props ) => {
     try {
       setIsDeleting(true);
       await deleteOwner(ownerId);
-      navigate("/contact");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      const err = error as AxiosError;
+      toast.custom(
+        () => (
+          <ErrorToast
+            title="Error al eliminar contacto!"
+            description={
+              err.status == 406
+                ? String(err.response?.data)
+                : "No se pudo eliminar el contacto. Intenta nuevamente."
+            }
+          />
+        ),
+        { duration: 5000 }
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -56,7 +68,7 @@ const FormEditOwner = ({ initialData }:  Props ) => {
       province: initialData.address.province,
       postalCode: initialData.address.postalCode,
       attachedDocument: [],
-    }
+    },
   });
 
   const { reset } = methods;
@@ -65,22 +77,28 @@ const FormEditOwner = ({ initialData }:  Props ) => {
     if (!id) return;
 
     try {
-      const finalData = adaptOwnerToPayload({...data});
+      const finalData = adaptOwnerToPayload({ ...data });
       await EditOwner(finalData, Number(id));
       toast.custom(
         () => (
-          <SuccessToast title="¡Cambios realizados con éxito!" description="Los datos del propietario se han actualizado correctamente." />   
+          <SuccessToast
+            title="¡Cambios realizados con éxito!"
+            description="Los datos del propietario se han actualizado correctamente."
+          />
         ),
         {
           duration: 5000,
-        },
+        }
       );
       setIsEditing(false);
       navigate("/contact");
     } catch {
       toast.custom(
         () => (
-          <ErrorToast title="¡Ha ocurrido un error!" description="Los datos no se han podido actualizar, intente nuevamente." />
+          <ErrorToast
+            title="¡Ha ocurrido un error!"
+            description="Los datos no se han podido actualizar, intente nuevamente."
+          />
         ),
         {
           duration: 5000,

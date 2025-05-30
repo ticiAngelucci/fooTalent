@@ -10,7 +10,6 @@ interface PropertiesResponse {
 }
 
 export async function fetchAllProperties(page: number = 0, size: number = defaultPageSize): Promise<PropertiesResponse> {
-  try {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -25,8 +24,5 @@ export async function fetchAllProperties(page: number = 0, size: number = defaul
 
     
     return response.data;
-  } catch (error) {
-    console.error("Error al obtener propiedades:", error);
-    throw error;
-  }
+
 }
