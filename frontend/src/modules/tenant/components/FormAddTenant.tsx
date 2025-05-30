@@ -13,8 +13,10 @@ import { toast } from "sonner";
 import { CircleAlert } from 'lucide-react';
 import { Check } from 'lucide-react';
 import { AxiosError } from "axios";
+import { useTenantStore } from "@/modules/dashboard/store/tenantStore";
 
 const FormAddTenant = () => {
+const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
     const navigate = useNavigate();
 
@@ -38,6 +40,7 @@ const FormAddTenant = () => {
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
       await createTenant({ ...data });
+      await fetchTenants();
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">

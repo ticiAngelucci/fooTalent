@@ -2,7 +2,7 @@ import { ApiResponse } from "../types/paymentsContract";
 import { API_URL } from "@/shared/constants/api";
 
 export const fetchContractPayments = async (contractId: number): Promise<ApiResponse> => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
   if (!token) {
     throw new Error("No se encontró token de autenticación");

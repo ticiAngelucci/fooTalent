@@ -37,6 +37,7 @@ import { Calendar } from "@/shared/components/ui/calendar";
 import parse from "date-fns/parse";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { usePagosStore } from "@/modules/dashboard/store/paymentsStore";
 
 interface Props {
   id: string;
@@ -68,6 +69,7 @@ const NewPaymentForm = ({
   });
 
   const [loading, setLoading] = useState(false);
+  const fetchPagos = usePagosStore((state) => state.fetchPagos);
 
   const navigate = useNavigate();
 
@@ -76,6 +78,7 @@ const NewPaymentForm = ({
       setLoading(true);
       if (paymentId) {
         await payRent(paymentId, data);
+        await fetchPagos();
         if (loadPayments) await loadPayments();
       } else {
         await createPayment(data);
@@ -143,18 +146,25 @@ const NewPaymentForm = ({
                       <SelectValue placeholder="Seleccione una Opción" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(ServiceType).map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type
-                            .toLowerCase()
-                            .split("_")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(" ")}
-                        </SelectItem>
-                      ))}
+                      {Object.values(ServiceType)
+                        .filter((type) => {
+                          if (ammount !== undefined) {
+                            return type === ServiceType.ALQUILER;
+                          }
+                          return type !== ServiceType.ALQUILER;
+                        })
+                        .map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type
+                              .toLowerCase()
+                              .split("_")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() + word.slice(1)
+                              )
+                              .join(" ")}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -337,7 +347,8 @@ const NewPaymentForm = ({
               className="flex flex-1/2 items-center text-base btn-primary"
               disabled={loading}
             >
-              <Save className="size-6 mr-2" />{!loading ? "Guardar Cambios" : "Guardando..."} 
+              <Save className="size-6 mr-2" />
+              {!loading ? "Guardar Cambios" : "Guardando..."}
             </Button>
           </div>
         </form>

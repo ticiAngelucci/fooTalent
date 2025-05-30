@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { Contract } from "@/modules/contract/types/contract";
 import { getContracts } from "../service/dashboardService";
 
@@ -48,6 +48,7 @@ export const useContractStore = create<ContractState>()(
     {
       name: "contract-store",
       partialize: (state) => ({ contratos: state.contracts }),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

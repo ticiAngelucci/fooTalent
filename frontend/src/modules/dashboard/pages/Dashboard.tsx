@@ -26,38 +26,16 @@ const Dashboard = () => {
   const tenants = useTenantStore((state) => state.tenants);
   const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     fetchPagos();
-  },[fetchPagos])
+    fetchContracts();
+    fetchProperties();
+    fetchTenants();
+  }, [fetchPagos, fetchContracts, fetchProperties, fetchTenants]);
 
-  useEffect(() => {
-    if (contracts.length === 0) {
-      fetchContracts();
-    }
-  }, [contracts.length, fetchContracts]);
-
-  useEffect(() => {
-    if (properties.length === 0) {
-      fetchProperties();
-    }
-  }, [properties.length, fetchProperties]);
-
-  useEffect(() => {
-    if (tenants.length === 0) {
-      fetchTenants();
-    }
-  }, [tenants.length, fetchTenants]);
-
-  useEffect(() => {
-    if (pagos.length === 0) {
-      fetchPagos();
-    }
-  }, [pagos.length, fetchPagos]);
-
-  const pagosVencidos = pagos.filter(p => p.status === "VENCIDO").length;
-  const pagosPendientes = pagos.filter(p => p.status === "PENDIENTE").length;
-  const pagosAlDia = pagos.filter(p => p.status === "PAGADO").length;
+  const pagosVencidos = pagos.filter((p) => p.status === "VENCIDO").length;
+  const pagosPendientes = pagos.filter((p) => p.status === "PENDIENTE").length;
+  const pagosAlDia = pagos.filter((p) => p.status === "PAGADO").length;
 
   const summary = [
     {

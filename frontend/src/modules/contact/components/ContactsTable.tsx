@@ -179,18 +179,6 @@ export default function ContactsTable({
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
-                                onRegisterPayment(
-                                  tipo === "inquilinos"
-                                    ? (contacto as ContactoInquilino).id
-                                    : (contacto as ContactoPropietario).idOwner
-                                )
-                              }
-                            >
-                              <DollarSign className="!w-5 !h-5 text-neutral-950" />
-                              Registrar Pago
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
                                 onRequestDelete(
                                   tipo === "inquilinos"
                                     ? (contacto as ContactoInquilino).id

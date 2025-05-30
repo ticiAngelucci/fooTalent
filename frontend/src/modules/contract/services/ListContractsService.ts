@@ -11,7 +11,7 @@ interface ContractsResponse {
 
 export async function fetchAllContracts(page: number = 0, size: number = defaultPageSize): Promise<ContractsResponse> {
   try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       throw new Error("No se encontró token de autenticación");

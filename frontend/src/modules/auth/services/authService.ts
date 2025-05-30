@@ -98,7 +98,7 @@ export const sendEmailConfirmation = async (email: string) => {
 
 export const getUserInfo = async () => {
   try {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const response = await axios.get(`${API_URL}/users/me`,{
       headers: {
         Authorization: `Bearer ${token}`,

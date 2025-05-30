@@ -45,7 +45,7 @@ export default function ContactsView() {
 
   const fetchContactos = async (tipo: string) => {
     setLoading(true);
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         `${API_URL}${tipo === "inquilinos" ? "/tenants" : "/owner"}`,
@@ -66,7 +66,7 @@ export default function ContactsView() {
 
   const handleDelete = async (id: number, tipo: string) => {
     setLoading(true);
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
       await axios.delete(
         `${API_URL}${
