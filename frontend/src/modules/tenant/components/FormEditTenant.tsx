@@ -8,12 +8,13 @@ import AddressFields from "./AddressFields";
 import DocumentUpload from "./DocumentUpload";
 import FormEditFooter from "./FormEditFooter";
 import { API_URL } from "@/shared/constants/api";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useUserStore } from "@/store/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Check, CircleAlert } from "lucide-react";
 import { DocumentFromAPI } from "@/shared/interfaces/documentInterface";
+import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 
 type EditTenantProps = {
   initialData: Tenant;
@@ -38,10 +39,21 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
         },
       });
       navigate("/contact");
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        throw err.response.data;
-      }
+    } catch (error) {
+      const err = error as AxiosError;
+      toast.custom(
+        () => (
+          <ErrorToast
+            title="Error al eliminar contacto!"
+            description={
+              err.status == 406
+                ? String(err.response?.data)
+                : "No se pudo eliminar el contacto. Intenta nuevamente."
+            }
+          />
+        ),
+        { duration: 5000 }
+      );
     } finally {
       setIsDeleting(false);
     }

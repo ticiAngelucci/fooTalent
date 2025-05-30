@@ -5,6 +5,7 @@ import FormEditOwner from "../components/FormEditOwner";
 import { Route } from "@/shared/constants/route";
 import { fetchOwner } from "../services/ownerService";
 import { OwnerFromAPI } from "../types/ownerFromApi";
+import { Loader2 } from "lucide-react";
 
 export default function EditOwner() {
   const { id } = useParams();
@@ -12,21 +13,23 @@ export default function EditOwner() {
   const [owner, setOwner] = useState<OwnerFromAPI>();
 
   useEffect(() => {
-    const getOwner = async()=>{
+    const getOwner = async () => {
       const editOwner = await fetchOwner(id);
-      if(editOwner) setOwner(editOwner);
+      if (editOwner) setOwner(editOwner);
       setLoading(false);
-    }
-      getOwner();
+    };
+    getOwner();
   }, []);
 
   return (
     <DashboardLayout subtitle="Perfil de propietario" redirect={Route.Contact}>
       <div className="p-6">
         {loading ? (
-          <p>Cargando propietario...</p>
+          <div className="col-span-3 flex justify-center items-center py-10">
+            <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+          </div>
         ) : owner ? (
-          <FormEditOwner initialData={owner}/>
+          <FormEditOwner initialData={owner} />
         ) : (
           <p>No se encontró el propietario.</p>
         )}

@@ -41,14 +41,13 @@ export const editProperty = async (id: string, data: PropertyFormData) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data; 
+      throw error.response.data;
     }
     throw error;
   }
 };
 
 export const deleteProperty = async (id: string) => {
-  try {
     const token = useUserStore.getState().token;
     const isAuthenticated = useUserStore.getState().isAuthenticated;
     if (!token && !isAuthenticated)
@@ -59,12 +58,7 @@ export const deleteProperty = async (id: string) => {
       },
     });
     return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-    throw error;
-  }
+
 };
 
 export const getOwnerList = async () => {

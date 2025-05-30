@@ -1,7 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import { Property } from "../types/property";
-import { ChevronsUpDown, MoreHorizontal, Trash2, MoveUpRight } from "lucide-react";
+import {
+  ChevronsUpDown,
+  MoreHorizontal,
+  Trash2,
+  MoveUpRight,
+} from "lucide-react";
 import clsx from "clsx";
 import {
   DropdownMenu,
@@ -13,7 +18,7 @@ import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 
 export const getPropertyColumns = (
-  handleDelete: (propertyId: string) => void
+  onDeleteClick: (id: string) => void
 ): ColumnDef<Property>[] => [
   {
     id: "direccion",
@@ -21,14 +26,17 @@ export const getPropertyColumns = (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
       >
         Dirección
         <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    accessorFn: (row) => `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
-    cell: ({ getValue }) => <div className="truncate">{getValue() as string}</div>,
+    accessorFn: (row) =>
+      `${row.street} ${row.number}, ${row.locality}, ${row.province}, ${row.country}`,
+    cell: ({ getValue }) => (
+      <div className="truncate">{getValue() as string}</div>
+    ),
     size: 407,
     minSize: 407,
     maxSize: 407,
@@ -39,7 +47,7 @@ export const getPropertyColumns = (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
       >
         Propietario
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -60,7 +68,7 @@ export const getPropertyColumns = (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
       >
         Tipo de inmueble
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -87,7 +95,7 @@ export const getPropertyColumns = (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
       >
         Estado
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -106,8 +114,10 @@ export const getPropertyColumns = (
           className={clsx(
             "px-4 py-0.5 rounded-full text-sm font-raleway border inline-block text-center min-w-[98px]",
             {
-              "text-green-700 bg-green-100 border-green-400": estado === "DISPONIBLE",
-              "text-neutral-700 bg-neutral-50 border-neutral-700": estado === "OCUPADO"
+              "text-green-700 bg-green-100 border-green-400":
+                estado === "DISPONIBLE",
+              "text-neutral-700 bg-neutral-50 border-neutral-700":
+                estado === "OCUPADO",
             }
           )}
         >
@@ -122,9 +132,13 @@ export const getPropertyColumns = (
   {
     id: "observaciones",
     accessorKey: "observations",
-    header: "Observaciones",
+    header:() => (
+      <span className="flex items-center gap-1 font-medium text-neutral-600">
+        Observaciones
+      </span>
+    ),
     cell: ({ row }) => (
-      <div className="max-w-sm truncate text-sm text-muted-foreground">
+      <div className="max-w-sm truncate text-sm">
         {row.getValue("observaciones") || "-"}
       </div>
     ),
@@ -144,13 +158,21 @@ export const getPropertyColumns = (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link className="!text-black" to={Route.EditProperty} state={{ property: row.original }}>
+            <DropdownMenuItem className="hover:cursor-pointer">
+              <Link
+                className="!text-black"
+                to={Route.EditProperty}
+                state={{ property: row.original }}
+              >
                 <MoveUpRight className="text-black inline" /> Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(row.original.id_property.toString())}>
-              <Trash2 className="text-black" />Eliminar
+            <DropdownMenuItem
+              className="hover:cursor-pointer"
+              onClick={() => onDeleteClick(row.original.id_property.toString())}
+            >
+              <Trash2 className="text-black mr-2 h-4 w-4" />
+              Eliminar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

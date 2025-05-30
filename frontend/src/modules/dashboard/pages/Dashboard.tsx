@@ -2,9 +2,9 @@ import { useUserStore } from "@/store/userStore";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
-import { AlertCircle, CircleCheck, Clock4 } from "lucide-react";
+import { AlertCircle, CircleCheck, Clock4, Loader2 } from "lucide-react";
 import { usePagosStore } from "../store/paymentsStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useContractStore } from "../store/contractStore";
 import { usePropertyStore } from "../store/propertyStore";
 import { useTenantStore } from "../store/tenantStore";
@@ -13,6 +13,7 @@ import { Route } from "@/shared/constants/route";
 
 const Dashboard = () => {
   const username = useUserStore((state) => state.firstName);
+  const [isLoading, setIsLoading] = useState(true);
 
   const pagos = usePagosStore((state) => state.pagos);
   const fetchPagos = usePagosStore((state) => state.fetchPagos);
@@ -27,10 +28,21 @@ const Dashboard = () => {
   const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
   useEffect(() => {
-    fetchPagos();
-    fetchContracts();
-    fetchProperties();
-    fetchTenants();
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          fetchPagos(),
+          fetchContracts(),
+          fetchProperties(),
+          fetchTenants(),
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, [fetchPagos, fetchContracts, fetchProperties, fetchTenants]);
 
   const pagosVencidos = pagos.filter((p) => p.status === "VENCIDO").length;
@@ -109,16 +121,22 @@ const Dashboard = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {infoSections.map((section, idx) => (
-            <InfoCard
-              key={idx}
-              type={section.type}
-              subtitle={section.subtitle}
-              redirect={section.redirect}
-              title={section.title}
-              items={section.items}
-            />
-          ))}
+          {isLoading ? (
+            <div className="col-span-3 flex justify-center items-center py-10">
+              <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+            </div>
+          ) : (
+            infoSections.map((section, idx) => (
+              <InfoCard
+                key={idx}
+                type={section.type}
+                subtitle={section.subtitle}
+                redirect={section.redirect}
+                title={section.title}
+                items={section.items}
+              />
+            ))
+          )}
         </div>
       </div>
     </DashboardLayout>

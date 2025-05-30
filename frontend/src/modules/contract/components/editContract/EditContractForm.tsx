@@ -37,10 +37,11 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import {
   CalendarIcon,
+  Loader2,
   Minus,
   PencilLine,
   Plus,
-  SaveIcon,
+  Save,
   X,
 } from "lucide-react";
 import { Calendar } from "@/shared/components/ui/calendar";
@@ -92,6 +93,8 @@ const UpdateContractForm = ({
   const [ownerId, setOwnerId] = useState<string>();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const form = useForm<ContractFormData>({
     resolver: zodResolver(ContractSchema),
@@ -117,8 +120,10 @@ const UpdateContractForm = ({
     }
   };
 
-  useEffect(() => {
-    const loadData = async () => {
+ useEffect(() => {
+  const loadData = async () => {
+    try {
+      setLoading(true);
       const [ownersData, tenantsData] = await Promise.all([
         fetchOwners(),
         fetchTenants(),
@@ -126,9 +131,13 @@ const UpdateContractForm = ({
       setOwnerId(contract.ownerId.toString());
       setOwners(ownersData.content);
       setTenants(tenantsData.dto);
-    };
-    loadData();
-  }, [token]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, [token, contract.ownerId]);
 
   useEffect(() => {
     const getOwnerProperties = async () => {
@@ -158,6 +167,7 @@ const UpdateContractForm = ({
 
   const handleSubmit = async (data: ContractFormData) => {
     try {
+      setIsSubmiting(true);
       const formDataToSend = new FormData();
       const contractBlob = new Blob([JSON.stringify(data)], {
         type: "application/json",
@@ -192,8 +202,17 @@ const UpdateContractForm = ({
           description={errorMessage}
         />
       ));
+    } finally {
+      setIsSubmiting(false);
     }
   };
+  if (loading) {
+    return (
+      <div className="col-span-3 flex justify-center items-center py-10">
+        <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+      </div>
+    );
+  }
   if (!contract) return null;
   return (
     <>
@@ -593,12 +612,14 @@ const UpdateContractForm = ({
                     <FormControl>
                       <Input
                         type="number"
-                        className="no-spinner  !text-base"
+                        className="no-spinner !bg-white  !text-base"
                         placeholder="%"
-                        value={field.value ?? ""}
+                        value={field.value === undefined ? "" : field.value}
                         onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          field.onChange(isNaN(value) ? 0 : value);
+                          const inputValue = e.target.value;
+                          field.onChange(
+                            inputValue === "" ? "" : parseFloat(inputValue)
+                          );
                         }}
                         disabled={
                           form.watch("adjustmentType") !==
@@ -617,7 +638,11 @@ const UpdateContractForm = ({
                 className="w-full mt-6 bg-brand-800 flex items-center justify-center gap-2 text-white hover:bg-brand-700 text-base font-semibold"
                 disabled={isDisabled ? true : false}
               >
-                <SaveIcon className="!w-6 !h-6" />
+                {isSubmiting ? (
+                  <Loader2 className="animate-spin size-6 mr-2" />
+                ) : (
+                  <Save className="size-6 mr-2" />
+                )}
                 Guardar
               </Button>
 

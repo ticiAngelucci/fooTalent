@@ -63,9 +63,9 @@ const DeleteContractModal = ({ id, open, setOpen }: Props) => {
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogContent className="bg-white rounded-[8px] gap-8 p-8 border border-neutral-200">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Eliminar Contrato</AlertDialogTitle>
+                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Eliminar contrato</AlertDialogTitle>
                     <AlertDialogDescription className="text-sm text-neutral-600 font-normal">
-                        ¿Estás seguro que deseas eliminar el contrato? Esta acción no es recuperable
+                        ¿Estás seguro que deseas eliminar el contrato? Esta acción no es recuperable.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="">

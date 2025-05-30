@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
-import { X, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -53,7 +53,7 @@ export default function DeleteConfirmationModal({
             {isDeleting ? (
               <Loader2 className="animate-spin !w-6 !h-6 mr-2" />
             ) : (
-              <X className="!w-6 !h-6 mr-2" />
+              ""
             )}
             Eliminar
           </Button>

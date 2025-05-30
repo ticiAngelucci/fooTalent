@@ -24,7 +24,7 @@ import {
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Button } from "@/shared/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PencilLine, Save, X } from "lucide-react";
+import { Loader2, PencilLine, Save, X } from "lucide-react";
 import { editProperty, getOwnerList } from "../services/PropertyService";
 import { TypeOfProperty } from "../enums/TypeOfProperty";
 import { toast } from "sonner";
@@ -38,6 +38,12 @@ const PropertyEdit = () => {
   const property = location.state?.property;
   const [isDisabled, setDisabled] = useState(true);
   const [ownerList, setOwnerList] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleOpen = () => {
+    setModalOpen(!modalOpen);
+  };
 
   useEffect(() => {
     const getOwners = async () => {
@@ -73,6 +79,7 @@ const PropertyEdit = () => {
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
+      setLoading(true);
       await editProperty(id, data);
       toast.custom(
         () => (
@@ -98,13 +105,15 @@ const PropertyEdit = () => {
           duration: 5000,
         }
       );
+    } finally {
+      setLoading(false);
     }
   };
 
-    if (!property) return null;
+  if (!property) return null;
 
   return (
-    <DashboardLayout subtitle="Añadir Inmueble" redirect={Route.Immovables}>
+    <DashboardLayout subtitle="Perfil del inmueble" redirect={Route.Immovables}>
       <section className="p-6 rounded-[8px] border bg-white">
         <Form {...form}>
           <form
@@ -292,7 +301,7 @@ const PropertyEdit = () => {
               )}
             />
 
-             <FormField
+            <FormField
               name="address.province"
               render={({ field }) => (
                 <FormItem className="col-span-1">
@@ -366,7 +375,12 @@ const PropertyEdit = () => {
               className="col-span-2 flex items-center w-full text-base btn-primary"
               disabled={isDisabled ? true : false}
             >
-              <Save className="size-6 mr-2" /> Guardar
+              {loading ? (
+                <Loader2 className="animate-spin size-6 mr-2" />
+              ) : (
+                <Save className="size-6 mr-2" />
+              )}
+              Guardar
             </Button>
             <br />
             <Button
@@ -378,19 +392,19 @@ const PropertyEdit = () => {
               {isDisabled ? "Editar" : "Cancelar"}
             </Button>
             <br />
-            <DeletePropertyModal id={id}>
-              <Button
-                type="button"
-                className="col-span-2 btn-tertiary"
-                disabled={!isDisabled ? true : false}
-              >
-                <X />
-                Eliminar
-              </Button>
-            </DeletePropertyModal>
+            <Button
+              type="button"
+              className="col-span-2 btn-tertiary"
+              disabled={!isDisabled ? true : false}
+              onClick={() => handleOpen()}
+            >
+              <X />
+              Eliminar
+            </Button>
           </form>
         </Form>
       </section>
+      <DeletePropertyModal open={modalOpen} setOpen={setModalOpen} id={id} />
     </DashboardLayout>
   );
 };

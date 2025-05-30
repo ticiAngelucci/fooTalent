@@ -14,7 +14,6 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import {
   ArrowUpRight,
-  DollarSign,
   Trash2,
   ChevronUp,
   ChevronDown,
@@ -43,7 +42,6 @@ export default function ContactsTable({
   loading,
   error,
   onEdit,
-  onRegisterPayment,
   onRequestDelete,
   onSortChange,
   sortField,
@@ -166,6 +164,7 @@ export default function ContactsTable({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuItem
+                            className="hover:cursor-pointer"
                               onClick={() =>
                                 onEdit(
                                   tipo === "inquilinos"
@@ -178,6 +177,7 @@ export default function ContactsTable({
                               Acceder
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                            className="hover:cursor-pointer"
                               onClick={() =>
                                 onRequestDelete(
                                   tipo === "inquilinos"

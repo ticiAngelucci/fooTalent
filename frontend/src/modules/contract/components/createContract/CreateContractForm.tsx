@@ -561,7 +561,6 @@ const CreateContractForm = () => {
                 )}
               />
 
-              {/* Porcentaje fijo */}
               <FormField
                 control={form.control}
                 name="adjustmentPercentage"

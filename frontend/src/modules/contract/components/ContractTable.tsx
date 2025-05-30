@@ -16,14 +16,11 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import { Input } from "@/shared/components/ui/input";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { TablePagination } from "./TablePagination";
 import { Contract, defaultPageSize } from "../types/contract";
 import { useContractStore } from "../store/contractStore";
-import {
-  getSortedRowModel,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
+import { getSortedRowModel, getFilteredRowModel } from "@tanstack/react-table";
 
 interface ContractTableProps {
   data: Contract[];
@@ -43,7 +40,6 @@ export function ContractTable({
   const { fetchContracts } = useContractStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [globalFilter, setGlobalFilter] = useState("");
-  
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -56,10 +52,8 @@ export function ContractTable({
     state: {
       pagination,
       globalFilter,
-
-      
     },
-    onPaginationChange: setPagination,    
+    onPaginationChange: setPagination,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -68,33 +62,26 @@ export function ContractTable({
     manualPagination: true,
     pageCount: Math.ceil(totalElements / pagination.pageSize),
     globalFilterFn: (row, _columnId, filterValue) => {
-      
-      const originalValues = Object.values(row.original).map(value =>
+      const originalValues = Object.values(row.original).map((value) =>
         String(value ?? "").toLowerCase()
       );
-      
-      const cellValues = row.getAllCells().map(cell =>
-        String(cell.getValue() ?? "").toLowerCase()
-      );
-      
+
+      const cellValues = row
+        .getAllCells()
+        .map((cell) => String(cell.getValue() ?? "").toLowerCase());
+
       const allValues = [...originalValues, ...cellValues];
-      return allValues.some(value =>
+      return allValues.some((value) =>
         value.includes(filterValue.toLowerCase())
       );
     },
-});
-
-  
+  });
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
   useEffect(() => {
     fetchContracts(pageIndex, pageSize);
   }, [pageIndex, pageSize, fetchContracts]);
-
-  if (isLoading) {
-    return <div className="text-center py-6">Cargando contratos...</div>;
-  }
 
   if (error) {
     return <div className="text-center text-red-600 py-6">{error}</div>;
@@ -145,7 +132,13 @@ export function ContractTable({
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-4">
+                  <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -174,7 +167,9 @@ export function ContractTable({
                   colSpan={columns.length}
                   className="h-24 text-center py-20"
                 >
-                  <span className="text-lg text-black font-bold">No se encontraron resultados</span> 
+                  <span className="text-lg text-black font-bold">
+                    No se encontraron resultados
+                  </span>
                 </TableCell>
               </TableRow>
             )}
