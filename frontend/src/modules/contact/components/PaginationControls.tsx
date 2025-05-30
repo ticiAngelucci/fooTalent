@@ -35,7 +35,7 @@ export default function PaginationControls({
         size="sm"
         disabled={currentPage === 1}
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-        className="text-neutral-950 text-base font-semibold"
+        className="text-neutral-950 text-base"
       >
         <ChevronLeft className="!w-6 !h-6 mr-1" />
         Anterior
@@ -70,7 +70,7 @@ export default function PaginationControls({
         onClick={() =>
           onPageChange(currentPage < totalPages ? currentPage + 1 : currentPage)
         }
-        className="text-neutral-950 text-base font-semibold"
+        className="text-neutral-950 text-base"
       >
         Siguiente
         <ChevronRight className="!w-6 !h-6 ml-1" />

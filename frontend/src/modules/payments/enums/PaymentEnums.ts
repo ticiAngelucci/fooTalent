@@ -6,7 +6,6 @@ export enum ServiceType {
   AGUA = "AGUA",
   GAS = "GAS",
   MUNICIPALIDAD = "MUNICIPALIDAD",
-  NO_APLICA = "NO_APLICA"
 }
 
 export enum PaymentMethod {

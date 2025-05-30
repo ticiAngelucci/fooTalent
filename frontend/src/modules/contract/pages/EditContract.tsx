@@ -2,7 +2,6 @@ import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayou
 import { Route } from "@/shared/constants/route";
 import EditContractPage from "../components/editContract/EditContractForm";
 import { useLocation } from "react-router-dom";
-import DeleteContractModal from "../components/deleteContract/DeleteContractModal";
 import { useDeleteContractModal } from "../hooks/useDeleteContractModal";
 
 import { Button } from "@/shared/components/ui/button";
@@ -17,6 +16,7 @@ import {
 
 import { DollarSign } from "lucide-react";
 import PaymentsTable from "../components/paymentsTable/PaymentsTable";
+import CancelContractModal from "../components/cancelContract/CancelContractModal";
 
 const EditContract = () => {
   const { deleteOpen, setDeleteOpen, deleteId, handleDelete } =
@@ -29,11 +29,10 @@ const EditContract = () => {
       <EditContractPage contract={contract} handleDelete={handleDelete} />
       <samp className="text-neutral-950">Pagos</samp>
 
-      <DeleteContractModal
-        open={deleteOpen}
+      <CancelContractModal open={deleteOpen}
         setOpen={setDeleteOpen}
-        id={deleteId ?? 0}
-      />
+        id={deleteId ?? 0}/>
+
       <PaymentsTable contractId={contract?.id} />
 
       <Button

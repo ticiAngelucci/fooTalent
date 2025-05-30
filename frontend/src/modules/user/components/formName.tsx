@@ -38,7 +38,6 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
           }
         }
       } catch (error) {
-        console.error("Error al obtener el usuario:", error);
       }
     };
 
@@ -74,8 +73,6 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
           }
         )
 
-      } else {
-        console.error("No se pudo actualizar el usuario.");
       }
     } catch (error) {
       toast.custom(

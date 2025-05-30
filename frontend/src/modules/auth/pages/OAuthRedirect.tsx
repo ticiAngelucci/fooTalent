@@ -14,7 +14,7 @@ export default function OauthRedirect() {
       const token = params.get("token");
 
       if (token) {
-        sessionStorage.setItem("token", token);
+        localStorage.setItem("token", token);
         setLogin(token);
         await getUser();
         navigate(Route.Dashboard);

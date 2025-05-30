@@ -1,7 +1,7 @@
 import { API_URL } from "@/shared/constants/api";
 import axios from "axios";
 
-const token = sessionStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 export const cancelContract = async (id: number) => {
   try {

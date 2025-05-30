@@ -36,7 +36,7 @@ export const createTenant = async (data: Tenant) => {
     },
   };
 
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const formData = new FormData();
   formData.append(
     "tenant",

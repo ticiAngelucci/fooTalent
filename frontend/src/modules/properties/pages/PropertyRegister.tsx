@@ -31,10 +31,13 @@ import { TypeOfProperty } from "../enums/TypeOfProperty";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { usePropertyStore } from "@/modules/dashboard/store/propertyStore";
 
 const PropertyRegister = () => {
   const [ownerList, setOwnerList] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fetchProperties = usePropertyStore((state) => state.fetchProperties);
+
 
   useEffect(() => {
     const getOwners = async () => {
@@ -66,6 +69,7 @@ const PropertyRegister = () => {
     setIsSubmitting(true);
     try {
       await createProperty(data);
+      await fetchProperties();
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">

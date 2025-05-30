@@ -3,12 +3,11 @@ import { getAuthToken } from "../store/authStore"
 import { ApiResponse } from "../types/pyments"
 import { API_URL } from "@/shared/constants/api";
 
-
 export const fetchPayments = async (currentPage: number, pageSize: number): Promise<ApiResponse> => {
   try {
     const token = getAuthToken()
     const response = await axios.get<ApiResponse>(
-      `${API_URL}/payments/all-details?page=${currentPage}&size=${pageSize}`,
+      `${API_URL}/payments/all-rent?page=${currentPage}&size=${pageSize}`,
       {
         headers: {
           Authorization: `Bearer ${token}`

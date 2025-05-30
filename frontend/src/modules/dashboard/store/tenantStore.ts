@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { Tenant } from "@/modules/tenant/types/tenant";
 import { getTenants } from "../service/dashboardService";
 
@@ -48,6 +48,7 @@ export const useTenantStore = create<TenantState>()(
     {
       name: "tenant-store",
       partialize: (state) => ({ tenants: state.tenants }),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

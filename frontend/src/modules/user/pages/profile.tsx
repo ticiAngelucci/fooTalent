@@ -23,7 +23,6 @@ const Profile = () => {
         const data = await getUser(token); 
         setInfo(data);
       } catch {
-        console.error("Error al obtener el usuario:");
       }
     };
 

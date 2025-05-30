@@ -33,7 +33,7 @@ const InfoCard = ({
                 {type === "contact" && (
                   <>
                     <ContactRound className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2 truncate">
+                    <div className="flex flex-col w-full h-full gap-2 truncate text-neutral-600">
                       <p>
                         Nombre:{" "}
                         <span className="text-black font-semibold">
@@ -64,10 +64,10 @@ const InfoCard = ({
                 {type === "contract" && (
                   <>
                     <ClipboardPenLine className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2 truncate">
+                    <div className="flex flex-col w-full h-full gap-2 truncate text-neutral-600">
                       <p>
-                        Tipo Inmueble:{" "}
-                        <span className="text-black font-semibold">Casa</span>
+                        Precio Alquiler:{" "}
+                        <span className="text-black font-semibold">$ {item.baseRent}</span>
                       </p>
                       <p className=" truncate">
                         Ubicación:{" "}
@@ -98,7 +98,7 @@ const InfoCard = ({
                 {type === "property" && (
                   <>
                     <House className="size-10 text-brand-800" />
-                    <div className="flex flex-col w-full h-full gap-2 truncate">
+                    <div className="flex flex-col w-full h-full gap-2 truncate text-neutral-600">
                       <p>
                         Tipo de inmueble:{" "}
                         <span className="text-black font-semibold">
@@ -128,7 +128,7 @@ const InfoCard = ({
                       item.propertyStatus == "DISPONIBLE" ? (
                         <span className="flex gap-2.5  items-center mt-1 text-xs text-success-700 bg-green-50 border border-success-700 px-2 py-1 rounded-full w-fit normal-case">
                           <Check className="size-5" />
-                          {item.propertyStatus === "DISPONBLE" && (
+                          {item.propertyStatus === "DISPONIBLE" && (
                             <>Disponible</>
                           )}
                         </span>
@@ -147,7 +147,7 @@ const InfoCard = ({
         })}
       </div>
 
-      <Link className="self-end" to={redirect}>
+      <Link className="self-end !underline" to={redirect}>
         Ver todos
       </Link>
     </div>

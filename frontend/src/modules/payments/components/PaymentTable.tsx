@@ -194,6 +194,7 @@ export const PaymentTable = ({
                             payment.id
                           )
                         }
+                        disabled={payment.status == "PAGADO"}
                       >
                         <DollarSign />
                         Registrar pago
