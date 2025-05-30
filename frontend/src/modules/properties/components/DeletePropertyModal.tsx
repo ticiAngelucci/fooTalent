@@ -15,7 +15,7 @@ import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 import { useNavigate } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { usePropertyStore } from "@/modules/immovables/store/propertyStore";
 
@@ -27,12 +27,8 @@ interface Props {
 
 const DeletePropertyModal = ({ id, open, setOpen }: Props) => {
   const navigate = useNavigate();
-  const {fetchProperties} = usePropertyStore();
+  const { fetchProperties } = usePropertyStore();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    console.log("Loading cambió a:", loading);
-  }, [loading]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -100,7 +96,8 @@ const DeletePropertyModal = ({ id, open, setOpen }: Props) => {
             className="btn-destructive flex-1/2 !pt-2 !px-4 rounded-[4px]"
             onClick={handleDelete}
           >
-            {loading ? (<Loader2 className="animate-spin !w-6 !h-6 mr-2" />) : ("")} Eliminar
+            {loading ? <Loader2 className="animate-spin !w-6 !h-6 mr-2" /> : ""}{" "}
+            Eliminar
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
