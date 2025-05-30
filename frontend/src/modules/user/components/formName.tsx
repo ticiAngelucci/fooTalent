@@ -1,6 +1,6 @@
 import { useUserStore } from "@/store/userStore";
 import React, { useEffect, useState } from "react";
-import { PencilLine, Save, Shield } from "lucide-react";
+import { Loader2, PencilLine, Save, Shield } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { getUser, setUser } from "../services/userService";
 import SuccessToast from "@/shared/components/Toasts/SuccessToast";
@@ -23,6 +23,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
   const [firstIsEditable, setFirstIsEditable] = useState<boolean>(false);
   const [lastIsEditable, setLastIsEditable] = useState<boolean>(false);
   const [info, setInfo] = useState<UserProps | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const token = useUserStore((state) => state.token);
   const setNewData = useUserStore((state) => state.getCredentials);
 
@@ -37,8 +38,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
             setLastName(data.lastName);
           }
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     fetchUser();
@@ -54,7 +54,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
 
   const saveInfo = async () => {
     if (!info) return;
-
+    setIsSubmitting(true);
     try {
       const updatedInfo = { ...info, lastName, firstName };
 
@@ -65,25 +65,30 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
         setFirstIsEditable(false);
         toast.custom(
           () => (
-            <SuccessToast title="Datos modificados con éxito!"
-              description="Tus datos fueron modificados exitosamente." />
+            <SuccessToast
+              title="Datos modificados con éxito!"
+              description="Tus datos fueron modificados exitosamente."
+            />
           ),
           {
             duration: 5000,
           }
-        )
-
+        );
       }
     } catch (error) {
       toast.custom(
         () => (
-          <ErrorToast title="¡Error al Modificar tus datos!"
-            description="Tus datos no han sido modificados, por favor inténtelo nuevamente." />
+          <ErrorToast
+            title="¡Error al Modificar tus datos!"
+            description="Tus datos no han sido modificados, por favor inténtelo nuevamente."
+          />
         ),
         {
           duration: 5000,
         }
-      )
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -98,8 +103,9 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
             <div className="flex flex-col w-full md:w-1/2 relative">
               <span className="font-raleway font-semibold text-sm">Nombre</span>
               <input
-                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center font-raleway font-normal text-base leading-6 tracking-normal [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] justify-between ${!firstIsEditable ? ` bg-neutral-100` : `bg-white `
-                  }`}
+                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center font-raleway font-normal text-base leading-6 tracking-normal [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] justify-between ${
+                  !firstIsEditable ? ` bg-neutral-100` : `bg-white `
+                }`}
                 value={firstName}
                 disabled={!firstIsEditable}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -113,10 +119,13 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
               />
             </div>
             <div className="flex flex-col w-full md:w-1/2 relative">
-              <span className="font-raleway font-semibold text-sm">Apellido</span>
+              <span className="font-raleway font-semibold text-sm">
+                Apellido
+              </span>
               <input
-                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center justify-between ${!lastIsEditable ? ` bg-neutral-100` : `bg-white `
-                  }`}
+                className={`h-[40px] rounded-[6px] w-full border border-neutral-300 px-2 mt-1 flex items-center justify-between ${
+                  !lastIsEditable ? ` bg-neutral-100` : `bg-white `
+                }`}
                 value={lastName}
                 disabled={!lastIsEditable}
                 onChange={(e) => setLastName(e.target.value)}
@@ -156,7 +165,7 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
               <Button
                 onClick={onEditPassword}
                 className="w-full h-[40px] bg-white text-black mt-6 hover:bg-neutral-50"
-                style={{ borderColor: '#d1d5db' }}
+                style={{ borderColor: "#d1d5db" }}
               >
                 <Shield width={16} height={20} />
                 <p className="font-raleway font-semibold text-[16px] leading-[24px] tracking-[0] [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums]">
@@ -168,9 +177,13 @@ const FormName: React.FC<FormNameProps> = ({ onEditPassword }) => {
           <Button
             className="w-[452px] h-[40px] font-raleway font-semibold text-[16px] leading-[24px] tracking-[0%] [font-variant-numeric:lining-nums] [font-variant-numeric:proportional-nums] text-white rounded-[6px] bg-brand-800 border border-neutral-300 mt-5 hover:bg-brand-700"
             onClick={saveInfo}
-            disabled={(firstIsEditable || lastIsEditable) ? false : true}
+            disabled={(!firstIsEditable && !lastIsEditable) || isSubmitting}
           >
-            <Save />
+            {isSubmitting ? (
+              <Loader2 className="animate-spin h-6 w-6" />
+            ) : (
+              <Save />
+            )}
             Guardar
           </Button>
         </div>

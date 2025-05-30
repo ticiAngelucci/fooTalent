@@ -15,6 +15,7 @@ import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 import { Owner, ownerSchema } from "../schemas/ownerSchema";
 import { adaptOwnerToPayload } from "../adapter/ownerAdapter";
 import { AxiosError } from "axios";
+import { Route } from "@/shared/constants/route";
 
 interface Props {
   initialData: OwnerFromAPI;
@@ -50,6 +51,7 @@ const FormEditOwner = ({ initialData }: Props) => {
       );
     } finally {
       setIsDeleting(false);
+      navigate(Route.Contact);
     }
   };
 
