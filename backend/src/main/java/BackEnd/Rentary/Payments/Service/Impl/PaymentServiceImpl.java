@@ -259,8 +259,8 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (payment.getStatus() != PaymentStatus.PENDIENTE) {
-            throw new InvalidPaymentException("El pago ya fue confirmado o no está pendiente");
+        if (payment.getStatus() == PaymentStatus.PAGADO){
+            throw new InvalidPaymentException("El pago ya fue confirmado");
         }
 
         PaymentValidationUtil.validatePaymentAmount(amount);
