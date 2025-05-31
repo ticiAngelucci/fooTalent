@@ -1,4 +1,4 @@
-![Logo](https://media.discordapp.net/attachments/1357793365369819236/1368021024586858556/9.png?ex=6829d21c&is=6828809c&hm=2eb2625fbc457fdb52d0fe0cc154571126e528716d8408c84926760a69afd5d7&=&format=webp&quality=lossless&width=1712&height=856)
+![Logo](public/readme-banner.png)
 
 
 - [Rentary](#rentary)
