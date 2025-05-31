@@ -1,13 +1,13 @@
 import axios from "axios"
 import { getAuthToken } from "../store/authStore"
 import { ApiResponse } from "../types/pyments"
-
+import { API_URL } from "@/shared/constants/api";
 
 export const fetchPayments = async (currentPage: number, pageSize: number): Promise<ApiResponse> => {
   try {
     const token = getAuthToken()
     const response = await axios.get<ApiResponse>(
-      `https://rrentary.koyeb.app/payments/all-details?page=${currentPage}&size=${pageSize}`,
+      `${API_URL}/payments/all-rent?page=${currentPage}&size=${pageSize}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -17,7 +17,9 @@ export const fetchPayments = async (currentPage: number, pageSize: number): Prom
     
     return response.data
   } catch (error) {
-    console.error("Error al cargar los pagos:", error)
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data; 
+    }
     throw error
   }
 }

@@ -5,7 +5,7 @@ export const adaptContractToFormData = (
   contractFromApi: any
 ): ContractFormData => {
   return {
-    tenantId: contractFromApi.tenantId ?? 0, // si no está, poné un valor por defecto o lanzá error
+    tenantId: contractFromApi.tenantId ?? 0,
     propertyId: contractFromApi.propertyId ?? 0,
     startDate: contractFromApi.startDate,
     endDate: contractFromApi.endDate,

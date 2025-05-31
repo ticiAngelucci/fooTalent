@@ -16,7 +16,9 @@ export const createProperty = async (data: PropertyFormData) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw error;
   }
 };
@@ -38,30 +40,25 @@ export const editProperty = async (id: string, data: PropertyFormData) => {
     );
     return response.data;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw error;
   }
 };
 
 export const deleteProperty = async (id: string) => {
-  try {
     const token = useUserStore.getState().token;
     const isAuthenticated = useUserStore.getState().isAuthenticated;
     if (!token && !isAuthenticated)
       throw Object.assign(new Error("No autorizado"), { status: 401 });
-    const response = await axios.delete(
-      `${API_URL}/properties/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.delete(`${API_URL}/properties/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+
 };
 
 export const getOwnerList = async () => {
@@ -77,7 +74,9 @@ export const getOwnerList = async () => {
     });
     return response.data.content;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw error;
   }
 };

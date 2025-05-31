@@ -13,9 +13,7 @@ export const changePassword = async (userData: UserProps) => {
     if (!username) {
       throw new Error("El usuario no está autenticado.");
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const data = { email: username, ...userData };
-    console.log("Datos enviados:", data);
     const response = await axios.put(`${API_URL}/auth/change_password`, data);
     return response.data;
   } catch (error: unknown) {
@@ -72,7 +70,7 @@ export const setUser = async (data:  Record<string, any> | null) => {
 export const uploadImage = async (file: File) => {
   const token = useUserStore.getState().token;
   const formData = new FormData();
-  formData.append("image", file); // La clave debe coincidir con la esperada por el backend
+  formData.append("image", file);
 
   try {
     const response = await axios.post(

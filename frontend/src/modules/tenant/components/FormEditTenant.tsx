@@ -8,12 +8,13 @@ import AddressFields from "./AddressFields";
 import DocumentUpload from "./DocumentUpload";
 import FormEditFooter from "./FormEditFooter";
 import { API_URL } from "@/shared/constants/api";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useUserStore } from "@/store/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Check, CircleAlert } from "lucide-react";
 import { DocumentFromAPI } from "@/shared/interfaces/documentInterface";
+import ErrorToast from "@/shared/components/Toasts/ErrorToast";
 
 type EditTenantProps = {
   initialData: Tenant;
@@ -32,18 +33,27 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
   const handleDelete = async (tenantId: number) => {
     try {
       setIsDeleting(true);
-      const response = await axios.delete(
-        `${API_URL}/tenants/${tenantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("response", response.data);
+      await axios.delete(`${API_URL}/tenants/${tenantId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate("/contact");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      const err = error as AxiosError;
+      toast.custom(
+        () => (
+          <ErrorToast
+            title="Error al eliminar contacto!"
+            description={
+              err.status == 406
+                ? String(err.response?.data)
+                : "No se pudo eliminar el contacto. Intenta nuevamente."
+            }
+          />
+        ),
+        { duration: 5000 }
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -84,20 +94,18 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
       formData.append("documents", file);
     });
     try {
-      const response = await axios.put(
-        `${API_URL}/tenants/${id}`, formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.put(`${API_URL}/tenants/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-green-700 font-semibold text-sm flex gap-2 items-center">
-              <Check />¡Cambios realizados con éxito!
+              <Check />
+              ¡Cambios realizados con éxito!
             </p>
             <p className="text-gray-700 text-sm mt-1">
               Los datos del inquilino se han actualizado correctamente.
@@ -106,18 +114,17 @@ const EditTenant = ({ initialData, documents }: EditTenantProps) => {
         ),
         {
           duration: 5000,
-        },
+        }
       );
-      console.log("Actualizado:", response.data);
       setIsEditing(false);
       navigate("/contact");
-
     } catch {
       toast.custom(
         () => (
           <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-              <CircleAlert />¡Ha ocurrido un error!
+              <CircleAlert />
+              ¡Ha ocurrido un error!
             </p>
             <p className="text-gray-700 text-sm mt-1">
               Los datos no se han podido actualizar, intente nuevamente.

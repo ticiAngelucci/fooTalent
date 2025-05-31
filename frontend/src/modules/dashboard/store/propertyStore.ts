@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { getProperties } from "../service/dashboardService";
 import { Property } from "../types/property.types";
 
@@ -17,7 +17,7 @@ const createFetchProperties = (
   return async () => {
     set({ loading: true, error: null });
     try {
-      const data = await getProperties(); // debe devolver Property[]
+      const data = await getProperties();
       set({ properties: data, loading: false });
     } catch (error) {
       set({
@@ -48,6 +48,7 @@ export const usePropertyStore = create<PropertyState>()(
     {
       name: "property-store",
       partialize: (state) => ({ properties: state.properties }),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
