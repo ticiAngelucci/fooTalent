@@ -44,7 +44,7 @@ const FuncionalitySection = () => {
             <img
               src={feature.image}
               alt={feature.title}
-              className="h-[350px] w-auto mb-4 object-contain"
+              className="h-[350px] w-auto object-contain"
             />
             <h3 className="text-lg mb-2 font-bold">{feature.title}</h3>
             <p className="text-gray-500 max-w-md">{feature.subtitle}</p>

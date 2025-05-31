@@ -1,20 +1,19 @@
-import { PaymentTable } from "../components/PaymentTable"
-import { PaymentSearch } from "../components/PaymentSearch"
-import { CustomPagination } from "../components/CustomPagination"
-import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout"
-import { usePaymentsTable } from "../hooks/usePaymentsTable"
-import { Route } from "@/shared/constants/route"
-import PaymentRegister from "./PaymentRegister"
-import { usePaymentModal } from "../hooks/usePaymentsModal"
-import DeletePaymentsModal from "../components/DeletePaymentsModal"
-import { useDeletePaymentModal } from "../hooks/useDeletePaymentModal"
-
-
+import { PaymentTable } from "../components/PaymentTable";
+import { PaymentSearch } from "../components/PaymentSearch";
+import { CustomPagination } from "../components/CustomPagination";
+import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
+import { usePaymentsTable } from "../hooks/usePaymentsTable";
+import { Route } from "@/shared/constants/route";
+import PaymentRegister from "./PaymentRegister";
+import { usePaymentModal } from "../hooks/usePaymentsModal";
+import DeletePaymentsModal from "../components/DeletePaymentsModal";
+import { useDeletePaymentModal } from "../hooks/useDeletePaymentModal";
 
 export default function PaymentsView() {
-
-  const {modalOpen, setModalOpen, userId, userName, userAddress, handleOpen} = usePaymentModal();
-    const {deleteOpen, setDeleteOpen, deleteId, handleDelete} = useDeletePaymentModal();
+  const { modalOpen, setModalOpen, userId, userName, userAddress, handleOpen, ammount, paymentId } =
+    usePaymentModal();
+  const { deleteOpen, setDeleteOpen, deleteId, handleDelete } =
+    useDeletePaymentModal();
 
   const {
     sortData,
@@ -26,19 +25,16 @@ export default function PaymentsView() {
     totalElements,
     loading,
     sortedData,
-    filteredData
-  } = usePaymentsTable(10)
-
+    filteredData,
+    loadPayments,
+  } = usePaymentsTable(10);
 
   return (
-    <DashboardLayout subtitle="Pagos"
-    redirect={Route.Dashboard}
-    >
-      
+    <DashboardLayout subtitle="Pagos" redirect={Route.Dashboard}>
       <div className="rounded-md border mt-4 overflow-x-auto">
         <div className="p-4">
           <div className="flex justify-between mb-4">
-            <PaymentSearch 
+            <PaymentSearch
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
             />
@@ -64,8 +60,22 @@ export default function PaymentsView() {
           </div>
         </div>
       </div>
-      <PaymentRegister open={modalOpen} setOpen={setModalOpen} id={userId} userName={userName} address={userAddress} />
-      <DeletePaymentsModal open={deleteOpen} setOpen={setDeleteOpen} id={deleteId} />
+      <PaymentRegister
+        open={modalOpen}
+        setOpen={setModalOpen}
+        id={userId}
+        userName={userName}
+        ammount={ammount}
+        address={userAddress}
+        paymentId={paymentId}
+        loadPayments={loadPayments}
+      />
+      <DeletePaymentsModal
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        id={deleteId}
+        loadPayments={loadPayments}
+      />
     </DashboardLayout>
-  )
+  );
 }

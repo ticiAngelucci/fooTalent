@@ -11,7 +11,7 @@ interface ContractsResponse {
 
 export async function fetchAllContracts(page: number = 0, size: number = defaultPageSize): Promise<ContractsResponse> {
   try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       throw new Error("No se encontró token de autenticación");
@@ -26,13 +26,12 @@ export async function fetchAllContracts(page: number = 0, size: number = default
         Authorization: `Bearer ${token}`,
       },
     });
-    
-    
-    console.log("response.data", response.data);
-    
+        
     return response.data;
   } catch (error) {
-    console.error("Error al obtener contratos:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw error;
   }
 }

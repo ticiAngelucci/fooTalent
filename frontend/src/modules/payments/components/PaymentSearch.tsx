@@ -1,6 +1,5 @@
 import { Search } from "lucide-react"
 import { Input } from "@/shared/components/ui/input"
-import { Button } from "@/shared/components/ui/button"
 
 interface PaymentSearchProps {
   searchQuery: string
@@ -20,7 +19,6 @@ export const PaymentSearch = ({ searchQuery, setSearchQuery }: PaymentSearchProp
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <Button variant="outline">Buscar</Button>
     </div>
   )
 }

@@ -15,12 +15,13 @@ const Navbar = () => {
       <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-8 text-sm font-medium">
         <a href="#inicio" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Inicio</a>
         <a href="#funcionalidades" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Funcionalidades</a>
+        <a href="#testimonios" className="!font-bold !text-[#0F172A] hover:!text-blue-600 transition-colors">Testimonios</a>
       </div>
 
       <div className="hidden md:flex items-center gap-2">
-        <Button variant="outline" className="text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px]">Contáctanos</Button>
+        <a href="/#contacto" className=""><Button variant="outline" className="btn-secondary text-sm px-4 py-2 border-2 !bg-transparent !rounded-[4px] text-black">Contáctanos</Button></a>
         <Link to={Route.Register}>
-          <Button className="bg-[#1E40AF] !rounded-[4px] text-white text-sm px-4 py-2">
+          <Button className="btn-primary !rounded-[4px] text-white text-sm px-4 py-2">
             Probar demo
           </Button>
         </Link>
@@ -34,11 +35,14 @@ const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col items-start p-4 gap-4 md:hidden">
-          <a href="#inicio" className="text-sm font-bold text-[#0F172A]">Inicio</a>
-          <a href="#funcionalidades" className="text-sm font-bold text-[#0F172A]">Funcionalidades</a>
-          <a href="#contacto" className="text-sm font-bold text-[#0F172A]">Contacto</a>
-          <Button variant="outline" className="text-sm w-full">Contáctanos</Button>
-          <Button className="bg-[#1E40AF] text-white text-sm w-full">Probar demo</Button>
+          <a href="#inicio" className="text-sm font-bold !text-[#0F172A]">Inicio</a>
+          <a href="#funcionalidades" className="text-sm font-bold !text-[#0F172A]">Funcionalidades</a>
+          <a href="#contacto" className="text-sm w-full">
+            <Button variant="outline" className="text-sm w-full text-neutral-950">Contáctanos</Button>
+          </a>
+          <Link to={Route.Register} className="bg-[#1E40AF] text-white text-sm w-full rounded-sm">
+            <Button className="bg-[#1E40AF] text-white text-sm w-full">Probar demo</Button>
+          </Link>
         </div>
       )}
     </nav>

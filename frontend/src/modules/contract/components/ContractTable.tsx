@@ -16,14 +16,11 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import { Input } from "@/shared/components/ui/input";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { TablePagination } from "./TablePagination";
 import { Contract, defaultPageSize } from "../types/contract";
 import { useContractStore } from "../store/contractStore";
-import {
-  getSortedRowModel,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
+import { getSortedRowModel, getFilteredRowModel } from "@tanstack/react-table";
 
 interface ContractTableProps {
   data: Contract[];
@@ -42,8 +39,7 @@ export function ContractTable({
 }: ContractTableProps) {
   const { fetchContracts } = useContractStore();
   const [searchQuery, setSearchQuery] = useState("");
-
-  
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -55,10 +51,10 @@ export function ContractTable({
     columns,
     state: {
       pagination,
-      globalFilter: searchQuery,
+      globalFilter,
     },
     onPaginationChange: setPagination,
-    onGlobalFilterChange: setSearchQuery,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -66,8 +62,17 @@ export function ContractTable({
     manualPagination: true,
     pageCount: Math.ceil(totalElements / pagination.pageSize),
     globalFilterFn: (row, _columnId, filterValue) => {
-      return Object.values(row.original).some((value) =>
-        String(value).toLowerCase().includes(filterValue.toLowerCase())
+      const originalValues = Object.values(row.original).map((value) =>
+        String(value ?? "").toLowerCase()
+      );
+
+      const cellValues = row
+        .getAllCells()
+        .map((cell) => String(cell.getValue() ?? "").toLowerCase());
+
+      const allValues = [...originalValues, ...cellValues];
+      return allValues.some((value) =>
+        value.includes(filterValue.toLowerCase())
       );
     },
   });
@@ -78,15 +83,14 @@ export function ContractTable({
     fetchContracts(pageIndex, pageSize);
   }, [pageIndex, pageSize, fetchContracts]);
 
-  
-
-  if (isLoading) {
-    return <div className="text-center py-6">Cargando contratos...</div>;
-  }
-
   if (error) {
     return <div className="text-center text-red-600 py-6">{error}</div>;
   }
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setGlobalFilter(value);
+  };
 
   return (
     <>
@@ -96,17 +100,17 @@ export function ContractTable({
             <Search />
           </span>
           <Input
-            placeholder="Buscar contrato..."
+            placeholder="Buscar"
             className="w-full text-lg py-3 pl-10 pr-4"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
       </div>
 
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
         <Table className="w-full table-fixed">
-          <TableHeader className="bg-[#E5E7EB]">
+          <TableHeader className="bg-neutral-100">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -128,11 +132,20 @@ export function ContractTable({
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-4">
+                  <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={
+                    row.index % 2 === 0 ? "bg-white" : "bg-neutral-100"
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -152,9 +165,11 @@ export function ContractTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center py-20"
                 >
-                  No se encontraron resultados.
+                  <span className="text-lg text-black font-bold">
+                    No se encontraron resultados
+                  </span>
                 </TableCell>
               </TableRow>
             )}

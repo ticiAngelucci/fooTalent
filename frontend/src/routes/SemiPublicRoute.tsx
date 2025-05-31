@@ -7,7 +7,6 @@ const SemiPublicRoute = () => {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
 
   if (isAuthenticated) {
-    console.log('[SemiPublicRoute] Access denied: User is already authenticated');
     return <Navigate to={Route.Dashboard} replace />
   }
   return <Outlet />

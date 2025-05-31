@@ -1,14 +1,15 @@
 import { ApiResponse } from "../types/paymentsContract";
+import { API_URL } from "@/shared/constants/api";
 
 export const fetchContractPayments = async (contractId: number): Promise<ApiResponse> => {
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
   if (!token) {
     throw new Error("No se encontró token de autenticación");
   }
 
   const response = await fetch(
-    `https://rrentary.koyeb.app/payments/contract/${contractId}?page=0&size=10`,
+    `${API_URL}/payments/contract/${contractId}?page=0&size=10`,
     {
       method: "GET",
       headers: {

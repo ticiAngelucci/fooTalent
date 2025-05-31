@@ -1,7 +1,12 @@
 import { Button } from "@/shared/components/ui/button";
 import { useFormContext } from "react-hook-form";
-import { Save, Pencil, X } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/shared/components/ui/dialog";
+import { Save, Pencil, X, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/shared/components/ui/dialog";
 import { DialogHeader } from "@/shared/components/ui/dialog";
 import { useState } from "react";
 
@@ -63,23 +68,26 @@ const FormEditFooter = ({
             onClick={() => setOpenDialog(true)}
             className="text-neutral-950 w-full"
           >
-            <X size={20} className="mr-2" /> Eliminar inquilino
+            <X size={20} className="mr-2" /> Eliminar propietario
           </Button>
 
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Eliminar inquilino</DialogTitle>
-                <DialogDescription>
-                  ¿Estás seguro que deseas eliminar inquilino? Esta acción no es recuperable.
+            <DialogContent className="bg-white rounded-lg p-6 shadow-xl h-52 w-[573px] flex flex-col justify-between">
+              <DialogHeader className="space-y-2">
+                <DialogTitle className="text-lg font-semibold">
+                  Eliminar propietario
+                </DialogTitle>
+                <DialogDescription className="text-sm text-neutral-600">
+                  ¿Estás seguro que deseas eliminar el propietario? Esta acción
+                  no es recuperable.
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="flex flex-col-reverse justify-center items-center gap-4 pt-4 w-full">
+              <div className="w-full flex gap-2">
                 <Button
                   variant="outline"
                   onClick={() => setOpenDialog(false)}
-                  className="w-full"
+                  className="w-1/2 btn-secondary"
                 >
                   Cancelar
                 </Button>
@@ -91,12 +99,12 @@ const FormEditFooter = ({
                     setOpenDialog(false);
                   }}
                   disabled={isDeleting}
-                  className="w-full"
+                  className="btn-destructive w-1/2 text-base font-semibold rounded-sm"
                 >
-                  {isDeleting ? "Eliminando..." : (
-                    <>
-                      <X size={20} />Eliminar
-                    </>
+                  {isDeleting ? (
+                    <Loader2 className="animate-spin !w-6 !h-6 mr-2" />
+                  ) : (
+                    <>Eliminar</>
                   )}
                 </Button>
               </div>

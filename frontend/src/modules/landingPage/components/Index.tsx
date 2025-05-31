@@ -15,8 +15,8 @@ const Index = () => {
         Nuestra aplicación te permite gestionar contratos, inmuebles y propietarios con total comodidad.
         Simplifica la carga de documentos y mantén actualizados los valores de alquiler automáticamente.
       </p>
-      <Link to={Route.Register}>
-        <Button className="bg-[#1E40AF] !rounded-[4px] text-white text-sm px-4 py-2">
+      <Link to={Route.Register} className="mb-10">
+        <Button className="btn-primary !rounded-[4px] text-white text-sm px-4 py-2">
           Probar demo
         </Button>
       </Link>

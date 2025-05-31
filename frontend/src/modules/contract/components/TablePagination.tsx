@@ -64,8 +64,8 @@ export function TablePagination<T>({ table }: TablePaginationProps<T>) {
           onClick={() => table.setPageIndex(pageIndex)}
           className={`w-8 h-8 rounded-md flex items-center justify-center ${
             currentPage === pageIndex
-              ? "bg-brand-800 text-white"
-              : "hover:bg-gray-200"
+              ? "btn-primary text-white w-10"
+              : "btm-tertiary w-10"
           }`}
         >
           {pageIndex + 1}

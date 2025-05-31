@@ -23,8 +23,8 @@ const CancelContractModal = ({ id, open, setOpen }: Props) => {
             toast.custom(
                 () => (
                     <SuccessToast
-                        title="Contrato cancelado con éxito"
-                        description="El contrato ha sido cancelado con éxito"
+                        title="Contrato finalizado con éxito"
+                        description="El contrato ha sido finalizado con éxito"
                     />
                 ),
                 {
@@ -38,7 +38,7 @@ const CancelContractModal = ({ id, open, setOpen }: Props) => {
                 () => (
                     <ErrorToast
                         title="¡Error!"
-                        description="Ocurrió un error al cancelar el contrato, intenta nuevamente"
+                        description="Ocurrió un error al finalizar el contrato, intenta nuevamente"
                     />
                 ),
                 { duration: 5000 }
@@ -50,9 +50,9 @@ const CancelContractModal = ({ id, open, setOpen }: Props) => {
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogContent className="bg-white rounded-[8px] gap-8 p-8 border border-neutral-200">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Cancelar Contrato</AlertDialogTitle>
+                    <AlertDialogTitle className="text-base font-semibold text-neutral-950">Finalizar contrato</AlertDialogTitle>
                     <AlertDialogDescription className="text-sm text-neutral-600 font-normal">
-                        ¿Estás seguro que deseas Cancelar el contrato? Esta acción no es recuperable
+                        ¿Estás seguro que deseas finalizar el contrato? Esta acción no es recuperable.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="">

@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "@fontsource/raleway/index.css" @custom-variant dark (&: is(.dark *));
 
+
+*{
+  scroll-behavior: smooth;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -250,6 +255,14 @@ button:hover {
   body {
     @apply bg-background text-foreground font-raleway;
   }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: black !important;
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 @layer utilities {
@@ -263,16 +276,16 @@ button:hover {
 
   /* Buttons */
   .btn-primary {
-    @apply bg-brand-800 !outline-none hover:bg-brand-700 hover:cursor-pointer focus:bg-brand-800 focus:border-2 focus:border-brand-200;
+    @apply h-10 bg-brand-800 !outline-none hover:bg-brand-700 font-medium hover:cursor-pointer focus:bg-brand-800 focus:border-2 focus:border-brand-200;
   }
   .btn-secondary {
-    @apply bg-white border !border-neutral-300 text-neutral-950 font-semibold hover:!bg-neutral-50 hover:!border-neutral-300 hover:!outline-none hover:cursor-pointer focus:border-neutral-200;
+    @apply h-10 bg-white border !border-neutral-300 text-neutral-950 font-medium hover:!bg-neutral-50 hover:!border-neutral-300 hover:!outline-none hover:cursor-pointer focus:border-neutral-200;
   }
   .btn-tertiary {
-    @apply bg-white !outline-none !border-none text-neutral-950 font-semibold hover:bg-neutral-100 hover:!border-none hover:cursor-pointer focus:border-2 border-neutral-200;
+    @apply h-10 bg-white !outline-none !border-none text-neutral-950 font-medium hover:bg-neutral-100 hover:!border-none hover:cursor-pointer focus:border-2 border-neutral-200;
   }
   .btn-destructive {
-    @apply bg-error-600 !outline-none !border-none text-white hover:bg-error-500 hover:!border-none hover:cursor-pointer focus:bg-error-600 focus:border-2 focus:border-error-200;
+    @apply h-10 bg-error-600 !outline-none !border-none text-white hover:bg-error-500 hover:!border-none hover:cursor-pointer focus:bg-error-600 focus:border-2 focus:border-error-200;
   }
 
   /* Link */

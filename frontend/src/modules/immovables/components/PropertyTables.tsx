@@ -23,8 +23,7 @@ import {
 import { TablePagination } from "./TablePagination";
 import { defaultPageSize, Property } from "../types/property";
 import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { usePropertyStore } from "../store/propertyStore";
 
 interface PropertyTableProps {
@@ -33,10 +32,8 @@ interface PropertyTableProps {
   error: string | null;
   columns: ColumnDef<Property>[];
   totalElements: number;
-  handleDelete: (id: any) => void;
+  handleDelete: (id: string) => void;
 }
-
-
 
 export function PropertyTable({
   data,
@@ -59,12 +56,17 @@ export function PropertyTable({
 
   const [columnSizing, setColumnSizing] = useState({});
   const normalizeString = (str: string | number | null | undefined): string => {
-    if (typeof str !== 'string') {
-      return String(str).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    if (typeof str !== "string") {
+      return String(str)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
     }
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
   };
-
 
   const table = useReactTable({
     data,
@@ -89,8 +91,8 @@ export function PropertyTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: true, 
-    pageCount: Math.ceil(totalElements / pagination.pageSize), 
+    manualPagination: true,
+    pageCount: Math.ceil(totalElements / pagination.pageSize),
     columnResizeMode: "onChange",
     globalFilterFn: (row, _columnId, filterValue) => {
       const normalizedFilterValue = normalizeString(filterValue);
@@ -103,8 +105,8 @@ export function PropertyTable({
 
   useEffect(() => {
     const initialSizing: Record<string, number> = {};
-    columns.forEach(column => {
-      if ('id' in column && column.id && 'size' in column) {
+    columns.forEach((column) => {
+      if ("id" in column && column.id && "size" in column) {
         initialSizing[column.id] = column.size as number;
       }
     });
@@ -115,7 +117,10 @@ export function PropertyTable({
   }, [columns]);
 
   useEffect(() => {
-    fetchProperties(table.getState().pagination.pageIndex, table.getState().pagination.pageSize);
+    fetchProperties(
+      table.getState().pagination.pageIndex,
+      table.getState().pagination.pageSize
+    );
   }, [table, fetchProperties]);
 
   const { pageIndex, pageSize } = table.getState().pagination;
@@ -129,22 +134,14 @@ export function PropertyTable({
     setGlobalFilter(value);
   };
 
-  const handleSearchButton = () => {
-    setGlobalFilter(searchQuery);
-  };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-lg">Cargando inmuebles...</p>
-      </div>
-    );
-  }
 
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <p className="text-lg text-red-600">{error}</p>
+        <p className="text-lg text-red-600">
+          Ocurrió un Error al cargar Propiedades, intente nuevamente
+        </p>
       </div>
     );
   }
@@ -163,18 +160,11 @@ export function PropertyTable({
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={handleSearchButton}
-        >
-          Buscar
-        </Button>
       </div>
       <div className="rounded-md border mt-4 overflow-x-auto bg-white shadow">
-
         <div className="w-full relative">
           <Table className="w-full table-fixed">
-            <TableHeader className="bg-[#E5E7EB]">
+            <TableHeader className="bg-neutral-100">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
@@ -186,27 +176,29 @@ export function PropertyTable({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
 
                       {header.column.getCanResize() && (
                         <div
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
                           className={`resizer ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
+                            header.column.getIsResizing() ? "isResizing" : ""
                           }`}
                           style={{
-                            position: 'absolute',
+                            position: "absolute",
                             right: 0,
                             top: 0,
-                            height: '100%',
-                            width: '5px',
-                            background: header.column.getIsResizing() ? 'blue' : 'transparent',
-                            cursor: 'col-resize',
-                            userSelect: 'none',
-                            touchAction: 'none',
+                            height: "100%",
+                            width: "5px",
+                            background: header.column.getIsResizing()
+                              ? "blue"
+                              : "transparent",
+                            cursor: "col-resize",
+                            userSelect: "none",
+                            touchAction: "none",
                           }}
                         />
                       )}
@@ -216,11 +208,20 @@ export function PropertyTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-4">
+                    <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    className={
+                      row.index % 2 === 0 ? "bg-white" : "bg-neutral-100"
+                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
@@ -240,9 +241,11 @@ export function PropertyTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24 text-center py-20"
                   >
-                    No se encontraron resultados.
+                    <span className="text-lg text-black font-bold">
+                      No se encontraron resultados
+                    </span>
                   </TableCell>
                 </TableRow>
               )}

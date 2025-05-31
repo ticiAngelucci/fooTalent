@@ -12,8 +12,11 @@ import { toast } from "sonner";
 
 import { CircleAlert } from 'lucide-react';
 import { Check } from 'lucide-react';
+import { AxiosError } from "axios";
+import { useTenantStore } from "@/modules/dashboard/store/tenantStore";
 
 const FormAddTenant = () => {
+const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
     const navigate = useNavigate();
 
@@ -36,8 +39,8 @@ const FormAddTenant = () => {
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      console.log(data);
       await createTenant({ ...data });
+      await fetchTenants();
       toast.custom(
         () => (
           <div className="bg-green-50 border border-green-600/20 rounded-md p-4 w-[360px] shadow-md">
@@ -56,29 +59,35 @@ const FormAddTenant = () => {
       );
       navigate("/contact")
 
-    } catch {
+    }  catch(error: unknown) {
+      const err = error as AxiosError<{ errorCode: string; errorMessage: string; details: string[] }>;
+    
+      const isConflict = err.response?.status === 409;
+      const detailMessage = err.response?.data?.details?.[0] || "Ya existe un inquilino con ese DNI.";
+    
       toast.custom(
         () => (
           <div className="bg-error-50 border border-error-600/70 rounded-md p-4 w-[360px] shadow-md">
             <p className="text-error-700 font-semibold text-sm flex gap-2 items-center">
-                <CircleAlert/>¡Ha ocurrido un error!
+              <CircleAlert />
+              ¡Ha ocurrido un error!
             </p>
             <p className="text-gray-700 text-sm mt-1">
-              El inquilino no se pudo añadir al sistema, intente nuevamente.
+              {isConflict
+                ? `No se pudo registrar el inquilino. ${detailMessage}`
+                : "El inquilino no se pudo añadir al sistema, intente nuevamente."
+              }
             </p>
           </div>
         ),
-        {
-          duration: 5000,
+        { duration: 5000 }
+          );
         }
-      );
-    }
   });
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} className="space-y-6">
-        {/* Datos + Documentos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <PersonalDataFields />
@@ -88,13 +97,11 @@ const FormAddTenant = () => {
           </div>
         </div>
 
-        {/* Dirección */}
         <div className="pt-2">
           <h4 className="text-md font-semibold mb-2">Dirección</h4>
           <AddressFields />
         </div>
 
-        {/* Botones */}
         <FormFooter />
       </form>
     </FormProvider>

@@ -10,8 +10,7 @@ interface PropertiesResponse {
 }
 
 export async function fetchAllProperties(page: number = 0, size: number = defaultPageSize): Promise<PropertiesResponse> {
-  try {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     if (!token) {
       throw new Error("No se encontró token de autenticación");
@@ -25,13 +24,5 @@ export async function fetchAllProperties(page: number = 0, size: number = defaul
 
     
     return response.data;
-  } catch (error) {
-    console.error("Error al obtener propiedades:", error);
-    throw error;
-  }
-}
 
-// Aquí se  agrega las otras funciones como:
-// export async function createProperty(propertyData: Omit<Property, 'id_property'>): Promise<Property> { ... }
-// export async function updateProperty(id: number, propertyData: Partial<Property>): Promise<Property> { ... }
-// export async function deleteProperty(id: number): Promise<void> { ... }
+}
