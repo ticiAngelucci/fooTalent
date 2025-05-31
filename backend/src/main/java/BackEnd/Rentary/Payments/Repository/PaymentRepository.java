@@ -38,4 +38,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
                                                              @Param("createdBy") String createdBy);
 
     Page<Payment> findByCreatedByAndServiceType(String createdBy, ServiceType serviceType, Pageable pageable);
+
+    List<Payment> findByStatus(PaymentStatus paymentStatus);
 }
