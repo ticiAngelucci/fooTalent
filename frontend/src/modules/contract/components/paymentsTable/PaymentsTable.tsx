@@ -1,5 +1,17 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 
 import { formatDate } from "../../utils/formatDate";
 import { usePayments } from "../../hooks/usePayments";
@@ -11,7 +23,7 @@ interface PaymentsTableProps {
 }
 
 export default function PaymentsTable({ contractId }: PaymentsTableProps) {
-  const { 
+  const {
     activeTab,
     setActiveTab,
     sortKey,
@@ -20,7 +32,7 @@ export default function PaymentsTable({ contractId }: PaymentsTableProps) {
     rentPayments,
     otherPayments,
     loading,
-    error
+    error,
   } = usePayments(contractId);
 
   if (loading) {
@@ -42,7 +54,7 @@ export default function PaymentsTable({ contractId }: PaymentsTableProps) {
         <div className="w-full rounded-lg border shadow-sm">
           <TabsContent value="alquiler" className="mt-0">
             <Table>
-              <TableHeader className="bg-muted/20">
+              <TableHeader>
                 <TableRow>
                   <SortableHeader
                     label="Fecha"
@@ -66,7 +78,9 @@ export default function PaymentsTable({ contractId }: PaymentsTableProps) {
                   rentPayments.map((payment, index) => (
                     <TableRow
                       key={payment.id}
-                      className={index % 2 === 0 ? "bg-gray-100" : ""}
+                      className={
+                        index % 2 === 0 ? "bg-white" : "bg-neutral-100"
+                      }
                     >
                       <TableCell>{formatDate(payment.paymentDate)}</TableCell>
                       <TableCell>${payment.amount.toLocaleString()}</TableCell>

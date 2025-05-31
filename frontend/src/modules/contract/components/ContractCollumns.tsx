@@ -1,9 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import {
+  ArrowUpRight,
   ChevronsUpDown,
+  CircleX,
   MoreHorizontal,
-  MoveUpRight,
   Trash2,
 } from "lucide-react";
 import { Contract } from "../types/contract";
@@ -16,20 +17,30 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { Route } from "@/shared/constants/route";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
 
-interface ContractProps{
-  handleDelete: (id:number) => void;
-  handleCancel: (id:number) => void;
+interface ContractProps {
+  handleDelete: (id: number) => void;
+  handleCancel: (id: number) => void;
 }
 
-export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps): ColumnDef<Contract>[] => [
+export const getContractColumns = ({
+  handleDelete,
+  handleCancel,
+}: ContractProps): ColumnDef<Contract>[] => [
   {
     accessorKey: "propertyAddress",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Dirección
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -38,9 +49,9 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
     cell: ({ getValue }) => (
       <div className="truncate max-w-[300px]">{getValue() as string}</div>
     ),
-    size: 300,
-    minSize: 300,
-    maxSize: 300,
+    size: 280,
+    minSize: 280,
+    maxSize: 280,
   },
   {
     accessorKey: "tenantFullName",
@@ -48,7 +59,8 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Inquilino
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -57,9 +69,9 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
     cell: ({ getValue }) => (
       <div className="truncate max-w-[200px]">{getValue() as string}</div>
     ),
-    size: 200,
-    minSize: 200,
-    maxSize: 200,
+    size: 160,
+    minSize: 160,
+    maxSize: 160,
   },
   {
     accessorKey: "startDate",
@@ -67,16 +79,17 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Fecha de inicio
-        <ChevronsUpDown className="ml-2 h-4 w-4" />
+        <ChevronsUpDown className="h-4 w-4" />
       </Button>
     ),
     cell: ({ getValue }) => <div>{getValue() as string}</div>,
-    size: 120,
-    minSize: 120,
-    maxSize: 120,
+    size: 140,
+    minSize: 460,
+    maxSize: 140,
   },
   {
     accessorKey: "endDate",
@@ -84,31 +97,36 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Fecha de fin
-        <ChevronsUpDown className="ml-2 h-4 w-4" />
+        <ChevronsUpDown className=" h-4 w-4" />
       </Button>
     ),
     cell: ({ getValue }) => <div>{getValue() as string}</div>,
-    size: 120,
-    minSize: 120,
-    maxSize: 120,
+    size: 140,
+    minSize: 140,
+    maxSize: 140,
   },
   {
     id: "estado",
-    header: "Estado",
+    header: () => (
+      <div className="flex items-center justify-center w-full h-full">
+        <span className="font-medium text-neutral-600">Estado</span>
+      </div>
+    ),
     accessorFn: (row) => (row.active ? "Activo" : "Finalizado"),
     cell: ({ getValue }) => {
       const estado = getValue() as string;
       return (
         <span
           className={clsx(
-            "px-3 py-1 rounded-full text-xs font-semibold border",
+            "py-0.5 rounded-full text-sm font-raleway border inline-block text-center min-w-[98px]",
             {
-              "text-green-700 bg-green-100 border-green-400":
+              "text-success-700 bg-success-50 border-success-700":
                 estado === "Activo",
-              "text-gray-700 bg-gray-200 border-gray-400":
+              "text-neutral-700 bg-neutral-50 border-neutral-700":
                 estado === "Finalizado",
             }
           )}
@@ -117,21 +135,27 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
         </span>
       );
     },
-    size: 100,
-    minSize: 100,
-    maxSize: 100,
+    size: 120,
+    minSize: 120,
+    maxSize: 120,
   },
   {
     id: "valor",
-    header: "Valor",
+    header: () => (
+      <div className="flex items-center justify-center w-full h-full">
+        <span className="font-medium text-neutral-600">Valor</span>
+      </div>
+    ),
     accessorFn: (row) =>
-      typeof row.deposit === "number"
-        ? row.deposit.toLocaleString("es-AR", {
+      typeof row.baseRent === "number"
+        ? row.baseRent.toLocaleString("es-AR", {
             style: "currency",
             currency: "ARS",
           })
         : "No definido",
-    cell: ({ getValue }) => <div>{getValue() as string}</div>,
+    cell: ({ getValue }) => (
+      <span className="font-raleway text-sm">{getValue() as string}</span>
+    ),
     size: 120,
     minSize: 120,
     maxSize: 120,
@@ -142,7 +166,8 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Ajuste
         <ChevronsUpDown className="ml-2 h-4 w-4" />
@@ -159,16 +184,17 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="font-semibold"
+        className="flex items-center gap-1 font-medium text-neutral-600"
+        style={{ color: "#4B5563" }}
       >
         Índice
         <ChevronsUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ getValue }) => <div>{getValue() as string}</div>,
-    size: 100,
-    minSize: 100,
-    maxSize: 100,
+    size: 90,
+    minSize: 90,
+    maxSize: 90,
   },
   {
     id: "actions",
@@ -188,15 +214,46 @@ export const getContractColumns = ({ handleDelete, handleCancel }: ContractProps
                 to={Route.EditContract}
                 state={{ contract: row.original }}
               >
-                <MoveUpRight className="!text-neutral-950 inline" /> Acceder
+                <ArrowUpRight className="!text-neutral-950 inline !h-5 !w-5" />{" "}
+                Acceder
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={()=> handleCancel(Number(row.original.id))} >
-              <Trash2 className="text-neutral-950" /> Cancelar
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => handleCancel(Number(row.original.id))}
+              disabled={!row.original.active}
+            >
+              <CircleX className="text-neutral-950 !h-5 !w-5" /> Finalizar
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={()=> handleDelete(Number(row.original.id))} >
-              <Trash2 className="text-neutral-950" /> Eliminar
-            </DropdownMenuItem>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuItem
+                    className={`cursor-pointer ${
+                      row.original.active
+                        ? "opacity-50 pointer-events-auto"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (!row.original.active) {
+                        handleDelete(Number(row.original.id));
+                      }
+                    }}
+                  >
+                    <Trash2 className="text-neutral-950 !h-5 !w-5" /> Eliminar
+                  </DropdownMenuItem>
+                </TooltipTrigger>
+                {row.original.active && (
+                  <TooltipContent>
+                    <p>
+                      No se puede eliminar
+                      <br />
+                      un contrato activo
+                    </p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </DropdownMenuContent>
         </DropdownMenu>
       );

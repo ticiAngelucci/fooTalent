@@ -7,7 +7,6 @@ const ProtectedRoute = () => {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
 
   if (!isAuthenticated) {
-    console.log('Access denied: Please log in first.');
     return <Navigate to={Route.Login} replace />;
   }
 

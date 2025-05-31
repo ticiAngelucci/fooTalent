@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,11 +52,6 @@ public class PaymentServiceImpl implements PaymentService {
         Contract contract = PaymentValidationUtil.findAndValidateContract(contractRepository, contractId);
         String currentUser = getCurrentUserEmail();
         validateContractBelongsToUser(contract, currentUser);
-
-        PaymentValidationUtil.validatePaymentAmount(amount);
-        if (serviceType == ServiceType.ALQUILER) {
-            validateRentalPaymentAmount(contractId, amount);
-        }
 
         Payment payment = PaymentFactory.createPaymentEntity(
                 contract, amount, paymentDate, serviceType,
@@ -180,6 +176,22 @@ public class PaymentServiceImpl implements PaymentService {
         return new PaymentDetailedResponsePage(paymentResponses, page, paymentsPage.getTotalElements());
     }
 
+
+    @Transactional(readOnly = true)
+    public PaymentDetailedResponsePage getAllPaymentsRent(int page, int size) {
+        String currentUser = getCurrentUserEmail();
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Payment> paymentsPage = paymentRepository.findByCreatedByAndServiceType(
+                currentUser, ServiceType.ALQUILER, pageable);
+
+        List<PaymentDetailedResponse> paymentResponses = paymentsPage.getContent().stream()
+                .map(paymentMapper::toDetailedResponse)
+                .collect(Collectors.toList());
+
+        return new PaymentDetailedResponsePage(paymentResponses, page, paymentsPage.getTotalElements());
+    }
+
     @Override
     @Transactional(readOnly = true)
     public ServicePaymentResponsePage getServicePaymentsByType(ServiceType serviceType, int page, int size) {
@@ -241,21 +253,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment confirmRentalPayment(Long paymentId, BigDecimal amount, LocalDate paymentDate,
-                                        PaymentMethod paymentMethod, Currency currency, String description) throws ChangeSetPersister.NotFoundException {
+                                        PaymentMethod paymentMethod, Currency currency, String description)
+            throws ChangeSetPersister.NotFoundException {
 
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        if (payment.getServiceType() != ServiceType.ALQUILER) {
-            throw new InvalidPaymentException("Solo se pueden confirmar pagos de alquiler");
-        }
 
         if (payment.getStatus() != PaymentStatus.PENDIENTE) {
             throw new InvalidPaymentException("El pago ya fue confirmado o no está pendiente");
         }
 
         PaymentValidationUtil.validatePaymentAmount(amount);
-        validateRentalPaymentAmount(payment.getContract().getContractId(), amount);
+
+        validateRentalPaymentAmountRental(payment.getContract(), amount);
 
         payment.setAmount(amount);
         payment.setPaymentDate(paymentDate);
@@ -266,15 +276,19 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentRepository.save(payment);
     }
-
+    
     private BigDecimal getTotalPaidForContract(Long contractId, String currentUser) {
         BigDecimal totalPaid = paymentRepository.sumAmountByContractAndServiceTypeAndCreatedBy(
                 contractId, ServiceType.ALQUILER, currentUser);
         return totalPaid != null ? totalPaid : BigDecimal.ZERO;
     }
 
-    private void validateRentalPaymentAmount(Long contractId, BigDecimal amount) {
-        BigDecimal pendingAmount = calculatePendingAmount(contractId);
+    private void validateRentalPaymentAmountRental(Contract contract, BigDecimal amount) {
+        amount = amount.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal pendingAmount = BigDecimal
+                .valueOf(contract.getBaseRent())
+                .setScale(2, RoundingMode.HALF_UP);
+
         if (amount.compareTo(pendingAmount) > 0) {
             throw new InvalidPaymentException("El monto del pago no puede ser mayor que el saldo pendiente");
         }

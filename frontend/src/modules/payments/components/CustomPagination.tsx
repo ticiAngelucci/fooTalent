@@ -64,7 +64,7 @@ export function CustomPagination({
           onClick={() => onPageChange(pageIndex)}
           className={`w-8 h-8 rounded-md flex items-center justify-center ${
             currentPage === pageIndex
-              ? "bg-blue-500 text-white"
+              ? "btn-primary text-white"
               : "hover:bg-gray-200"
           }`}
         >

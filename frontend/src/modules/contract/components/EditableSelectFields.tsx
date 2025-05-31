@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -49,7 +49,6 @@ export const EditableSelectFields = ({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Propietario */}
         <div>
           <Label className="mb-2 text-sm font-semibold">Propietario</Label>
           {isEditingFields ? (
@@ -84,7 +83,6 @@ export const EditableSelectFields = ({
           )}
         </div>
 
-        {/* Inquilino */}
         <div>
           <Label className="mb-2 text-sm font-semibold">Inquilino</Label>
           {isEditingFields ? (
@@ -117,7 +115,6 @@ export const EditableSelectFields = ({
         </div>
       </div>
 
-      {/* Inmueble */}
       <div className="mt-4">
         <Label className="mb-2 text-sm font-semibold">Inmueble</Label>
         {isEditingFields ? (

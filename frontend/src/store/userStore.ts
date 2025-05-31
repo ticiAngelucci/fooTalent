@@ -43,7 +43,7 @@ export const useUserStore = create<UserState>()(
       isAuthenticated: false,
 
       login: (token: string) => {
-        sessionStorage.setItem("token", token);
+        localStorage.setItem("token", token);
         set({ token, isAuthenticated: true });
       },
 
@@ -61,7 +61,7 @@ export const useUserStore = create<UserState>()(
       },
 
       getCredentials: async () => {
-        const token = get().token || sessionStorage.getItem("token");
+        const token = get().token || localStorage.getItem("token");
         if (!token) return;
 
         try {
@@ -75,13 +75,14 @@ export const useUserStore = create<UserState>()(
           get().setUser(user);
           set({ token, isAuthenticated: true });
         } catch (error) {
-          console.error("Auth check failed:", error);
           get().logout();
         }
       },
 
       logout: () => {
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
+        localStorage.clear();
+        sessionStorage.clear();
         set({
           id: null,
           firstName: null,
@@ -97,7 +98,7 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: "user-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
