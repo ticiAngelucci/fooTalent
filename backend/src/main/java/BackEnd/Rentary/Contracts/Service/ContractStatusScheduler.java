@@ -5,7 +5,6 @@ import BackEnd.Rentary.Contracts.Respository.IContractRepository;
 import BackEnd.Rentary.Payments.Entities.Payment;
 import BackEnd.Rentary.Payments.Enums.PaymentStatus;
 import BackEnd.Rentary.Payments.Repository.PaymentRepository;
-import BackEnd.Rentary.Payments.Service.Impl.PaymentServiceImpl;
 import BackEnd.Rentary.Payments.Utils.PaymentCalculationUtil;
 import BackEnd.Rentary.Properties.Entities.Property;
 import BackEnd.Rentary.Properties.Enums.PropertyStatus;
@@ -26,12 +25,9 @@ public class ContractStatusScheduler {
     private final IContractRepository contractRepository;
     private final PropertyRepository propertyRepository;
     private final PaymentRepository paymentRepository;
-    private String getCurrentUserEmail() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
 
     @Transactional
-    @Scheduled(cron = "0 35 1 * * ?", zone = "UTC")
+    @Scheduled(cron = "0 50 1 * * ?", zone = "UTC")
     public void updateContractStatus() {
         List<Contract> activeContracts = contractRepository.findByActiveTrue();
         LocalDate today = LocalDate.now();
@@ -46,8 +42,7 @@ public class ContractStatusScheduler {
                 propertyRepository.save(property);
             }
         }
-        String currentUser = getCurrentUserEmail();
-        List<Payment> pendingPayments = paymentRepository.findByStatusAndCreatedBy(PaymentStatus.PENDIENTE, currentUser);
+        List<Payment> pendingPayments = paymentRepository.findByStatus(PaymentStatus.PENDIENTE);
 
         for (Payment payment : pendingPayments) {
             if (PaymentCalculationUtil.isPaymentOverdue(payment, today)) {
