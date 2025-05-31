@@ -19,7 +19,6 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
         if (location.state && typeof location.state === 'object' && 'email' in location.state) {
             const email = location.state.email as string;
             if (email && email.trim() !== '') {
-                console.log("Correo electrónico obtenido del estado:", email);
                 setUserEmail(email);
                 
                 sessionStorage.setItem('errorEmail', email);
@@ -30,10 +29,7 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
         
         const storedEmail = sessionStorage.getItem('errorEmail');
         if (storedEmail && storedEmail.trim() !== '') {
-            console.log("Correo electrónico recuperado de sessionStorage:", storedEmail);
             setUserEmail(storedEmail);
-        } else {
-            console.log("No se pudo obtener un correo electrónico válido");
         }
     }, [location.state]);
 
@@ -56,7 +52,7 @@ const ErrorEmailNotFound = ({ onRetry }: ErrorEmailNotFoundProps) => {
                 <div className="w-full max-w-md px-6">
                     <div>
                         <div className="flex justify-center mb-4">
-                            <MailWarning className="w-16 h-16 text-[#1E40AF]" />
+                            <MailWarning className="w-16 h-16 text-error-600" />
                         </div>
                         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
                             Ha ocurrido un error

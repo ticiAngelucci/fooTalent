@@ -167,4 +167,13 @@ public class PaymentController {
 
         return ResponseEntity.ok(response);
     }
+    @Operation(summary = "Listar todos los pagos de alquiler", description = "Obtiene todos los pagos con información detallada del contrato, inquilino, frecuencia de ajuste, valor del alquiler y fecha límite")
+    @GetMapping("/all-rent")
+    public ResponseEntity<PaymentDetailedResponsePage> getAllPaymentsRent(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        PaymentDetailedResponsePage responsePage = paymentService.getAllPaymentsRent(page, size);
+        return ResponseEntity.ok(responsePage);
+    }
 }

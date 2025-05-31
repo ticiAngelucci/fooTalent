@@ -78,13 +78,11 @@ public class AuthController {
     @Operation(summary = "Verificación de token")
     @GetMapping("/verifyToken")
     public void verifyAccount(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
-        // Validar que el token no sea nulo o vacío
         if (token == null || token.isEmpty()) {
             response.sendRedirect(frontUrl + "/login?verified=invalid");
             return;
         }
 
-        // Buscar al usuario por el token
         Optional<User> optionalUser = userRepository.findByVerificationToken(token);
 
         if (optionalUser.isEmpty()) {
@@ -94,25 +92,21 @@ public class AuthController {
 
         User user = optionalUser.get();
 
-        // Verificar si el token ha expirado
         if (user.getVerificationTokenExpiration() == null || user.getVerificationTokenExpiration().before(new Date())) {
             response.sendRedirect(frontUrl + "/login?verified=expired");
             return;
         }
 
-        // Verificar si el usuario ya está activo
         if (user.getIsActive()) {
             response.sendRedirect(frontUrl + "/login?verified=already");
             return;
         }
 
-        // Activar el usuario
         user.setIsActive(true);
         user.setVerificationToken(null);
         user.setVerificationTokenExpiration(null);
         userRepository.save(user);
 
-        // Redirigir al login con mensaje de éxito
         response.sendRedirect(frontUrl + "/login?verified=success");
     }
 

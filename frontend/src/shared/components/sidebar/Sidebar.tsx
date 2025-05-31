@@ -21,7 +21,7 @@ import {
 import { useSidebar } from "@/shared/components/ui/sidebar";
 import { Route } from "@/shared/constants/route";
 import LogoutButton from "../logoutButton/LogoutButton";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const items = [
   { title: "Tablero", url: Route.Dashboard, icon: LayoutDashboard },
@@ -32,6 +32,7 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const location = useLocation();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
 
@@ -40,12 +41,17 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className={`transition-all duration-300 flex flex-col justify-between border-gray-200 fixed ${collapsed ? "w-20" : "w-[13rem]"}`}
+      className={`transition-all duration-300 flex flex-col justify-between border-gray-200 fixed ${
+        collapsed ? "w-20" : "w-[13rem]"
+      }`}
     >
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenuButton className="flex items-center justify-center w-full h-full rounded-md p-0" onClick={()=>navigate(Route.Dashboard)}>
+            <SidebarMenuButton
+              className="flex items-center justify-center w-full h-full rounded-md p-0"
+              onClick={() => navigate(Route.Dashboard)}
+            >
               <img
                 src={collapsed ? "/Frame.svg" : "/Logo.svg"}
                 alt=""
@@ -61,6 +67,35 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-col gap-y-4">
               {items.map((item) => (
+              item.url === location.pathname ? (
+                <SidebarMenuItem
+                  key={item.title}
+                  className={`min-h-[50px] flex items-center justify-center bg-brand-50`}
+                >
+                  <SidebarMenuButton
+                    asChild
+                    className={`hover:bg-slate-100 rounded-md flex items-center w-full h-[50px] text-base ${
+                      collapsed ? "justify-center" : "justify-start ml-4"
+                    }`}
+                  >
+                    <a
+                      href={item.url}
+                      className="flex items-center justify-center w-full"
+                    >
+                      <span
+                        className={`inline-flex ${
+                          collapsed ? "h-6 w-6" : "h-5 w-5"
+                        }`}
+                      >
+                        <item.icon className="h-full w-full text-brand-800" />
+                      </span>
+                      {!collapsed &&
+                          <span className="text-brand-800">{item.title}</span>
+                      }
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : (
                 <SidebarMenuItem
                   key={item.title}
                   className={`min-h-[50px] flex items-center justify-center text-neutral-950`}
@@ -75,15 +110,21 @@ export function AppSidebar() {
                       href={item.url}
                       className="flex items-center justify-center w-full"
                     >
-                      <span className={`inline-flex ${collapsed ? "h-6 w-6" : "h-5 w-5"}`}>
+                      <span
+                        className={`inline-flex ${
+                          collapsed ? "h-6 w-6" : "h-5 w-5"
+                        }`}
+                      >
                         <item.icon className="h-full w-full text-gray-800" />
                       </span>
-                      {!collapsed && (
-                        <span className="text-gray-800">{item.title}</span>
-                      )}
+                      {!collapsed &&
+                          <span className="text-gray-800">{item.title}</span>
+                        }
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+              )
+                
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -100,8 +141,10 @@ export function AppSidebar() {
               collapsed ? "justify-center" : "justify-center"
             }`}
           >
-            <a href="#" className="flex items-center w-full p-0">
-              <span className={`inline-flex ${collapsed ? "h-6 w-6" : "h-5 w-5"}`}>
+            <a href="/#contacto" className="flex items-center w-full p-0">
+              <span
+                className={`inline-flex ${collapsed ? "h-6 w-6" : "h-5 w-5"}`}
+              >
                 <Mailbox className="h-full w-full text-neutral-950" />
               </span>
               {!collapsed && (

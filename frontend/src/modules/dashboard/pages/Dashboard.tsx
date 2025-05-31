@@ -2,9 +2,9 @@ import { useUserStore } from "@/store/userStore";
 import SummaryCard from "@/shared/components/summaryCard/SummaryCard";
 import InfoCard from "@/shared/components/infoCard/InfoCard";
 import DashboardLayout from "@/shared/components/layout/dashboard/DashboardLayout";
-import { AlertCircle, CircleCheck, Clock4 } from "lucide-react";
+import { AlertCircle, CircleCheck, Clock4, Loader2 } from "lucide-react";
 import { usePagosStore } from "../store/paymentsStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useContractStore } from "../store/contractStore";
 import { usePropertyStore } from "../store/propertyStore";
 import { useTenantStore } from "../store/tenantStore";
@@ -13,6 +13,7 @@ import { Route } from "@/shared/constants/route";
 
 const Dashboard = () => {
   const username = useUserStore((state) => state.firstName);
+  const [isLoading, setIsLoading] = useState(true);
 
   const pagos = usePagosStore((state) => state.pagos);
   const fetchPagos = usePagosStore((state) => state.fetchPagos);
@@ -26,41 +27,27 @@ const Dashboard = () => {
   const tenants = useTenantStore((state) => state.tenants);
   const fetchTenants = useTenantStore((state) => state.fetchTenants);
 
-
-  useEffect(()=>{
-    fetchPagos();
-  },[])
-
   useEffect(() => {
-    if (contracts.length === 0) {
-      fetchContracts();
-    }
-  }, [contracts.length, fetchContracts]);
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          fetchPagos(),
+          fetchContracts(),
+          fetchProperties(),
+          fetchTenants(),
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    if (properties.length === 0) {
-      fetchProperties();
-    } else {
-    }
-  }, [properties.length, fetchProperties]);
+    loadData();
+  }, [fetchPagos, fetchContracts, fetchProperties, fetchTenants]);
 
-  useEffect(() => {
-    if (tenants.length === 0) {
-      fetchTenants();
-    } else {
-    }
-  }, [tenants.length, fetchTenants]);
-
-  useEffect(() => {
-    if (pagos.length === 0) {
-      fetchPagos();
-    }
-  }, [pagos.length, fetchPagos]);
-
-  // Payments
-  const pagosVencidos = pagos.filter(p => p.status === "VENCIDO").length;
-  const pagosPendientes = pagos.filter(p => p.status === "PENDIENTE").length;
-  const pagosAlDia = pagos.filter(p => p.status === "PAGADO").length;
+  const pagosVencidos = pagos.filter((p) => p.status === "VENCIDO").length;
+  const pagosPendientes = pagos.filter((p) => p.status === "PENDIENTE").length;
+  const pagosAlDia = pagos.filter((p) => p.status === "PAGADO").length;
 
   const summary = [
     {
@@ -83,13 +70,11 @@ const Dashboard = () => {
     },
   ];
 
-  //Cards Sections
-
   const infoSections: InfoCardProps[] = [
     {
       type: "contract",
       title: "Contratos",
-      subtitle: "Contratos vigentes",
+      subtitle: "Listado de contratos",
       redirect: Route.Contracts,
       items: contracts,
     },
@@ -103,7 +88,7 @@ const Dashboard = () => {
     {
       type: "contact",
       title: "Contactos",
-      subtitle: "Listado de contratos",
+      subtitle: "Listado de contactos",
       redirect: Route.Contact,
       items: tenants,
     },
@@ -112,9 +97,8 @@ const Dashboard = () => {
   if (!username) return null;
 
   return (
-    <DashboardLayout subtitle={`Tablero`}>
+    <DashboardLayout>
       <div className="flex justify-between items-center p-3 w-full rounded-2xl text-neutral-950">
-        {/* Contenido textual */}
         <div className="flex flex-col items-start gap-1">
           <h3 className="text-2xl font-semibold">
             Bienvenido, <span className="font-bold">{username}</span>
@@ -124,7 +108,6 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Imagen decorativa */}
         <img
           src="/dashboardLogo.png"
           alt="Dashboard Logo"
@@ -138,16 +121,22 @@ const Dashboard = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {infoSections.map((section, idx) => (
-            <InfoCard
-              key={idx}
-              type={section.type}
-              subtitle={section.subtitle}
-              redirect={section.redirect}
-              title={section.title}
-              items={section.items}
-            />
-          ))}
+          {isLoading ? (
+            <div className="col-span-3 flex justify-center items-center py-10">
+              <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-800" />
+            </div>
+          ) : (
+            infoSections.map((section, idx) => (
+              <InfoCard
+                key={idx}
+                type={section.type}
+                subtitle={section.subtitle}
+                redirect={section.redirect}
+                title={section.title}
+                items={section.items}
+              />
+            ))
+          )}
         </div>
       </div>
     </DashboardLayout>
