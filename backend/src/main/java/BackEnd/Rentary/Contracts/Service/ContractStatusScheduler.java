@@ -27,7 +27,7 @@ public class ContractStatusScheduler {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    @Scheduled(cron = "0 50 1 * * ?", zone = "UTC")
+    @Scheduled(cron = "0 59 1 * * ?", zone = "UTC")
     public void updateContractStatus() {
         List<Contract> activeContracts = contractRepository.findByActiveTrue();
         LocalDate today = LocalDate.now();
